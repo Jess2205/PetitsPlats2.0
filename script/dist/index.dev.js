@@ -9,77 +9,41 @@ var _recipes = require("./recipes.js");
 
 var _filtres = require("./filtres.js");
 
+// Assurez-vous que le chemin est correct
 // Fonction pour afficher les recettes
-function displayRecipes(recipes) {
+function displayRecipes(recipesToDisplay) {
   var mediaContainer = document.getElementById('media-container');
+  mediaContainer.innerHTML = ''; // Efface les recettes existantes
 
-  if (!mediaContainer) {
-    console.error('Élément #media-container non trouvé');
-    return;
+  if (recipesToDisplay.length === 0) {
+    showErrorMessage();
+  } else {
+    hideErrorMessage();
+    recipesToDisplay.forEach(function (recipe) {
+      // Création dynamique des éléments pour chaque recette
+      var recipeElement = document.createElement('div');
+      recipeElement.className = 'recipe-card bg-white p-4 rounded shadow-lg';
+      recipeElement.innerHTML = "\n        <h3 class=\"text-xl font-bold\">".concat(recipe.name, "</h3>\n        <p>").concat(recipe.description, "</p>\n        <p><strong>Ingredients:</strong> ").concat(recipe.ingredients.map(function (ing) {
+        return ing.ingredient;
+      }).join(', '), "</p>\n        <p><strong>Appliance:</strong> ").concat(recipe.appliance, "</p>\n        <p><strong>Ustensils:</strong> ").concat(recipe.ustensils.join(', '), "</p>\n      ");
+      mediaContainer.appendChild(recipeElement);
+    });
   }
-
-  mediaContainer.innerHTML = ''; // Effacer les recettes existantes
-
-  recipes.forEach(function (recipe) {
-    var recipeElement = document.createElement('div');
-    recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'p-6', 'mb-6', 'w-full', 'max-w-lg', 'mx-auto'); // Conteneur d'image
-
-    var imageContainer = document.createElement('div');
-    imageContainer.classList.add('relative');
-    var recipeImage = document.createElement('img');
-    recipeImage.src = "dataMedia/".concat(recipe.image);
-    recipeImage.alt = recipe.name;
-    recipeImage.classList.add('w-full', 'h-auto', 'rounded-t-lg', 'object-cover'); // Badge de temps
-
-    var timeBadge = document.createElement('span');
-    timeBadge.textContent = "".concat(recipe.time, " min");
-    timeBadge.classList.add('absolute', 'top-3', 'right-3', 'bg-yellow-400', 'text-black', 'rounded-full', 'px-3', 'py-1', 'text-xs', 'font-bold'); // Titre de la recette
-
-    var recipeTitle = document.createElement('h2');
-    recipeTitle.textContent = recipe.name;
-    recipeTitle.classList.add('text-xl', 'font-bold', 'mb-2', 'text-gray-900'); // Description de la recette
-
-    var description = document.createElement('p');
-    description.textContent = recipe.description;
-    description.classList.add('text-base', 'my-2', 'text-gray-700'); // Ingrédients
-
-    var ingredientsGrid = document.createElement('div');
-    ingredientsGrid.classList.add('grid', 'grid-cols-2', 'gap-4', 'text-gray-700', 'mt-2');
-    recipe.ingredients.forEach(function (ingredient) {
-      var ingredientElement = document.createElement('div');
-      ingredientElement.classList.add('flex', 'flex-col', 'text-sm', 'font-semibold');
-      var ingredientName = document.createElement('span');
-      ingredientName.textContent = "".concat(ingredient.ingredient);
-      ingredientName.classList.add('mb-1');
-      var ingredientQuantity = document.createElement('span');
-
-      if (ingredient.quantity) {
-        ingredientQuantity.textContent = "".concat(ingredient.quantity, " ").concat(ingredient.unit || '').trim();
-        ingredientQuantity.classList.add('text-gray-500', 'font-normal');
-      }
-
-      ingredientElement.appendChild(ingredientName);
-      ingredientElement.appendChild(ingredientQuantity);
-      ingredientsGrid.appendChild(ingredientElement);
-    }); // Append à la carte de recette
-
-    imageContainer.appendChild(recipeImage);
-    imageContainer.appendChild(timeBadge);
-    recipeElement.appendChild(imageContainer);
-    recipeElement.appendChild(recipeTitle);
-    recipeElement.appendChild(description);
-    recipeElement.appendChild(ingredientsGrid);
-    mediaContainer.appendChild(recipeElement);
-  });
-} // Gestion des filtres
+} // Ajouter les écouteurs d'événements
 
 
-document.getElementById('ingredients').addEventListener('change', function () {
-  (0, _filtres.filterRecipesWithAdvancedFilters)();
+window.addEventListener('load', function () {
+  displayRecipes(_recipes.recipes); // Affiche toutes les recettes au chargement de la page
 });
-document.getElementById('appareils').addEventListener('change', function () {
-  (0, _filtres.filterRecipesWithAdvancedFilters)();
-});
-document.getElementById('ustensiles').addEventListener('change', function () {
-  (0, _filtres.filterRecipesWithAdvancedFilters)();
+var searchInput = document.getElementById('search-input');
+
+if (searchInput) {
+  searchInput.addEventListener('input', rechercheCombinée);
+}
+
+var filtres = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
+filtres.forEach(function (filtre) {
+  if (filtre) {
+    filtre.addEventListener('change', rechercheCombinée);
+  }
 });

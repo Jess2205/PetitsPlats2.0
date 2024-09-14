@@ -77,9 +77,13 @@ export function displayRecipes(recipes) {
   });
 }
 
+// index.js
+
 // Fonction pour afficher les tags dans le conteneur
 function displayTags(selectedTags, category) {
   const tagContainer = document.getElementById('tag-container');
+  if (!tagContainer) return;
+  
   tagContainer.innerHTML = ''; // Efface les tags existants
 
   selectedTags.forEach(tagText => {
@@ -95,7 +99,7 @@ function displayTags(selectedTags, category) {
 
     removeIcon.addEventListener('click', () => {
       removeTag(tagText, category);
-      tagContainer.removeChild(tag);
+      displayTags(selectedTags[category], category);
       filterRecipesWithAdvancedFilters();
     });
 
@@ -108,6 +112,7 @@ function addTag(tagText, category) {
   if (!selectedTags[category].includes(tagText)) {
     selectedTags[category].push(tagText);
     displayTags(selectedTags[category], category);
+    filterRecipesWithAdvancedFilters();
   }
 }
 
@@ -138,12 +143,12 @@ function filterRecipesWithAdvancedFilters() {
         selectedIngredients.includes(ingredient.ingredient.toLowerCase())
       );
 
-    const matchesAppareils = activeFilters.appareils.length === 0 ||
-      activeFilters.appareils.includes(recipe.appliance?.toLowerCase() || '');
+    const matchesAppareils = selectedAppareils.length === 0 ||
+      selectedAppareils.includes(recipe.appliance?.toLowerCase() || '');
 
-    const matchesUstensiles = activeFilters.ustensiles.length === 0 ||
+    const matchesUstensiles = selectedUstensiles.length === 0 ||
       recipe.ustensils?.some(ustensile => 
-        activeFilters.ustensiles.includes(ustensile.toLowerCase())
+        selectedUstensiles.includes(ustensile.toLowerCase())
       ) || false;
 
     return matchesIngredients && matchesAppareils && matchesUstensiles;
@@ -156,3 +161,40 @@ function filterRecipesWithAdvancedFilters() {
     displayRecipes(filteredRecipes);
   }
 }
+
+// Exemple de définition des fonctions showErrorMessage et hideErrorMessage
+export function showErrorMessage() {
+  const errorMessageElement = document.getElementById('error-message');
+  if (errorMessageElement) {
+    errorMessageElement.style.display = 'block';
+  }
+}
+
+export function hideErrorMessage() {
+  const errorMessageElement = document.getElementById('error-message');
+  if (errorMessageElement) {
+    errorMessageElement.style.display = 'none';
+  }
+}
+
+// Ajout des écouteurs d'événements pour les filtres (à adapter selon la structure de votre HTML)
+document.getElementById('ingredients').addEventListener('change', () => {
+  const selectedOptions = Array.from(document.getElementById('ingredients').selectedOptions).map(option => option.value);
+  selectedTags.ingredients = selectedOptions;
+  displayTags(selectedOptions, 'ingredients');
+  filterRecipesWithAdvancedFilters();
+});
+
+document.getElementById('appareils').addEventListener('change', () => {
+  const selectedOptions = Array.from(document.getElementById('appareils').selectedOptions).map(option => option.value);
+  selectedTags.appareils = selectedOptions;
+  displayTags(selectedOptions, 'appareils');
+  filterRecipesWithAdvancedFilters();
+});
+
+document.getElementById('ustensiles').addEventListener('change', () => {
+  const selectedOptions = Array.from(document.getElementById('ustensiles').selectedOptions).map(option => option.value);
+  selectedTags.ustensiles = selectedOptions;
+  displayTags(selectedOptions, 'ustensiles');
+  filterRecipesWithAdvancedFilters();
+});
