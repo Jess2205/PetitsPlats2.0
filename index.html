@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Les Petits Plats</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link href="/dist/output.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- Header Section -->
+  <header class="h-screen flex flex-col justify-center items-center text-white" style="background-image: url('/assets/header-background.png');">
+    <h1 class="text-4xl font-bold absolute p-0 gap-0 opacity-1 transition ease-out duration-300" style="top: 51px; left: 69px;">
+      Les Petits Plats ©
+    </h1>
+    <h2 class="text-7xl mt-6 text-center text-yellow-400">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h2>
+
+    <!-- Barre de recherche principale -->
+    <div class="mt-6 flex w-2/3">
+      <input 
+        id="search-input" 
+        type="text" 
+        placeholder="Rechercher une recette, un ingrédient, ..." 
+        class="text-black w-full p-4 focus:outline-none"
+      >
+      <button class="bg-white text-white px-4 py-3 rounded-r-full hover:bg-green-700" aria-label="Rechercher">
+        <img src="./assets/loupe.png" alt="icone d'une loupe">
+      </button>
+    </div>
+   <!-- Conteneur pour le message d'erreur -->
+<div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
+  Aucune recette trouvée.
+</div>
+
+<!-- Conteneur pour les résultats de recherche -->
+<div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
+  <!-- Les résultats injectés dynamiquement ici -->
+</div>
+
+    <!-- Conteneur pour les tags -->
+    <div id="tag-container" class="mt-4 w-full flex flex-wrap justify-center gap-2">
+      <!-- Tags ajoutés dynamiquement ici -->
+    </div>
+  </header>
+
+  <!-- Filters Section -->
+  <section class="py-8 flex justify-around mt-6">
+    <!-- Filtres dynamiques des ingrédients -->
+    <div class="flex flex-col">
+      <label for="ingredients" class="mb-2 opacity-0">Ingrédients</label>
+      <select id="ingredients" class="p-2 rounded border" multiple >
+        <option value="">Ingrédients</option>
+        <!-- Options injectées dynamiquement ici -->
+      </select>
+    </div>
+
+    <!-- Filtres dynamiques des appareils -->
+    <div class="flex flex-col">
+      <label for="appareils" class="mb-2 opacity-0">Appareils</label>
+      <select id="appareils" class="p-2 rounded border" multiple>
+        <option value="">Appareils</option>
+        <!-- Options injectées dynamiquement ici -->
+      </select>
+    </div>
+
+    <!-- Filtres dynamiques des ustensiles -->
+    <div class="flex flex-col">
+      <label for="ustensiles" class="mb-2 opacity-0">Ustensiles</label>
+      <select id="ustensiles" class="p-2 rounded border" multiple>
+        <option value="">Ustensiles</option>
+        <!-- Options injectées dynamiquement ici -->
+      </select>
+    </div>
+
+    <p id="total-recipes" class="self-end text-black-400 text-2x">1500 recettes</p>
+
+
+  </section>
+
+  <!-- Section où les médias seront affichés -->
+  <section id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+    <!-- Les recettes/médias seront injectés dynamiquement ici -->
+  </section>
+
+  <!-- Footer Section -->
+  <footer class="bg-gray-800 text-white text-center py-4">
+    <p>&copy; 2024 Les Petits Plats</p>
+  </footer>
+
+  <!-- Scripts JS -->
+  <script type="module" src="/script/index.js" defer></script>
+  <script type="module" src="/script/filtres.js" defer></script>
+  <script type="module" src="/script/main.js" defer></script>
+  
+
+  <script>
+
+    // Test console logs
+    console.log('Document loaded');
+    
+    // Log elements to ensure they are correctly selected
+    const searchInput = document.getElementById('search-input');
+    console.log('Search input element:', searchInput);
+    
+    const ingredientsSelect = document.getElementById('ingredients');
+    console.log('Ingredients select element:', ingredientsSelect);
+
+    const appareilsSelect = document.getElementById('appareils');
+    console.log('Appareils select element:', appareilsSelect);
+
+    const ustensilesSelect = document.getElementById('ustensiles');
+    console.log('Ustensiles select element:', ustensilesSelect);
+
+    const mediaContainer = document.getElementById('media-container');
+    console.log('Media container element:', mediaContainer);
+
+    const resultsContainer = document.getElementById('results-container');
+    console.log('Results container element:', resultsContainer);
+
+    const tagContainer = document.getElementById('tag-container');
+    console.log('Tag container element:', tagContainer);
+
+    const errorMessage = document.getElementById('error-message');
+    console.log('Error message element:', errorMessage);
+  </script>
+</body>
+</html>
