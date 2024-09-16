@@ -6,11 +6,29 @@
   <title>Les Petits Plats</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="./dist/output.css" rel="stylesheet">
+  <style>
+    /* Assure-toi que le conteneur est bien aligné en ligne */
+    .filters-container {
+      display: flex;
+      align-items: flex-start; /* Aligne les éléments en haut */
+      justify-content: space-between; /* Répartit l'espace entre les filtres et le compteur */
+    }
+    .filter-group {
+      flex: 1; /* Permet aux groupes de filtre de se redimensionner également */
+      margin-right: 16px; /* Espace entre les filtres */
+    }
+    .search-input {
+      width: 100%;
+    }
+    .search-input, .filter-group select {
+      margin-bottom: 0.5rem;
+    }
+  </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
 
   <!-- Header Section -->
-  <header class="h-screen flex flex-col justify-center items-center text-white" style="background-image: url('./assets/header-background.png');">
+  <header class="h-screen flex flex-col justify-center items-center text-white" style="background-image: url('./assets/header-background.png'); background-size: cover; background-position: center;">
     <h1 class="text-4xl font-bold absolute p-0 gap-0 opacity-1 transition ease-out duration-300" style="top: 51px; left: 69px;">
       Les Petits Plats ©
     </h1>
@@ -28,15 +46,16 @@
         <img src="./assets/loupe.png" alt="icone d'une loupe">
       </button>
     </div>
-   <!-- Conteneur pour le message d'erreur -->
-<div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
-  Aucune recette trouvée.
-</div>
 
-<!-- Conteneur pour les résultats de recherche -->
-<div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
-  <!-- Les résultats injectés dynamiquement ici -->
-</div>
+    <!-- Conteneur pour le message d'erreur -->
+    <div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
+      Aucune recette trouvée.
+    </div>
+
+    <!-- Conteneur pour les résultats de recherche -->
+    <div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
+      <!-- Les résultats injectés dynamiquement ici -->
+    </div>
 
     <!-- Conteneur pour les tags -->
     <div id="tag-container" class="mt-2 w-full flex flex-wrap justify-center gap-2 text-black bg-yellow-400">
@@ -45,37 +64,53 @@
   </header>
 
   <!-- Filters Section -->
-  <section class="py-8 flex justify-around mt-6">
+  <section class="py-8 filters-container mt-6">
     <!-- Filtres dynamiques des ingrédients -->
-    <div class="flex flex-col">
-      <label for="ingredients" class="mb-2 opacity-0">Ingrédients</label>
-      <select id="ingredients" class="p-2 rounded border" multiple >
+    <div class="filter-group">
+      <input 
+        id="ingredients-search" 
+        type="text" 
+        placeholder="Rechercher un ingrédient" 
+        class="search-input p-2 rounded border"
+      >
+      <select aria-label="Rechercher un ingrédient"  id="ingredients" class="p-2 rounded border" multiple>
         <option value="">Ingrédients</option>
         <!-- Options injectées dynamiquement ici -->
       </select>
     </div>
 
     <!-- Filtres dynamiques des appareils -->
-    <div class="flex flex-col">
-      <label for="appareils" class="mb-2 opacity-0">Appareils</label>
-      <select id="appareils" class="p-2 rounded border" multiple>
+    <div class="filter-group">
+      <input 
+        id="appareils-search" 
+        type="text" 
+        placeholder="Rechercher un appareil" 
+        class="search-input p-2 rounded border"
+      >
+      <select aria-label="Rechercher un appareil"   id="appareils" class="p-2 rounded border" multiple>
         <option value="">Appareils</option>
         <!-- Options injectées dynamiquement ici -->
       </select>
     </div>
 
     <!-- Filtres dynamiques des ustensiles -->
-    <div class="flex flex-col">
-      <label for="ustensiles" class="mb-2 opacity-0">Ustensiles</label>
-      <select id="ustensiles" class="p-2 rounded border" multiple>
+    <div class="filter-group">
+      <input 
+        id="ustensiles-search" 
+        type="text" 
+        placeholder="Rechercher un ustensile" 
+        class="search-input p-2 rounded border"
+      >
+      <select aria-label="Rechercher un ustensile"   id="ustensiles" class="p-2 rounded border" multiple>
         <option value="">Ustensiles</option>
         <!-- Options injectées dynamiquement ici -->
       </select>
     </div>
 
-    <p id="total-recipes" class="self-end text-black-400 text-2x">1500 recettes</p>
-
-
+    <!-- Compteur de recettes -->
+    <p id="total-recipes" class="text-black-400 text-2xl">
+      1500 recettes
+    </p>
   </section>
 
   <!-- Section où les médias seront affichés -->
@@ -92,17 +127,15 @@
   <script type="module" src="./script/index.js" defer></script>
   <script type="module" src="./script/filtres.js" defer></script>
   <script type="module" src="./script/main.js" defer></script>
-  
 
   <script>
-
     // Test console logs
     console.log('Document loaded');
-    
+
     // Log elements to ensure they are correctly selected
     const searchInput = document.getElementById('search-input');
     console.log('Search input element:', searchInput);
-    
+
     const ingredientsSelect = document.getElementById('ingredients');
     console.log('Ingredients select element:', ingredientsSelect);
 

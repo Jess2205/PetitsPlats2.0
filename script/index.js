@@ -1,9 +1,6 @@
 import { recipes } from './recipes.js'; // Assure-toi que le chemin est correct
 import { rechercheCombinée } from './main.js';
 
-// Utilisation de la fonction
-document.getElementById('search-input').addEventListener('input', rechercheCombinée);
-
 // Fonction pour afficher les recettes
 export function displayRecipes(recipes) {
   const mediaContainer = document.getElementById('media-container');
@@ -77,8 +74,6 @@ export function displayRecipes(recipes) {
   });
 }
 
-// index.js
-
 // Fonction pour afficher les tags dans le conteneur
 function displayTags(selectedTags, category) {
   const tagContainer = document.getElementById('tag-container');
@@ -124,7 +119,7 @@ function removeTag(tagText, category) {
   }
 }
 
-// Object pour stocker les tags sélectionnés
+// Objet pour stocker les tags sélectionnés
 const selectedTags = {
   ingredients: [],
   appareils: [],
@@ -177,7 +172,7 @@ export function hideErrorMessage() {
   }
 }
 
-// Ajout des écouteurs d'événements pour les filtres (à adapter selon la structure de votre HTML)
+// Événements pour les filtres
 document.getElementById('ingredients').addEventListener('change', () => {
   const selectedOptions = Array.from(document.getElementById('ingredients').selectedOptions).map(option => option.value);
   selectedTags.ingredients = selectedOptions;
@@ -198,3 +193,6 @@ document.getElementById('ustensiles').addEventListener('change', () => {
   displayTags(selectedOptions, 'ustensiles');
   filterRecipesWithAdvancedFilters();
 });
+
+// Ajouter l'événement de recherche combinée
+document.getElementById('search-input').addEventListener('input', rechercheCombinée);
