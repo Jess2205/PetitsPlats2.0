@@ -133,38 +133,45 @@ function filterRecipesWithAdvancedFilters() {
 
 // Fonction de filtrage des recettes
 function filterRecipes() {
-  const texteRecherche = document.getElementById('search-input').value.toLowerCase();
+  const searchInput = document.getElementById('search-input');
   const searchText = searchInput.value.trim().toLowerCase();
 
-  if (searchText.length < 3) {
-    return;
-  }
+  // Récupérer les tags d'ingrédients, d'ustensiles, et d'appareils sélectionnés
+  const selectedIngredients = [...document.querySelectorAll('#ingredients option:checked')].map(el => el.value.toLowerCase());
+  const selectedUstensils = [...document.querySelectorAll('#ustensiles option:checked')].map(el => el.value.toLowerCase());
+  const selectedAppliances = [...document.querySelectorAll('#appareils option:checked')].map(el => el.value.toLowerCase());
 
-  const selectedIngredients = Array.from(document.getElementById('ingredients').selectedOptions).map(option => option.value.toLowerCase());
-  const selectedAppareils = Array.from(document.getElementById('appareils').selectedOptions).map(option => option.value.toLowerCase());
-  const selectedUstensiles = Array.from(document.getElementById('ustensiles').selectedOptions).map(option => option.value.toLowerCase());
+  // Filtrer les recettes selon le texte et les tags
+  const filteredRecipes = recipes.filter(recipe => {
+    const matchesSearchText = (
+      recipe.name.toLowerCase().includes(searchText) ||
+      recipe.description.toLowerCase().includes(searchText) ||
+      recipe.ingredients.some(ingredient => ingredient.toLowerCase().includes(searchText))
+    );
 
-  const recettesFiltrees = recipes.filter(recette => {
-    const correspondTexte = recette.name.toLowerCase().includes(searchText) ||
-                            recette.description.toLowerCase().includes(searchText) ||
-                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchText));
+    // Vérifier que la recette contient tous les ingrédients sélectionnés
+    const matchesIngredients = selectedIngredients.every(tag => 
+      recipe.ingredients.some(ingredient => ingredient.toLowerCase().includes(tag))
+    );
 
-    const correspondIngredients = !selectedIngredients.length || recette.ingredients.some(ingredient => selectedIngredients.includes(ingredient.ingredient.toLowerCase()));
-    const correspondAppareils = !selectedAppareils.length || selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
-    const correspondUstensiles = !selectedUstensiles.length || recette.ustensils?.some(ustensile => selectedUstensiles.includes(ustensile.toLowerCase())) || false;
+    // Vérifier que la recette contient tous les ustensiles sélectionnés
+    const matchesUstensils = selectedUstensils.every(tag => 
+      recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+    );
 
-    return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
+    // Vérifier que la recette utilise l'appareil sélectionné
+    const matchesAppliance = selectedAppliances.length === 0 || selectedAppliances.includes(recipe.appliance.toLowerCase());
+
+    // Retourner vrai seulement si tous les critères sont remplis (intersection des résultats)
+    return matchesSearchText && matchesIngredients && matchesUstensils && matchesAppliance;
   });
 
-  // Mise à jour du compteur de recettes
-  document.getElementById('total-recipes').textContent = `${recettesFiltrees.length} recettes`;
-
-  if (recettesFiltrees.length === 0) {
-    showErrorMessage(searchText); // Appelle la fonction pour afficher le message d'erreur et vider les médias
+  // Afficher ou masquer les résultats en fonction des recettes filtrées
+  if (filteredRecipes.length === 0) {
+    showErrorMessage(searchText);
   } else {
     hideErrorMessage();
-    displayRecipes(recettesFiltrees); // Affiche les recettes filtrées
-    updateAdvancedFilters(recettesFiltrees); // Met à jour les filtres avancés
+    displayRecipes(filteredRecipes);
   }
 }
 
