@@ -43,10 +43,11 @@ function displayTags() {
 function addTag(tagText, category) {
   if (selectedTags[category] && !selectedTags[category].includes(tagText)) {
     selectedTags[category].push(tagText);
-    displayTags(); // Re-affiche les tags
-    filterRecipesWithAdvancedFilters(); // Refiltre les recettes après ajout du tag
+    displayTags(); // Affiche les tags sélectionnés
+    filterRecipesWithAdvancedFilters(); // Met à jour les recettes avec les filtres avancés
   }
 }
+
 
 // Fonction pour retirer un tag
 function removeTag(tagText, category) {
