@@ -58,8 +58,9 @@ function removeTag(tagText, category) {
     }
   }
 }
-// Mettre à jour les options des filtres avancés
-function updateFilterOptions() {
+
+// Mettre à jour les options des filtres avancés en fonction des recettes affichées
+function updateFilterOptions(filteredRecipes) {
   const ingredientsSelect = document.getElementById('ingredients');
   const appareilsSelect = document.getElementById('appareils');
   const ustensilesSelect = document.getElementById('ustensiles');
@@ -73,7 +74,7 @@ function updateFilterOptions() {
   const uniqueAppareils = new Set();
   const uniqueUstensiles = new Set();
 
-  recipes.forEach(recipe => {
+  filteredRecipes.forEach(recipe => {
     recipe.ingredients.forEach(ingredient => uniqueIngredients.add(ingredient.ingredient));
     if (recipe.appliance) uniqueAppareils.add(recipe.appliance);
     recipe.ustensils.forEach(ustensile => uniqueUstensiles.add(ustensile));
@@ -94,16 +95,6 @@ function updateFilterOptions() {
   updateOptions(ustensilesSelect, [...uniqueUstensiles]);
 }
 
-// Filtrage des options dans les filtres avancés
-function filterOptions(searchInputId, selectElementId) {
-  const searchText = document.getElementById(searchInputId).value.toLowerCase();
-  const selectElement = document.getElementById(selectElementId);
-  const allOptions = Array.from(selectElement.options);
-
-  allOptions.forEach(option => {
-    option.style.display = option.value.toLowerCase().includes(searchText) || option.value === "" ? "block" : "none";
-  });
-}
 // Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
 function filterRecipesWithAdvancedFilters() {
   const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
@@ -134,6 +125,7 @@ function filterRecipesWithAdvancedFilters() {
   } else {
     hideErrorMessage();
     displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
+    updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
   }
 }
 
@@ -169,7 +161,7 @@ function filterRecipes() {
   } else {
     hideErrorMessage();
     displayRecipes(recettesFiltrees);
-    updateAdvancedFilters(recettesFiltrees); // Met à jour les filtres avancés
+    updateFilterOptions(recettesFiltrees); // Met à jour les options des filtres avancés avec les recettes filtrées
   }
 }
 
@@ -191,6 +183,6 @@ function listenToFilterChanges() {
 
 // Initialisation des filtres lors du chargement de la page
 window.addEventListener('load', () => {
-  updateFilterOptions();
+  updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
   listenToFilterChanges();
 });
