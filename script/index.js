@@ -1,6 +1,8 @@
 import { recipes } from './recipes.js'; // Assure-toi que le chemin est correct
 import { rechercheCombinée } from './main.js';
 
+
+
 // Fonction pour afficher les recettes
 export function displayRecipes(recipes) {
   const mediaContainer = document.getElementById('media-container');
@@ -74,11 +76,40 @@ export function displayRecipes(recipes) {
   });
 }
 
+// Fonction pour mettre à jour les options des filtres avancés
+export function updateAdvancedFilters(filteredRecipes) {
+  const ingredientsSet = new Set();
+  const appareilsSet = new Set();
+  const ustensilesSet = new Set();
+  
+  filteredRecipes.forEach(recipe => {
+    recipe.ingredients.forEach(ingredient => ingredientsSet.add(ingredient.ingredient));
+    if (recipe.appliance) appareilsSet.add(recipe.appliance);
+    recipe.ustensils.forEach(ustensile => ustensilesSet.add(ustensile));
+  });
+
+  updateSelectOptions('ingredients', ingredientsSet);
+  updateSelectOptions('appareils', appareilsSet);
+  updateSelectOptions('ustensiles', ustensilesSet);
+}
+
+// Mise à jour des options des filtres
+function updateSelectOptions(selectId, optionsSet) {
+  const selectElement = document.getElementById(selectId);
+  selectElement.innerHTML = '<option value="">Sélectionner...</option>';
+  optionsSet.forEach(option => {
+    const opt = document.createElement('option');
+    opt.value = option;
+    opt.textContent = option;
+    selectElement.appendChild(opt);
+  });
+}
+
 // Fonction pour afficher les tags dans le conteneur
 function displayTags(selectedTags, category) {
   const tagContainer = document.getElementById('tag-container');
   if (!tagContainer) return;
-  
+
   tagContainer.innerHTML = ''; // Efface les tags existants
 
   selectedTags.forEach(tagText => {
@@ -94,8 +125,6 @@ function displayTags(selectedTags, category) {
 
     removeIcon.addEventListener('click', () => {
       removeTag(tagText, category);
-      displayTags(selectedTags[category], category);
-      filterRecipesWithAdvancedFilters();
     });
 
     tagContainer.appendChild(tag);
@@ -103,11 +132,11 @@ function displayTags(selectedTags, category) {
 }
 
 // Fonction pour ajouter un tag dans la catégorie correspondante
-function addTag(tagText, category) {
+export function addTag(tagText, category) {
   if (!selectedTags[category].includes(tagText)) {
     selectedTags[category].push(tagText);
-    displayTags(selectedTags[category], category);
-    filterRecipesWithAdvancedFilters();
+    displayTags(selectedTags[category], category); // Met à jour l'affichage des tags
+    filterRecipesWithAdvancedFilters(); // Refiltre les recettes
   }
 }
 
@@ -116,6 +145,18 @@ function removeTag(tagText, category) {
   const index = selectedTags[category].indexOf(tagText);
   if (index > -1) {
     selectedTags[category].splice(index, 1);
+    displayTags(selectedTags[category], category); // Met à jour l'affichage des tags
+    filterRecipesWithAdvancedFilters(); // Refiltre les recettes
+  }
+}
+
+// Fonction pour mettre à jour le compteur de recettes affichées
+function updateRecipeCount(count) {
+  const recipeCountElement = document.getElementById('total-recipes');
+  if (recipeCountElement) {
+    recipeCountElement.textContent = `${count} Recettes`;
+  } else {
+    console.error('Élément #recipe-count non trouvé');
   }
 }
 
@@ -134,7 +175,7 @@ function filterRecipesWithAdvancedFilters() {
 
   const filteredRecipes = recipes.filter(recipe => {
     const matchesIngredients = selectedIngredients.length === 0 ||
-      recipe.ingredients.some(ingredient => 
+      recipe.ingredients.some(ingredient =>
         selectedIngredients.includes(ingredient.ingredient.toLowerCase())
       );
 
@@ -142,7 +183,7 @@ function filterRecipesWithAdvancedFilters() {
       selectedAppareils.includes(recipe.appliance?.toLowerCase() || '');
 
     const matchesUstensiles = selectedUstensiles.length === 0 ||
-      recipe.ustensils?.some(ustensile => 
+      recipe.ustensils?.some(ustensile =>
         selectedUstensiles.includes(ustensile.toLowerCase())
       ) || false;
 
@@ -154,6 +195,7 @@ function filterRecipesWithAdvancedFilters() {
   } else {
     hideErrorMessage();
     displayRecipes(filteredRecipes);
+    updateRecipeCount(filteredRecipes.length); // Mets à jour le compteur
   }
 }
 
@@ -195,4 +237,6 @@ document.getElementById('ustensiles').addEventListener('change', () => {
 });
 
 // Ajouter l'événement de recherche combinée
-document.getElementById('search-input').addEventListener('input', rechercheCombinée);
+document.getElementById('search-input').addEventListener('input', () => {
+  rechercheCombinée();
+});

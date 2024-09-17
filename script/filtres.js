@@ -1,9 +1,8 @@
-import { displayRecipes as afficherRecettes } from './index.js'; // Assurez-vous que le chemin est correct
-import { recipes } from './recipes.js'; // Assurez-vous que le chemin est correct
-import { hideErrorMessage, showErrorMessage } from './index.js'; // Assurez-vous que le chemin est correct
+import { displayRecipes as afficherRecettes } from './index.js'; // Assure-toi que le chemin est correct
+import { recipes } from './recipes.js'; // Assure-toi que le chemin est correct
+import { hideErrorMessage, showErrorMessage } from './index.js'; // Assure-toi que le chemin est correct
 
-
-// Object pour stocker les tags sélectionnés
+// Objet pour stocker les tags sélectionnés
 const selectedTags = {
   ingredients: [],
   appareils: [],
@@ -13,11 +12,16 @@ const selectedTags = {
 // Fonction pour afficher les tags dans le conteneur
 function displayTags(selectedTags, category) {
   const tagContainer = document.getElementById('tag-container');
+  if (!tagContainer) {
+    console.error('Élément #tag-container non trouvé');
+    return;
+  }
+  
   tagContainer.innerHTML = ''; // Efface les tags existants
 
   // Vérification que la catégorie existe et que c'est un tableau
   if (!selectedTags || !Array.isArray(selectedTags)) {
-    console.error(`selectedTags for category "${category}" is not a valid array.`);
+    console.error(`selectedTags pour la catégorie "${category}" n'est pas un tableau valide.`);
     return;  // Arrêter l'exécution si le tableau n'est pas valide
   }
 
@@ -34,7 +38,7 @@ function displayTags(selectedTags, category) {
 
     removeIcon.addEventListener('click', () => {
       removeTag(tagText, category);
-      tagContainer.removeChild(tag);
+      tag.remove(); // Utilise la méthode .remove() pour enlever le tag du DOM
       filterRecipesWithAdvancedFilters();
     });
 
@@ -44,17 +48,21 @@ function displayTags(selectedTags, category) {
 
 // Fonction pour ajouter un tag dans la catégorie correspondante
 function addTag(tagText, category) {
-  if (!selectedTags[category].includes(tagText)) {
+  if (selectedTags[category] && !selectedTags[category].includes(tagText)) {
     selectedTags[category].push(tagText);
     displayTags(selectedTags[category], category);
+    filterRecipesWithAdvancedFilters(); // Refiltre les recettes après ajout du tag
   }
 }
 
 // Fonction pour retirer un tag
 function removeTag(tagText, category) {
-  const index = selectedTags[category].indexOf(tagText);
-  if (index > -1) {
-    selectedTags[category].splice(index, 1);
+  if (selectedTags[category]) {
+    const index = selectedTags[category].indexOf(tagText);
+    if (index > -1) {
+      selectedTags[category].splice(index, 1);
+      displayTags(selectedTags[category], category);
+    }
   }
 }
 
@@ -94,6 +102,11 @@ function updateFilterOptions() {
   const ingredientsSelect = document.getElementById('ingredients');
   const appareilsSelect = document.getElementById('appareils');
   const ustensilesSelect = document.getElementById('ustensiles');
+
+  if (!ingredientsSelect || !appareilsSelect || !ustensilesSelect) {
+    console.error('Un ou plusieurs éléments de filtre non trouvés');
+    return;
+  }
 
   const uniqueIngredients = new Set();
   const uniqueAppareils = new Set();
@@ -147,7 +160,7 @@ function listenToFilterChanges() {
   });
 }
 
-// Ajouter des écouteurs d'événements pour les filtres
+// Initialisation des filtres lors du chargement de la page
 window.addEventListener('load', () => {
   updateFilterOptions();
   listenToFilterChanges();

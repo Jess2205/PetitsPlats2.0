@@ -1,77 +1,59 @@
 "use strict";
 
-var _recipes = require("./recipes.js");
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.displayRecipes = displayRecipes;
+exports.showErrorMessage = showErrorMessage;
+exports.hideErrorMessage = hideErrorMessage;
 
-var _index = require("./index.js");
-
-// Assurez-vous que le chemin est correct
-// Assurez-vous que le chemin est correct
-var searchBar = document.getElementById('search-bar'); // Fonction de recherche
-
-function searchRecipes(query) {
-  var lowerCaseQuery = query.toLowerCase();
-
-  var filteredRecipes = _recipes.recipes.filter(function (recipe) {
-    return recipe.title.toLowerCase().includes(lowerCaseQuery) || recipe.ingredients.some(function (ingredient) {
-      return ingredient.ingredient.toLowerCase().includes(lowerCaseQuery);
-    }) || recipe.description.toLowerCase().includes(lowerCaseQuery);
-  });
-
-  displayRecipes(filteredRecipes);
-  updateAdvancedFilters(filteredRecipes);
-} // Affichage des recettes
-
-
+// index.js
+// Fonction pour afficher les recettes
 function displayRecipes(recipes) {
-  var recipesContainer = document.getElementById('recipes-container');
-  recipesContainer.innerHTML = ''; // Efface les recettes existantes
+  var recipeContainer = document.getElementById('results-container');
+  recipeContainer.innerHTML = ''; // Efface le contenu existant
+
+  if (recipes.length === 0) {
+    recipeContainer.innerHTML = '<p>Aucune recette trouvée.</p>';
+    return;
+  }
 
   recipes.forEach(function (recipe) {
-    var recipeElement = document.createElement('div');
-    recipeElement.className = 'recipe';
-    recipeElement.textContent = recipe.title;
-    recipesContainer.appendChild(recipeElement);
-  });
-} // Mise à jour des filtres avancés
+    var recipeCard = document.createElement('div');
+    recipeCard.className = 'recipe-card'; // Création du contenu de la carte de recette
 
-
-function updateAdvancedFilters(filteredRecipes) {
-  var ingredientsSet = new Set();
-  var appareilsSet = new Set();
-  var ustensilesSet = new Set();
-  filteredRecipes.forEach(function (recipe) {
+    var recipeTitle = document.createElement('h3');
+    recipeTitle.textContent = recipe.name;
+    var recipeDescription = document.createElement('p');
+    recipeDescription.textContent = recipe.description;
+    var recipeIngredients = document.createElement('ul');
     recipe.ingredients.forEach(function (ingredient) {
-      return ingredientsSet.add(ingredient.ingredient);
+      var ingredientItem = document.createElement('li');
+      ingredientItem.textContent = "".concat(ingredient.ingredient, ": ").concat(ingredient.quantity || '', " ").concat(ingredient.unit || '');
+      recipeIngredients.appendChild(ingredientItem);
     });
-    if (recipe.appliance) appareilsSet.add(recipe.appliance);
-    recipe.ustensils.forEach(function (ustensile) {
-      return ustensilesSet.add(ustensile);
-    });
+    recipeCard.appendChild(recipeTitle);
+    recipeCard.appendChild(recipeDescription);
+    recipeCard.appendChild(recipeIngredients);
+    recipeContainer.appendChild(recipeCard);
   });
-  updateSelectOptions('ingredients', ingredientsSet);
-  updateSelectOptions('appareils', appareilsSet);
-  updateSelectOptions('ustensiles', ustensilesSet);
-} // Mise à jour des options des filtres
+} // Fonction pour afficher le message d'erreur
 
 
-function updateSelectOptions(selectId, optionsSet) {
-  var selectElement = document.getElementById(selectId);
-  selectElement.innerHTML = '<option value="">Sélectionner...</option>';
-  optionsSet.forEach(function (option) {
-    var opt = document.createElement('option');
-    opt.value = option;
-    opt.textContent = option;
-    selectElement.appendChild(opt);
-  });
-} // Événements de la barre de recherche
+function showErrorMessage() {
+  var errorMessageElement = document.getElementById('error-message');
 
-
-searchBar.addEventListener('input', function () {
-  var query = searchBar.value.trim();
-
-  if (query.length >= 3) {
-    searchRecipes(query);
-  } else {
-    displayRecipes(_recipes.recipes); // Optionnel : effacer les résultats si la recherche est trop courte
+  if (errorMessageElement) {
+    errorMessageElement.style.display = 'block';
+    errorMessageElement.textContent = 'Aucune recette ne correspond à votre recherche.';
   }
-});
+} // Fonction pour masquer le message d'erreur
+
+
+function hideErrorMessage() {
+  var errorMessageElement = document.getElementById('error-message');
+
+  if (errorMessageElement) {
+    errorMessageElement.style.display = 'none';
+  }
+}
