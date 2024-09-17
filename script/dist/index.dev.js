@@ -84,12 +84,17 @@ function displayRecipes(recipes) {
 
 
 function showErrorMessage(searchText) {
-  var errorMessageElement = document.getElementById('error-message');
+  var mediaContainer = document.getElementById('media-container');
+  var errorMessageContainer = document.getElementById('error-message');
 
-  if (errorMessageElement) {
-    errorMessageElement.textContent = "Aucune recette ne contient \"".concat(searchText, "\". Vous pouvez chercher \"tarte aux pommes\", \"poisson\", etc.");
-    errorMessageElement.style.display = 'block';
-    console.log('Texte de recherche:', texteRecherche);
+  if (mediaContainer) {
+    mediaContainer.innerHTML = ''; // Efface les médias affichés
+  }
+
+  if (errorMessageContainer) {
+    errorMessageContainer.style.display = 'block'; // Affiche le message d'erreur
+
+    errorMessageContainer.textContent = 'Aucune recette ne contient "' + searchText + '". Vous pouvez chercher "tarte aux pommes", "poisson", etc.';
   }
 } // Fonction pour masquer le message d'erreur
 

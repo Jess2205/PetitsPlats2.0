@@ -85,11 +85,16 @@ export function displayRecipes(recipes) {
 // Exemple de définition des fonctions showErrorMessage et hideErrorMessage
 // Fonction pour afficher un message d'erreur avec un texte dynamique
 export function showErrorMessage(searchText) {
-  const errorMessageElement = document.getElementById('error-message');
-  if (errorMessageElement) {
-    errorMessageElement.textContent = `Aucune recette ne contient "${searchText}". Vous pouvez chercher "tarte aux pommes", "poisson", etc.`;
-    errorMessageElement.style.display = 'block';
-    console.log('Texte de recherche:', texteRecherche);
+  const mediaContainer = document.getElementById('media-container');
+  const errorMessageContainer = document.getElementById('error-message');
+
+  if (mediaContainer) {
+    mediaContainer.innerHTML = ''; // Efface les médias affichés
+  }
+
+  if (errorMessageContainer) {
+    errorMessageContainer.style.display = 'block'; // Affiche le message d'erreur
+    errorMessageContainer.textContent = 'Aucune recette ne contient "' + searchText + '". Vous pouvez chercher "tarte aux pommes", "poisson", etc.';
   }
 }
 

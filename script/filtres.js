@@ -122,7 +122,8 @@ function filterRecipesWithAdvancedFilters() {
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
 
   if (filteredRecipes.length === 0) {
-    showErrorMessage();
+    hideRecipes(); // Cacher les recettes si aucune recette ne correspond
+    showErrorMessage(searchText); // Passer searchText à la fonction d'erreur
   } else {
     hideErrorMessage();
     displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
@@ -133,8 +134,9 @@ function filterRecipesWithAdvancedFilters() {
 // Fonction de filtrage des recettes
 function filterRecipes() {
   const texteRecherche = document.getElementById('search-input').value.toLowerCase();
+  const searchText = searchInput.value.trim().toLowerCase();
 
-  if (texteRecherche.length < 3) {
+  if (searchText.length < 3) {
     return;
   }
 
@@ -143,9 +145,9 @@ function filterRecipes() {
   const selectedUstensiles = Array.from(document.getElementById('ustensiles').selectedOptions).map(option => option.value.toLowerCase());
 
   const recettesFiltrees = recipes.filter(recette => {
-    const correspondTexte = recette.name.toLowerCase().includes(texteRecherche) ||
-                            recette.description.toLowerCase().includes(texteRecherche) ||
-                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(texteRecherche));
+    const correspondTexte = recette.name.toLowerCase().includes(searchText) ||
+                            recette.description.toLowerCase().includes(searchText) ||
+                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchText));
 
     const correspondIngredients = !selectedIngredients.length || recette.ingredients.some(ingredient => selectedIngredients.includes(ingredient.ingredient.toLowerCase()));
     const correspondAppareils = !selectedAppareils.length || selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
@@ -158,11 +160,11 @@ function filterRecipes() {
   document.getElementById('total-recipes').textContent = `${recettesFiltrees.length} recettes`;
 
   if (recettesFiltrees.length === 0) {
-    showErrorMessage();
+    showErrorMessage(searchText); // Appelle la fonction pour afficher le message d'erreur et vider les médias
   } else {
     hideErrorMessage();
-    displayRecipes(recettesFiltrees);
-    updateFilterOptions(recettesFiltrees); // Met à jour les options des filtres avancés avec les recettes filtrées
+    displayRecipes(recettesFiltrees); // Affiche les recettes filtrées
+    updateAdvancedFilters(recettesFiltrees); // Met à jour les filtres avancés
   }
 }
 

@@ -43,8 +43,11 @@ function filterOptions(searchInputId, selectElementId) {
 // Fonction de filtrage des recettes
 function filterRecipes() {
   const texteRecherche = document.getElementById('search-input').value.toLowerCase();
+  const searchText = searchInput.value.trim().toLowerCase();
 
-  if (texteRecherche.length < 3) {
+  console.log('Search Text:', searchText); // Vérifie ce qui est saisi
+
+  if (searchText.length < 3) {
     return;
   }
 
@@ -53,9 +56,9 @@ function filterRecipes() {
   const selectedUstensiles = Array.from(document.getElementById('ustensiles').selectedOptions).map(option => option.value.toLowerCase());
 
   const recettesFiltrees = recipes.filter(recette => {
-    const correspondTexte = recette.name.toLowerCase().includes(texteRecherche) ||
-                            recette.description.toLowerCase().includes(texteRecherche) ||
-                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(texteRecherche));
+    const correspondTexte = recette.name.toLowerCase().includes(searchText) ||
+                            recette.description.toLowerCase().includes(searchText) ||
+                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchText));
 
     const correspondIngredients = !selectedIngredients.length || recette.ingredients.some(ingredient => selectedIngredients.includes(ingredient.ingredient.toLowerCase()));
     const correspondAppareils = !selectedAppareils.length || selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
@@ -68,7 +71,7 @@ function filterRecipes() {
   document.getElementById('total-recipes').textContent = `${recettesFiltrees.length} recettes`;
 
   if (recettesFiltrees.length === 0) {
-    showErrorMessage();
+    showErrorMessage(searchText);
   } else {
     hideErrorMessage();
     displayRecipes(recettesFiltrees);
@@ -81,7 +84,8 @@ window.addEventListener('load', () => {
   displayRecipes(recipes); // Affiche toutes les recettes au chargement de la page
   updateAdvancedFilters(recipes); // Met à jour les filtres avancés avec toutes les recettes
 
-  document.getElementById('search-input').addEventListener('input', filterRecipes);
+  // Ajoute l'écouteur d'événement pour le champ de recherche
+document.getElementById('search-input').addEventListener('input', filterRecipes);
 
   // Écouteurs pour les champs de recherche des filtres avancés
   document.getElementById('ingredients-search').addEventListener('input', () => filterOptions('ingredients-search', 'ingredients'));
