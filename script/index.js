@@ -1,6 +1,11 @@
-import { recipes } from './recipes.js'; // Assure-toi que le chemin est correct
-import { rechercheCombinée } from './main.js';
+//Ce fichier contiendra les fonctions principales pour 
+//la gestion des recettes, l'affichage et la mise à jour des tags 
+//et filtres.
+//Responsable du filtrage combiné, de l'affichage initial 
+//des recettes et des événements principaux 
+//(tags, barre de recherche, etc.).
 
+import { recipes } from './recipes.js'; // Assure-toi que le chemin est correct
 
 
 // Fonction pour afficher les recettes
@@ -76,167 +81,31 @@ export function displayRecipes(recipes) {
   });
 }
 
-// Fonction pour mettre à jour les options des filtres avancés
-export function updateAdvancedFilters(filteredRecipes) {
-  const ingredientsSet = new Set();
-  const appareilsSet = new Set();
-  const ustensilesSet = new Set();
-  
-  filteredRecipes.forEach(recipe => {
-    recipe.ingredients.forEach(ingredient => ingredientsSet.add(ingredient.ingredient));
-    if (recipe.appliance) appareilsSet.add(recipe.appliance);
-    recipe.ustensils.forEach(ustensile => ustensilesSet.add(ustensile));
-  });
-
-  updateSelectOptions('ingredients', ingredientsSet);
-  updateSelectOptions('appareils', appareilsSet);
-  updateSelectOptions('ustensiles', ustensilesSet);
-}
-
-// Mise à jour des options des filtres
-function updateSelectOptions(selectId, optionsSet) {
-  const selectElement = document.getElementById(selectId);
-  selectElement.innerHTML = '<option value="">Sélectionner...</option>';
-  optionsSet.forEach(option => {
-    const opt = document.createElement('option');
-    opt.value = option;
-    opt.textContent = option;
-    selectElement.appendChild(opt);
-  });
-}
-
-// Fonction pour afficher les tags dans le conteneur
-function displayTags(selectedTags, category) {
-  const tagContainer = document.getElementById('tag-container');
-  if (!tagContainer) return;
-
-  tagContainer.innerHTML = ''; // Efface les tags existants
-
-  selectedTags.forEach(tagText => {
-    const tag = document.createElement('div');
-    tag.className = 'tag bg-yellow-400 text-black rounded px-3 py-1 mr-2 mb-2 inline-block';
-    tag.textContent = tagText;
-
-    // Gestion de la suppression des tags
-    const removeIcon = document.createElement('span');
-    removeIcon.textContent = '✖';
-    removeIcon.classList.add('ml-2', 'cursor-pointer');
-    tag.appendChild(removeIcon);
-
-    removeIcon.addEventListener('click', () => {
-      removeTag(tagText, category);
-    });
-
-    tagContainer.appendChild(tag);
-  });
-}
-
-// Fonction pour ajouter un tag dans la catégorie correspondante
-export function addTag(tagText, category) {
-  if (!selectedTags[category].includes(tagText)) {
-    selectedTags[category].push(tagText);
-    displayTags(selectedTags[category], category); // Met à jour l'affichage des tags
-    filterRecipesWithAdvancedFilters(); // Refiltre les recettes
-  }
-}
-
-// Fonction pour retirer un tag
-function removeTag(tagText, category) {
-  const index = selectedTags[category].indexOf(tagText);
-  if (index > -1) {
-    selectedTags[category].splice(index, 1);
-    displayTags(selectedTags[category], category); // Met à jour l'affichage des tags
-    filterRecipesWithAdvancedFilters(); // Refiltre les recettes
-  }
-}
-
-// Fonction pour mettre à jour le compteur de recettes affichées
-function updateRecipeCount(count) {
-  const recipeCountElement = document.getElementById('total-recipes');
-  if (recipeCountElement) {
-    recipeCountElement.textContent = `${count} Recettes`;
-  } else {
-    console.error('Élément #recipe-count non trouvé');
-  }
-}
-
-// Objet pour stocker les tags sélectionnés
-const selectedTags = {
-  ingredients: [],
-  appareils: [],
-  ustensiles: []
-};
-
-// Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
-function filterRecipesWithAdvancedFilters() {
-  const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
-  const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
-  const selectedUstensiles = selectedTags.ustensiles.map(tag => tag.toLowerCase());
-
-  const filteredRecipes = recipes.filter(recipe => {
-    const matchesIngredients = selectedIngredients.length === 0 ||
-      recipe.ingredients.some(ingredient =>
-        selectedIngredients.includes(ingredient.ingredient.toLowerCase())
-      );
-
-    const matchesAppareils = selectedAppareils.length === 0 ||
-      selectedAppareils.includes(recipe.appliance?.toLowerCase() || '');
-
-    const matchesUstensiles = selectedUstensiles.length === 0 ||
-      recipe.ustensils?.some(ustensile =>
-        selectedUstensiles.includes(ustensile.toLowerCase())
-      ) || false;
-
-    return matchesIngredients && matchesAppareils && matchesUstensiles;
-  });
-
-  if (filteredRecipes.length === 0) {
-    showErrorMessage();
-  } else {
-    hideErrorMessage();
-    displayRecipes(filteredRecipes);
-    updateRecipeCount(filteredRecipes.length); // Mets à jour le compteur
-  }
-}
 
 // Exemple de définition des fonctions showErrorMessage et hideErrorMessage
-export function showErrorMessage() {
+// Fonction pour afficher un message d'erreur avec un texte dynamique
+export function showErrorMessage(searchText) {
   const errorMessageElement = document.getElementById('error-message');
   if (errorMessageElement) {
+    errorMessageElement.textContent = `Aucune recette ne contient "${searchText}". Vous pouvez chercher "tarte aux pommes", "poisson", etc.`;
     errorMessageElement.style.display = 'block';
+    console.log('Texte de recherche:', texteRecherche);
   }
 }
 
+// Fonction pour masquer le message d'erreur
 export function hideErrorMessage() {
   const errorMessageElement = document.getElementById('error-message');
   if (errorMessageElement) {
     errorMessageElement.style.display = 'none';
   }
 }
-
-// Événements pour les filtres
-document.getElementById('ingredients').addEventListener('change', () => {
-  const selectedOptions = Array.from(document.getElementById('ingredients').selectedOptions).map(option => option.value);
-  selectedTags.ingredients = selectedOptions;
-  displayTags(selectedOptions, 'ingredients');
-  filterRecipesWithAdvancedFilters();
-});
-
-document.getElementById('appareils').addEventListener('change', () => {
-  const selectedOptions = Array.from(document.getElementById('appareils').selectedOptions).map(option => option.value);
-  selectedTags.appareils = selectedOptions;
-  displayTags(selectedOptions, 'appareils');
-  filterRecipesWithAdvancedFilters();
-});
-
-document.getElementById('ustensiles').addEventListener('change', () => {
-  const selectedOptions = Array.from(document.getElementById('ustensiles').selectedOptions).map(option => option.value);
-  selectedTags.ustensiles = selectedOptions;
-  displayTags(selectedOptions, 'ustensiles');
-  filterRecipesWithAdvancedFilters();
-});
-
-// Ajouter l'événement de recherche combinée
-document.getElementById('search-input').addEventListener('input', () => {
-  rechercheCombinée();
-});
+// Fonction pour mettre à jour le compteur de recettes affichées
+export function updateRecipeCount(count) {
+  const recipeCountElement = document.getElementById('total-recipes');
+  if (recipeCountElement) {
+    recipeCountElement.textContent = `${count} Recettes`;
+  } else {
+    console.error('Élément #total-recipes non trouvé');
+  }
+}

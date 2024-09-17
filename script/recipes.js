@@ -1,3 +1,5 @@
+//Ce fichier contient les données des recettes. 
+
 export const recipes = [
     {
         "id": 1,
