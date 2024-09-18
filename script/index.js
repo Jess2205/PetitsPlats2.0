@@ -8,7 +8,6 @@
 import { recipes } from './recipes.js'; // Assure-toi que le chemin est correct
 
 
-// Fonction pour afficher les recettes
 export function displayRecipes(recipes) {
   const mediaContainer = document.getElementById('media-container');
 
@@ -19,7 +18,9 @@ export function displayRecipes(recipes) {
 
   mediaContainer.innerHTML = ''; // Effacer les recettes existantes
 
-  recipes.forEach(recipe => {
+  for (let i = 0; i < recipes.length; i++) {
+    const recipe = recipes[i];
+
     const recipeElement = document.createElement('div');
     recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'p-6', 'mb-6', 'w-full', 'max-w-lg', 'mx-auto');
 
@@ -51,7 +52,9 @@ export function displayRecipes(recipes) {
     const ingredientsGrid = document.createElement('div');
     ingredientsGrid.classList.add('grid', 'grid-cols-2', 'gap-4', 'text-gray-700', 'mt-2');
 
-    recipe.ingredients.forEach(ingredient => {
+    for (let j = 0; j < recipe.ingredients.length; j++) {
+      const ingredient = recipe.ingredients[j];
+      
       const ingredientElement = document.createElement('div');
       ingredientElement.classList.add('flex', 'flex-col', 'text-sm', 'font-semibold');
 
@@ -68,7 +71,7 @@ export function displayRecipes(recipes) {
       ingredientElement.appendChild(ingredientName);
       ingredientElement.appendChild(ingredientQuantity);
       ingredientsGrid.appendChild(ingredientElement);
-    });
+    }
 
     // Append à la carte de recette
     imageContainer.appendChild(recipeImage);
@@ -78,7 +81,7 @@ export function displayRecipes(recipes) {
     recipeElement.appendChild(description);
     recipeElement.appendChild(ingredientsGrid);
     mediaContainer.appendChild(recipeElement);
-  });
+  }
 }
 
 
