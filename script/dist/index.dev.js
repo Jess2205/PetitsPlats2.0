@@ -17,6 +17,7 @@ var _recipes = require("./recipes.js");
 //des recettes et des événements principaux 
 //(tags, barre de recherche, etc.).
 // Assure-toi que le chemin est correct
+// Fonction pour afficher les recettes
 function displayRecipes(recipes) {
   var mediaContainer = document.getElementById('media-container');
 
@@ -27,8 +28,7 @@ function displayRecipes(recipes) {
 
   mediaContainer.innerHTML = ''; // Effacer les recettes existantes
 
-  for (var i = 0; i < recipes.length; i++) {
-    var recipe = recipes[i];
+  recipes.forEach(function (recipe) {
     var recipeElement = document.createElement('div');
     recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'p-6', 'mb-6', 'w-full', 'max-w-lg', 'mx-auto'); // Conteneur d'image
 
@@ -53,9 +53,7 @@ function displayRecipes(recipes) {
 
     var ingredientsGrid = document.createElement('div');
     ingredientsGrid.classList.add('grid', 'grid-cols-2', 'gap-4', 'text-gray-700', 'mt-2');
-
-    for (var j = 0; j < recipe.ingredients.length; j++) {
-      var ingredient = recipe.ingredients[j];
+    recipe.ingredients.forEach(function (ingredient) {
       var ingredientElement = document.createElement('div');
       ingredientElement.classList.add('flex', 'flex-col', 'text-sm', 'font-semibold');
       var ingredientName = document.createElement('span');
@@ -71,8 +69,7 @@ function displayRecipes(recipes) {
       ingredientElement.appendChild(ingredientName);
       ingredientElement.appendChild(ingredientQuantity);
       ingredientsGrid.appendChild(ingredientElement);
-    } // Append à la carte de recette
-
+    }); // Append à la carte de recette
 
     imageContainer.appendChild(recipeImage);
     imageContainer.appendChild(timeBadge);
@@ -81,7 +78,7 @@ function displayRecipes(recipes) {
     recipeElement.appendChild(description);
     recipeElement.appendChild(ingredientsGrid);
     mediaContainer.appendChild(recipeElement);
-  }
+  });
 } // Exemple de définition des fonctions showErrorMessage et hideErrorMessage
 // Fonction pour afficher un message d'erreur avec un texte dynamique
 
