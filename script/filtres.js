@@ -60,6 +60,7 @@ function removeTag(tagText, category) {
   }
 }
 
+// Mettre à jour les options des filtres avancés en fonction des recettes affichées
 function updateFilterOptions(filteredRecipes) {
   const ingredientsSelect = document.getElementById('ingredients');
   const appareilsSelect = document.getElementById('appareils');
@@ -70,127 +71,65 @@ function updateFilterOptions(filteredRecipes) {
     return;
   }
 
-  // Utiliser des tableaux pour stocker les options uniques
-  let uniqueIngredients = [];
-  let uniqueAppareils = [];
-  let uniqueUstensiles = [];
+  const uniqueIngredients = new Set();
+  const uniqueAppareils = new Set();
+  const uniqueUstensiles = new Set();
 
-  // Boucle sur les recettes filtrées
-  for (let i = 0; i < filteredRecipes.length; i++) {
-    const recipe = filteredRecipes[i];
+  filteredRecipes.forEach(recipe => {
+    recipe.ingredients.forEach(ingredient => uniqueIngredients.add(ingredient.ingredient));
+    if (recipe.appliance) uniqueAppareils.add(recipe.appliance);
+    recipe.ustensils.forEach(ustensile => uniqueUstensiles.add(ustensile));
+  });
 
-    // Boucle sur les ingrédients de chaque recette
-    for (let j = 0; j < recipe.ingredients.length; j++) {
-      const ingredient = recipe.ingredients[j].ingredient;
-      // Ajout de l'ingrédient s'il n'existe pas déjà dans le tableau
-      if (uniqueIngredients.indexOf(ingredient) === -1) {
-        uniqueIngredients.push(ingredient);
-      }
-    }
-
-    // Ajout de l'appareil si non déjà présent
-    if (recipe.appliance && uniqueAppareils.indexOf(recipe.appliance) === -1) {
-      uniqueAppareils.push(recipe.appliance);
-    }
-
-    // Boucle sur les ustensiles
-    for (let k = 0; k < recipe.ustensils.length; k++) {
-      const ustensile = recipe.ustensils[k];
-      // Ajout de l'ustensile s'il n'existe pas déjà dans le tableau
-      if (uniqueUstensiles.indexOf(ustensile) === -1) {
-        uniqueUstensiles.push(ustensile);
-      }
-    }
-  }
-
-  // Fonction pour mettre à jour les options dans le select
   const updateOptions = (selectElement, items) => {
-    // Réinitialiser les options
     selectElement.innerHTML = '<option value="">Tous</option>';
-    // Boucle pour ajouter chaque élément comme option
-    for (let i = 0; i < items.length; i++) {
+    items.forEach(item => {
       const option = document.createElement('option');
-      option.value = items[i];
-      option.textContent = items[i];
+      option.value = item;
+      option.textContent = item;
       selectElement.appendChild(option);
-    }
+    });
   };
 
-  // Mise à jour des options pour chaque filtre
-  updateOptions(ingredientsSelect, uniqueIngredients);
-  updateOptions(appareilsSelect, uniqueAppareils);
-  updateOptions(ustensilesSelect, uniqueUstensiles);
+  updateOptions(ingredientsSelect, [...uniqueIngredients]);
+  updateOptions(appareilsSelect, [...uniqueAppareils]);
+  updateOptions(ustensilesSelect, [...uniqueUstensiles]);
 }
 
+// Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
 function filterRecipesWithAdvancedFilters() {
-  // Utilisation d'une boucle pour convertir les tags sélectionnés en minuscules
-  let selectedIngredients = [];
-  let selectedAppareils = [];
-  let selectedUstensiles = [];
+  const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
+  const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
+  const selectedUstensiles = selectedTags.ustensiles.map(tag => tag.toLowerCase());
 
-  for (let i = 0; i < selectedTags.ingredients.length; i++) {
-    selectedIngredients.push(selectedTags.ingredients[i].toLowerCase());
-  }
+  const filteredRecipes = recipes.filter(recipe => {
+    const matchesIngredients = selectedIngredients.length === 0 ||
+      recipe.ingredients.some(ingredient => 
+        selectedIngredients.includes(ingredient.ingredient.toLowerCase())
+      );
 
-  for (let i = 0; i < selectedTags.appareils.length; i++) {
-    selectedAppareils.push(selectedTags.appareils[i].toLowerCase());
-  }
+    const matchesAppareils = selectedAppareils.length === 0 ||
+      selectedAppareils.includes(recipe.appliance?.toLowerCase() || '');
 
-  for (let i = 0; i < selectedTags.ustensiles.length; i++) {
-    selectedUstensiles.push(selectedTags.ustensiles[i].toLowerCase());
-  }
+    const matchesUstensiles = selectedUstensiles.length === 0 ||
+      recipe.ustensils?.some(ustensile => 
+        selectedUstensiles.includes(ustensile.toLowerCase())
+      ) || false;
 
-  // Création d'un tableau pour stocker les recettes filtrées
-  let filteredRecipes = [];
+    return matchesIngredients && matchesAppareils && matchesUstensiles;
+  });
 
-  // Boucle pour filtrer chaque recette
-  for (let i = 0; i < recipes.length; i++) {
-    const recipe = recipes[i];
+  updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
 
-    // Vérification des ingrédients
-    let matchesIngredients = (selectedIngredients.length === 0);
-    for (let j = 0; j < recipe.ingredients.length; j++) {
-      const ingredient = recipe.ingredients[j].ingredient.toLowerCase();
-      if (selectedIngredients.indexOf(ingredient) !== -1) {
-        matchesIngredients = true;
-        break; // Arrête la boucle dès qu'un ingrédient correspond
-      }
-    }
-
-    // Vérification des appareils
-    let matchesAppareils = (selectedAppareils.length === 0) || 
-      (selectedAppareils.indexOf(recipe.appliance?.toLowerCase() || '') !== -1);
-
-    // Vérification des ustensiles
-    let matchesUstensiles = (selectedUstensiles.length === 0);
-    for (let k = 0; k < recipe.ustensils.length; k++) {
-      const ustensile = recipe.ustensils[k].toLowerCase();
-      if (selectedUstensiles.indexOf(ustensile) !== -1) {
-        matchesUstensiles = true;
-        break; // Arrête la boucle dès qu'un ustensile correspond
-      }
-    }
-
-    // Si tous les critères correspondent, ajouter la recette au tableau filtré
-    if (matchesIngredients && matchesAppareils && matchesUstensiles) {
-      filteredRecipes.push(recipe);
-    }
-  }
-
-  // Mise à jour du nombre de recettes filtrées
-  updateRecipeCount(filteredRecipes.length);
-
-  // Afficher ou cacher les résultats selon le nombre de recettes filtrées
   if (filteredRecipes.length === 0) {
-    hideRecipes(); // Cacher les recettes si aucune ne correspond
-    showErrorMessage(searchText); // Afficher un message d'erreur avec searchText
+    hideRecipes(); // Cacher les recettes si aucune recette ne correspond
+    showErrorMessage(searchText); // Passer searchText à la fonction d'erreur
   } else {
     hideErrorMessage();
-    displayRecipes(filteredRecipes); // Afficher les recettes filtrées
-    updateFilterOptions(filteredRecipes); // Mettre à jour les filtres avancés
+    displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
+    updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
   }
 }
-
 
 // Fonction de filtrage des recettes
 function filterRecipes() {
@@ -211,52 +150,14 @@ function filterRecipes() {
     );
 
     // Vérifier que la recette contient tous les ingrédients sélectionnés
-let matchesIngredients = true;
-for (let i = 0; i < selectedIngredients.length; i++) {
-  const tag = selectedIngredients[i];
-  let ingredientFound = false;
-  
-  // Parcourir les ingrédients de la recette
-  for (let j = 0; j < recipe.ingredients.length; j++) {
-    const ingredient = recipe.ingredients[j].ingredient.toLowerCase();
-    
-    // Si l'ingrédient contient le tag, le marquer comme trouvé
-    if (ingredient.includes(tag)) {
-      ingredientFound = true;
-      break; // Arrêter la boucle si un ingrédient correspondant est trouvé
-    }
-  }
-  
-  // Si l'un des tags n'est pas trouvé dans les ingrédients de la recette
-  if (!ingredientFound) {
-    matchesIngredients = false;
-    break; // Arrêter la vérification dès qu'un ingrédient est manquant
-  }
-}
+    const matchesIngredients = selectedIngredients.every(tag => 
+      recipe.ingredients.some(ingredient => ingredient.toLowerCase().includes(tag))
+    );
 
-// Vérifier que la recette contient tous les ustensiles sélectionnés
-let matchesUstensils = true;
-for (let i = 0; i < selectedUstensils.length; i++) {
-  const tag = selectedUstensils[i];
-  let ustensilFound = false;
-  
-  // Parcourir les ustensiles de la recette
-  for (let j = 0; j < recipe.ustensils.length; j++) {
-    const ustensil = recipe.ustensils[j].toLowerCase();
-    
-    // Si l'ustensile contient le tag, le marquer comme trouvé
-    if (ustensil.includes(tag)) {
-      ustensilFound = true;
-      break; // Arrêter la boucle si un ustensile correspondant est trouvé
-    }
-  }
-  
-  // Si l'un des tags n'est pas trouvé dans les ustensiles de la recette
-  if (!ustensilFound) {
-    matchesUstensils = false;
-    break; // Arrêter la vérification dès qu'un ustensile est manquant
-  }
-}
+    // Vérifier que la recette contient tous les ustensiles sélectionnés
+    const matchesUstensils = selectedUstensils.every(tag => 
+      recipe.ustensils.some(ustensil => ustensil.toLowerCase().includes(tag))
+    );
 
     // Vérifier que la recette utilise l'appareil sélectionné
     const matchesAppliance = selectedAppliances.length === 0 || selectedAppliances.includes(recipe.appliance.toLowerCase());
@@ -274,25 +175,20 @@ for (let i = 0; i < selectedUstensils.length; i++) {
   }
 }
 
+// Ajouter des écouteurs d'événements pour les filtres
 function listenToFilterChanges() {
   const filters = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
-
-  // Boucle native pour parcourir la NodeList des filtres
-  for (let i = 0; i < filters.length; i++) {
-    const filter = filters[i];
-    
+  filters.forEach(filter => {
     if (filter) {
-      filter.addEventListener('change', function(event) {
+      filter.addEventListener('change', event => {
         const category = event.target.id;
         const selectedOption = event.target.value;
-
-        // Si une option est sélectionnée, ajouter un tag correspondant
         if (selectedOption) {
           addTag(selectedOption, category);
         }
       });
     }
-  }
+  });
 }
 
 // Initialisation des filtres lors du chargement de la page
