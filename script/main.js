@@ -98,3 +98,4 @@ document.getElementById('search-input').addEventListener('input', filterRecipes)
     filtre.addEventListener('change', filterRecipes);
   });
 });
+

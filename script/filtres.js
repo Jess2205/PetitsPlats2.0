@@ -21,17 +21,20 @@ function displayTags() {
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('div');
-      tag.className = 'tag bg-yellow-400 text-black rounded px-3 py-1 mr-2 mb-2 inline-block';
+      tag.className = 'bg-yellow-400 text-black rounded px-3 py-1 mr-2 mb-2 inline-flex items-center'; // Ajout de items-center pour centrer le texte et l'icône
+
       tag.textContent = tagText;
 
       const removeIcon = document.createElement('span');
       removeIcon.textContent = '✖';
-      removeIcon.classList.add('ml-2', 'cursor-pointer');
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-red-600'); // Ajout d'une couleur au survol
+
       tag.appendChild(removeIcon);
 
       removeIcon.addEventListener('click', () => {
         removeTag(tagText, category);
         filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
+        displayTags(); // Met à jour l'affichage des tags après la suppression
       });
 
       tagContainer.appendChild(tag);
