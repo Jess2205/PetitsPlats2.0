@@ -22,9 +22,16 @@ function updateAdvancedFilters(recipes) {
       option.value = item;
       option.textContent = item;
       selectElement.appendChild(option);
+      
     });
   };
-
+  const selectElement = document.querySelector('select');
+  const optionTous = Array.from(selectElement.options).find(option => option.text === 'Tous');
+  
+  if (optionTous) {
+      selectElement.removeChild(optionTous);
+  }
+  
   updateOptions(document.getElementById('ingredients'), [...filters.ingredients]);
   updateOptions(document.getElementById('appareils'), [...filters.appareils]);
   updateOptions(document.getElementById('ustensiles'), [...filters.ustensiles]);
@@ -96,6 +103,7 @@ document.getElementById('search-input').addEventListener('input', filterRecipes)
   const filtres = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
   filtres.forEach(filtre => {
     filtre.addEventListener('change', filterRecipes);
+
   });
 });
 

@@ -188,6 +188,7 @@ function listenToFilterChanges() {
         const selectedOption = event.target.value;
         if (selectedOption) {
           addTag(selectedOption, category);
+          
         }
       });
     }
@@ -227,6 +228,9 @@ document.addEventListener("DOMContentLoaded", function() {
     const label = document.querySelector(`label[for="${filter.id}"]`);
     label.addEventListener('click', function() {
       toggleDropdown(filter.id, label);
+      
+      
     });
   });
 });
+

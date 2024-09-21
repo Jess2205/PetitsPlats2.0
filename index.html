@@ -7,30 +7,26 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="./dist/output.css" rel="stylesheet">
   <style>
-    /* Assure-toi que le conteneur est bien aligné en ligne */
-    .filters-container {
-      display: flex;
-      align-items: flex-start; /* Aligne les éléments en haut */
-      justify-content: space-between; /* Répartit l'espace entre les filtres et le compteur */
+     /* Flèche de filtre */
+     .arrow {
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
-    .filter-group {
-      flex: 1; /* Permet aux groupes de filtre de se redimensionner également */
-      margin-right: 16px; /* Espace entre les filtres */
-      padding-top: 15px;
+    .arrow.rotate {
+      transform: rotate(180deg);
     }
-    .search-input {
-      width: 90%;
-      margin-left: 10px;
-      
-    }
-    .search-input, .filter-group select {
-      margin-bottom: 0.5rem;
-    }
-    .hidden {
-  display: none;
+    select {
+    border: none; /* Supprime la bordure */
+    -webkit-appearance: none; /* Pour les navigateurs WebKit */
+    -moz-appearance: none; /* Pour Firefox */
+    appearance: none; /* Supprime le style par défaut du navigateur */
+    background: transparent; /* Pour un fond transparent */
+    
+    overflow: hidden; /* Supprime le scroll */
+    background-color: white;
 }
 
-   
+
   </style>
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -66,26 +62,31 @@
     </div>
   </header>
 
-  <!-- Filters Section -->
-<div class="py-8 mt-2 filters-container w-2/3">
- <!-- Filtres dynamiques des ingrédients -->
-<div class="filter-group p-8 mt-0 pt-0">
-  <label for="ingredients" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">
+ <!-- Filters Section -->
+ <div class="container mx-auto py-8">
+  <div class="flex justify-between items-center mb-4">
+    <!-- Les filtres sont placés côte à côte -->
+    <div class="flex gap-4">
+      <!-- Filtres dynamiques des ingrédients -->
+<div class="relative w-64">
+  <label for="ingredients" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Ingrédients <span class="arrow">&#x25B2;</span>
   </label>
-  <input id="ingredients-search" type="text" placeholder="Rechercher un ingrédient" class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 ">
-  <select aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
+  
+  <input id="ingredients-search" type="text" placeholder="Rechercher un ingrédient" class="search-input w-full px-3 py-2 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
+  <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="absolute right-3 top-2/3 pt-6 transform -translate-y-2/3 pointer-events-none"  >
+  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-1 hidden  " multiple>
     <option value="">Ingrédients</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
 
 <!-- Filtres dynamiques des appareils -->
-<div class="filter-group p-8 mt-0 pt-0">
-  <label for="appareils" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">
+<div class="relative w-64">
+  <label for="appareils" class="block bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Appareils <span class="arrow">&#x25B2;</span>
   </label>
-  <input id="appareils-search" type="text" placeholder="Rechercher un appareil" class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 ">
+  <input id="appareils-search" type="text" placeholder="Rechercher un appareil" class="search-input w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
   <select aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
     <option value="">Appareils</option>
     <!-- Options injectées dynamiquement ici -->
@@ -93,24 +94,26 @@
 </div>
 
 <!-- Filtres dynamiques des ustensiles -->
-<div class="filter-group p-8 mt-0 pt-0">
-  <label for="ustensiles" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">
+<div class="relative w-64">
+  <label for="ustensiles" class="block bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Ustensiles <span class="arrow">&#x25B2;</span>
   </label>
-  <input id="ustensiles-search" type="text" placeholder="Rechercher un ustensile" class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 ">
+  <input id="ustensiles-search" type="text" placeholder="Rechercher un ustensile" class="search-input w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
   <select aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
     <option value="">Ustensiles</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
+</div>
 
-    </div>
+ <!-- Compteur de recettes -->
+ <p id="total-recipes" class="text-black-400 text-xl">1500 recettes</p>
+</div>
+ <!-- Conteneur pour les tags sélectionnés -->
     <div id="tag-container" class="mt-2 flex flex-wrap gap-4 text-black bg-yellow-400"></div>
   </div>
 
-  <!-- Compteur de recettes -->
-  <p id="total-recipes" class="text-black-400 text-2xl">1500 recettes</p>
-</div>
+ 
 
   <!-- Section où les médias seront affichés -->
   <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
