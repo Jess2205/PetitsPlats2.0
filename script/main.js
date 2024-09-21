@@ -16,7 +16,7 @@ function updateAdvancedFilters(recipes) {
   });
 
   const updateOptions = (selectElement, items) => {
-    selectElement.innerHTML = '<option value="">Tous</option>';
+    selectElement.innerHTML = '<option value=""></option>';
     items.forEach(item => {
       const option = document.createElement('option');
       option.value = item;
