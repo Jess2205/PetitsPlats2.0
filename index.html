@@ -26,6 +26,9 @@
     .search-input, .filter-group select {
       margin-bottom: 0.5rem;
     }
+    .hidden {
+  display: none;
+}
 
    
   </style>
@@ -64,70 +67,50 @@
   </header>
 
   <!-- Filters Section -->
-  <div class="py-8 mt-2 filters-container  w-2/3">
-    <!-- Filtres dynamiques des ingrédients -->
-    <div class="filter-group p-8 mt-0 pt-0">
-      <label for="filter-select" class="absolute w-1/6 top-[-10px]  text-gray-500 bg-white px-2 text-l cursor-pointer">Ingrédients</label>
-      <input 
-        id="ingredients-search" 
-        type="text" 
-        placeholder="Rechercher un ingrédient" 
-        class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 "
-      >
-     
-      <select aria-label="Rechercher un ingrédient"  id="ingredients" class=" w-full rounded border mt-0 pl-2" multiple>
-        <option value="">Ingrédients</option>
-        <!-- Options injectées dynamiquement ici -->
-      </select>
-      <!-- Conteneur pour les tags -->
-    <div id="tag-container" class="mt-2 flex flex-wrap  gap-4 text-black bg-yellow-400">
-      <!-- Tags ajoutés dynamiquement ici -->
+<div class="py-8 mt-2 filters-container w-2/3">
+ <!-- Filtres dynamiques des ingrédients -->
+<div class="filter-group p-8 mt-0 pt-0">
+  <label for="ingredients" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">
+    Ingrédients <span class="arrow">&#x25B2;</span>
+  </label>
+  <input id="ingredients-search" type="text" placeholder="Rechercher un ingrédient" class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 ">
+  <select aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
+    <option value="">Ingrédients</option>
+    <!-- Options injectées dynamiquement ici -->
+  </select>
+</div>
+
+<!-- Filtres dynamiques des appareils -->
+<div class="filter-group p-8 mt-0 pt-0">
+  <label for="appareils" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">
+    Appareils <span class="arrow">&#x25B2;</span>
+  </label>
+  <input id="appareils-search" type="text" placeholder="Rechercher un appareil" class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 ">
+  <select aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
+    <option value="">Appareils</option>
+    <!-- Options injectées dynamiquement ici -->
+  </select>
+</div>
+
+<!-- Filtres dynamiques des ustensiles -->
+<div class="filter-group p-8 mt-0 pt-0">
+  <label for="ustensiles" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">
+    Ustensiles <span class="arrow">&#x25B2;</span>
+  </label>
+  <input id="ustensiles-search" type="text" placeholder="Rechercher un ustensile" class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 ">
+  <select aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
+    <option value="">Ustensiles</option>
+    <!-- Options injectées dynamiquement ici -->
+  </select>
+</div>
+
     </div>
+    <div id="tag-container" class="mt-2 flex flex-wrap gap-4 text-black bg-yellow-400"></div>
   </div>
 
-    <!-- Filtres dynamiques des appareils -->
-    <div class="filter-group p-8 mt-0 pt-0">
-      <label for="filter-select" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">Appareils</label>
-      <input 
-        id="appareils-search" 
-        type="text" 
-        placeholder="Rechercher un appareil" 
-        class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 "
-      >
-      <select aria-label="Rechercher un appareil"  id="appareils" class=" w-full rounded border mt-0 pl-2" multiple>
-        <option value="">Appareils</option>
-        <!-- Options injectées dynamiquement ici -->
-      </select>
-      <!-- Conteneur pour les tags -->
-    <div id="tag-container" class="mt-2 flex flex-wrap  gap-4 text-black bg-yellow-400">
-      <!-- Tags ajoutés dynamiquement ici -->
-    </div>
-    </div>
-
-    <!-- Filtres dynamiques des ustensiles -->
-    <div class="filter-group p-8 mt-0 pt-0">
-      <label for="filter-select" class="absolute w-1/6 top-[-10px] text-gray-500 bg-white px-2 text-l cursor-pointer">Ustensiles</label>
-      <input 
-        id="ustensiles-search" 
-        type="text" 
-        placeholder="Rechercher un ustensile" 
-        class="search-input P-2 w-full bg-white rounded pb-0 mb-0 relative top-8 pl-2 "
-      >
-      <select aria-label="Rechercher un ustensile"  id="ustensiles" class=" w-full rounded border mt-0 pl-2" multiple>
-        <option value="">Ustensiles</option>
-        <!-- Options injectées dynamiquement ici -->
-      </select>
-      <!-- Conteneur pour les tags -->
-    <div id="tag-container" class="mt-2 flex flex-wrap  gap-4 text-black bg-yellow-400">
-      <!-- Tags ajoutés dynamiquement ici -->
-    </div>
-    </div>
-
-    <!-- Compteur de recettes -->
-    <p id="total-recipes" class="text-black-400 text-2xl  ">
-      1500 recettes
-    </p>
-  </div>
+  <!-- Compteur de recettes -->
+  <p id="total-recipes" class="text-black-400 text-2xl">1500 recettes</p>
+</div>
 
   <!-- Section où les médias seront affichés -->
   <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">

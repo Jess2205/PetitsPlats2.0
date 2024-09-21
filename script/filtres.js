@@ -199,3 +199,34 @@ window.addEventListener('load', () => {
   updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
   listenToFilterChanges();
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+  // Fonction pour basculer la visibilité des dropdowns
+  function toggleDropdown(dropdownId, label) {
+    const dropdown = document.getElementById(dropdownId);
+    const arrow = label.querySelector('.arrow');
+
+    // Alterner la visibilité du dropdown
+    if (dropdown.classList.contains('hidden')) {
+      dropdown.classList.remove('hidden');
+      arrow.innerHTML = '&#x25BC;'; // Flèche vers le bas
+    } else {
+      dropdown.classList.add('hidden');
+      arrow.innerHTML = '&#x25B2;'; // Flèche vers le haut
+    }
+  }
+
+  // Écouteurs pour chaque label
+  const filters = [
+    { id: 'ingredients', label: 'Ingrédients' },
+    { id: 'appareils', label: 'Appareils' },
+    { id: 'ustensiles', label: 'Ustensiles' },
+  ];
+
+  filters.forEach(filter => {
+    const label = document.querySelector(`label[for="${filter.id}"]`);
+    label.addEventListener('click', function() {
+      toggleDropdown(filter.id, label);
+    });
+  });
+});
