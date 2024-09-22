@@ -211,10 +211,10 @@ document.addEventListener("DOMContentLoaded", function() {
     // Alterner la visibilité du dropdown
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
-      arrow.innerHTML = '&#x25BC;'; // Flèche vers le bas
+      arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'
     } else {
       dropdown.classList.add('hidden');
-      arrow.innerHTML = '&#x25B2;'; // Flèche vers le haut
+      arrow.innerHTML = '<img src="./assets/flèche-descendante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'
     }
   }
 
