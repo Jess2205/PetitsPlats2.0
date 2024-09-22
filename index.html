@@ -72,10 +72,13 @@
   <label for="ingredients" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Ingrédients <span class="arrow">&#x25B2;</span>
   </label>
-  
+  <div class="mt-6 flex w-64">
   <input id="ingredients-search" type="text" placeholder="Rechercher un ingrédient" class="search-input w-full px-3 py-2 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
-  <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="absolute right-3 top-2/3 pt-6 transform -translate-y-2/3 pointer-events-none"  >
-  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-1 hidden  " multiple>
+  <button class="bg-white text-white px-4 py-3 rounded-r hover:bg-green-700" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
+  </button>
+</div>
+  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-1 hidden " multiple>
     <option value="">Ingrédients</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
@@ -83,11 +86,16 @@
 
 <!-- Filtres dynamiques des appareils -->
 <div class="relative w-64">
-  <label for="appareils" class="block bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
+  <label for="appareils" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Appareils <span class="arrow">&#x25B2;</span>
   </label>
-  <input id="appareils-search" type="text" placeholder="Rechercher un appareil" class="search-input w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
-  <select aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
+  <div class="mt-6 flex w-64">
+  <input id="appareils-search" type="text" placeholder="Rechercher un appareil" class="search-input w-full px-3 py-2 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
+  <button class="bg-white text-white px-4 py-3 rounded-r hover:bg-green-700" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
+  </button>
+  </div>
+  <select aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-1 hidden" multiple>
     <option value="">Appareils</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
@@ -95,11 +103,16 @@
 
 <!-- Filtres dynamiques des ustensiles -->
 <div class="relative w-64">
-  <label for="ustensiles" class="block bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
+  <label for="ustensiles" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Ustensiles <span class="arrow">&#x25B2;</span>
   </label>
-  <input id="ustensiles-search" type="text" placeholder="Rechercher un ustensile" class="search-input w-full px-3 py-2 border-b border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
-  <select aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-0 pl-2 hidden" multiple>
+  <div class="mt-6 flex w-64">
+  <input id="ustensiles-search" type="text" placeholder="Rechercher un ustensile" class="search-input w-full px-3 py-2 pr-10 border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-300">
+  <button class="bg-white text-white px-4 py-3 rounded-r hover:bg-green-700" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
+  </button>
+  </div>
+  <select aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-1 hidden" multiple>
     <option value="">Ustensiles</option>
     <!-- Options injectées dynamiquement ici -->
   </select>

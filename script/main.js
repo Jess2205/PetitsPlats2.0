@@ -26,7 +26,7 @@ function updateAdvancedFilters(recipes) {
     });
   };
   const selectElement = document.querySelector('select');
-  const optionTous = Array.from(selectElement.options).find(option => option.text === 'Tous');
+  const optionTous = Array.from(selectElement.options).find(option => option.text === '');
   
   if (optionTous) {
       selectElement.removeChild(optionTous);
