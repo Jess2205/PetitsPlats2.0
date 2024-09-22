@@ -63,17 +63,17 @@
   </header>
 
  <!-- Filters Section -->
- <div class="container mx-auto py-8">
-  <div class="flex justify-between items-center mb-4">
+ <div class="container mx-auto py-4">
+  <div class="flex justify-between items-start mb-2">
     <!-- Les filtres sont placés côte à côte -->
     <div class="flex gap-4">
 
       <!-- Filtres dynamiques des ingrédients -->
-<div class="relative w-64">
+<div class="relative w-40">
   <label for="ingredients" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Ingrédients <span class="arrow">&#x25B2;</span>
   </label>
-  <div class=" flex w-64 border  border-gray-300">
+  <div class=" flex w-40 border  border-gray-300">
   <input id="ingredients-search" type="text" placeholder="Rechercher un ingrédient" class="search-input w-full px-3 py-2 pr-10  focus:outline-none focus:ring-2 focus:ring-gray-300">
   <button class="bg-white text-white px-4 py-3 rounded-r hover:bg-green-700" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
@@ -86,11 +86,11 @@
 </div>
 
 <!-- Filtres dynamiques des appareils -->
-<div class="relative w-64">
+<div class="relative w-40">
   <label for="appareils" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Appareils <span class="arrow">&#x25B2;</span>
   </label>
-  <div class="flex w-64 border  border-gray-300">
+  <div class="flex w-40 border  border-gray-300">
   <input id="appareils-search" type="text" placeholder="Rechercher un appareil" class="search-input w-full px-3 py-2 pr-10  focus:outline-none focus:ring-2 focus:ring-gray-300">
   <button class="bg-white text-white px-4 py-3 rounded-r hover:bg-green-700" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
@@ -103,11 +103,11 @@
 </div>
 
 <!-- Filtres dynamiques des ustensiles -->
-<div class="relative w-64">
+<div class="relative w-40">
   <label for="ustensiles" class="relative block  bg-white text-gray-500 px-2 py-2 rounded-t cursor-pointer">
     Ustensiles <span class="arrow">&#x25B2;</span>
   </label>
-  <div class="flex w-64 border  border-gray-300">
+  <div class="flex w-40 border  border-gray-300">
   <input id="ustensiles-search" type="text" placeholder="Rechercher un ustensile" class="search-input w-full px-3 py-2 pr-10  focus:outline-none focus:ring-2 focus:ring-gray-300">
   <button class="bg-white text-white px-4 py-3 rounded-r  hover:bg-green-700" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche" >
@@ -121,16 +121,16 @@
 </div>
 
  <!-- Compteur de recettes -->
- <p id="total-recipes" class="text-black-400 text-xl">1500 recettes</p>
+ <p id="total-recipes" class="text-black-500 text-2xl font-medium pt-2">1500 recettes</p>
 </div>
  <!-- Conteneur pour les tags sélectionnés -->
-    <div id="tag-container" class="mt-2 flex flex-wrap gap-4 text-black bg-yellow-400"></div>
+    <div id="tag-container" class=" mt-2 flex flex-wrap gap-4 text-black "></div>
   </div>
 
  
 
   <!-- Section où les médias seront affichés -->
-  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pl-20 pr-20">
     <!-- Les recettes/médias seront injectés dynamiquement ici -->
   </div>
 

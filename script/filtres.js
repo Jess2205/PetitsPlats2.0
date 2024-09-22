@@ -20,17 +20,18 @@ function displayTags() {
 
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
-      const tag = document.createElement('div');
-      tag.className = 'bg-yellow-400 text-black rounded px-3 py-1 mr-2 mb-2 inline-flex items-center'; // Ajout de items-center pour centrer le texte et l'icône
+      const tag = document.createElement('span'); // Changer 'div' en 'span' pour un meilleur ajustement
+      tag.className = 'inline-flex bg-yellow-400 text-black rounded px-2 py-1 items-center'; // inline-flex pour que le contenu s'ajuste
 
       tag.textContent = tagText;
 
       const removeIcon = document.createElement('span');
       removeIcon.textContent = '✖';
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-red-600'); // Ajout d'une couleur au survol
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-yellow-500'); // Ajout d'une couleur au survol
 
       tag.appendChild(removeIcon);
 
+      // Event listener pour supprimer le tag
       removeIcon.addEventListener('click', () => {
         removeTag(tagText, category);
         filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag

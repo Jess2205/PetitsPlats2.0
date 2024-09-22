@@ -23,6 +23,7 @@ function updateAdvancedFilters(recipes) {
       option.textContent = item;
       selectElement.appendChild(option);
       
+      
     });
   };
   const selectElement = document.querySelector('select');
