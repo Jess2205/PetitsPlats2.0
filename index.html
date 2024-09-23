@@ -25,6 +25,31 @@
     overflow: hidden; /* Supprime le scroll */
     background-color: white;
   }
+  .label-hidden {
+  padding: 0.5rem 0;
+  padding-bottom: 0; /* Ajuste les valeurs selon tes besoins */
+  }
+  .opacity-0 {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.pointer-events-none {
+  pointer-events: none;
+}
+
+.transition-opacity {
+  transition: opacity 0.3s ease-in-out;
+}
+
+#clear-search {
+  font-size: 1.5rem; /* Taille de la croix */
+  cursor: pointer;
+}
+
+#clear-search.hidden {
+  display: none;
+}
 
 
   </style>
@@ -75,8 +100,12 @@
       <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
     </span>
   </label>
-  <div class=" flex w-48 border rounded  border-gray-300">
-  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-2 pr-10 focus:outline-none focus:placeholder-transparent ">
+  <!-- Conteneur pour l'input et la loupe -->
+  <div id="ingredients-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-2 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
+  <button id="clear-search" class="absolute right-10 bottom-24 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise " ><!-- Symbole de la croix -->
+  </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>

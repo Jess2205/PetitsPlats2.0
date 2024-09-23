@@ -108,3 +108,100 @@ document.getElementById('search-input').addEventListener('input', filterRecipes)
   });
 });
 
+document.addEventListener('DOMContentLoaded', () => {
+  const ingredientsLabel = document.querySelector('label[for="ingredients"]');
+  const ingredientsInputContainer = document.getElementById('ingredients-input-container');
+  const ingredientsSelect = document.getElementById('ingredients');
+
+  let isInputVisible = false; // Gérer l'état d'affichage de l'input
+
+  // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+  ingredientsLabel.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut du label
+    isInputVisible = !isInputVisible;
+
+    if (isInputVisible) {
+      ingredientsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
+      ingredientsLabel.classList.remove('label-hidden'); // Garde le padding
+      ingredientsInputContainer.querySelector('input').focus(); // Met le focus sur l'input
+    } else {
+      ingredientsInputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+      ingredientsLabel.classList.add('label-hidden'); // Réduit le padding
+    }
+  });
+
+  // Garde le conteneur affiché après la sélection d'un ingrédient
+  ingredientsSelect.addEventListener('change', () => {
+    // Quand un ingrédient est sélectionné, on garde le conteneur ouvert
+    if (ingredientsSelect.value) {
+      isInputVisible = true;
+      ingredientsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde visible
+      ingredientsLabel.classList.remove('label-hidden'); // Garde le padding
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const ingredientsLabel = document.querySelector('label[for="ingredients"]');
+  const ingredientsInputContainer = document.getElementById('ingredients-input-container');
+  const ingredientsSelect = document.getElementById('ingredients');
+  const ingredientsInput = document.getElementById('ingredients-search'); // L'input de recherche des ingrédients
+  const clearSearchBtn = document.getElementById('clear-search'); // Le bouton croix pour effacer
+
+  let isInputVisible = false; // Gérer l'état d'affichage de l'input
+  let placeholderText = ingredientsInput.placeholder; // Stocker le texte initial du placeholder
+
+  // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+  ingredientsLabel.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut du label
+    isInputVisible = !isInputVisible;
+
+    if (isInputVisible) {
+      ingredientsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
+      ingredientsLabel.classList.remove('label-hidden'); // Garde le padding
+      ingredientsInput.focus(); // Met le focus sur l'input
+    } else {
+      ingredientsInputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+      ingredientsLabel.classList.add('label-hidden'); // Réduit le padding
+    }
+  });
+
+  // Efface le placeholder au focus
+  ingredientsInput.addEventListener('focus', () => {
+    ingredientsInput.placeholder = ''; // Vide le placeholder
+  });
+
+  // Remet le placeholder si l'input est vide après avoir perdu le focus
+  ingredientsInput.addEventListener('blur', () => {
+    if (ingredientsInput.value === '') {
+      ingredientsInput.placeholder = placeholderText; // Remet le placeholder initial
+    }
+  });
+
+  // Affiche la croix lorsque du texte est saisi
+  ingredientsInput.addEventListener('input', () => {
+    if (ingredientsInput.value !== '') {
+      clearSearchBtn.classList.remove('hidden'); // Affiche la croix
+    } else {
+      clearSearchBtn.classList.add('hidden'); // Masque la croix si l'input est vide
+    }
+  });
+
+  // Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+  clearSearchBtn.addEventListener('click', () => {
+    ingredientsInput.value = ''; // Efface le texte de l'input
+    clearSearchBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+    ingredientsInput.focus(); // Remet le focus sur l'input après avoir effacé
+  });
+
+  // Vide le texte de recherche après la sélection d'un ingrédient
+  ingredientsSelect.addEventListener('change', () => {
+    if (ingredientsSelect.value) {
+      ingredientsInput.value = ''; // Efface le texte saisi dans l'input
+      clearSearchBtn.classList.add('hidden'); // Masque la croix
+      isInputVisible = true;
+      ingredientsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible si besoin
+      ingredientsLabel.classList.remove('label-hidden'); // Garde le padding
+    }
+  });
+});
