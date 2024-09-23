@@ -21,7 +21,7 @@ export function displayRecipes(recipes) {
 
   recipes.forEach(recipe => {
     const recipeElement = document.createElement('div');
-    recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'p-6', 'mb-6', 'w-full', 'max-w-lg', 'mx-auto');
+    recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'mb-6', 'line-clamp-4', 'h-[300px]');
 
     // Conteneur d'image
     const imageContainer = document.createElement('div');
@@ -30,7 +30,7 @@ export function displayRecipes(recipes) {
     const recipeImage = document.createElement('img');
     recipeImage.src = `dataMedia/${recipe.image}`;
     recipeImage.alt = recipe.name;
-    recipeImage.classList.add('w-full', 'h-auto', 'rounded-t-lg', 'object-cover');
+    recipeImage.classList.add('w-full', 'h-64', 'rounded-t-lg', 'object-cover', 'pb-8');
 
     // Badge de temps
     const timeBadge = document.createElement('span');
@@ -40,24 +40,34 @@ export function displayRecipes(recipes) {
     // Titre de la recette
     const recipeTitle = document.createElement('h2');
     recipeTitle.textContent = recipe.name;
-    recipeTitle.classList.add('text-xl', 'font-bold', 'mb-2', 'text-gray-900');
+    recipeTitle.classList.add('text-xl', 'font-bold', 'mb-2', 'text-gray-900', 'pb-8', 'py-4','px-4');
+
+    // Label recette
+    const recipeLabel = document.createElement('h3');
+    recipeLabel.textContent ="RECETTE";
+    recipeLabel.classList.add('text-m','py-4','px-4', 'mb-2', 'text-gray-700', 'pb-2');
 
     // Description de la recette
     const description = document.createElement('p');
     description.textContent = recipe.description;
-    description.classList.add('text-base', 'my-2', 'text-gray-700');
+    description.classList.add('text-base','py-4','px-4', 'w-84', 'my-2', 'text-m', 'text-gray-900', 'pb-8', 'h-28', 'overflow-hidden');
+
+    // Label ingrédients
+    const ingredientLabel = document.createElement('h3');
+    ingredientLabel.textContent ="INGREDIENTS";
+    ingredientLabel.classList.add('text-m','py-4','px-4', 'text-gray-700');
 
     // Ingrédients
     const ingredientsGrid = document.createElement('div');
-    ingredientsGrid.classList.add('grid', 'grid-cols-2', 'gap-4', 'text-gray-700', 'mt-2');
+    ingredientsGrid.classList.add('grid','py-4','px-4', 'grid-cols-2', 'gap-4', 'text-gray-700');
 
     recipe.ingredients.forEach(ingredient => {
       const ingredientElement = document.createElement('div');
-      ingredientElement.classList.add('flex', 'flex-col', 'text-sm', 'font-semibold');
+      ingredientElement.classList.add('flex', 'flex-col', 'text-sm','py-4','px-4', 'font-semibold');
 
       const ingredientName = document.createElement('span');
       ingredientName.textContent = `${ingredient.ingredient}`;
-      ingredientName.classList.add('mb-1');
+      ingredientName.classList.add('mb-0');
 
       const ingredientQuantity = document.createElement('span');
       if (ingredient.quantity) {
@@ -75,7 +85,9 @@ export function displayRecipes(recipes) {
     imageContainer.appendChild(timeBadge);
     recipeElement.appendChild(imageContainer);
     recipeElement.appendChild(recipeTitle);
+    recipeElement.appendChild(recipeLabel);
     recipeElement.appendChild(description);
+    recipeElement.appendChild(ingredientLabel);
     recipeElement.appendChild(ingredientsGrid);
     mediaContainer.appendChild(recipeElement);
   });
