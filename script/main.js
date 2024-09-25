@@ -108,6 +108,7 @@ document.getElementById('search-input').addEventListener('input', filterRecipes)
   });
 });
 
+//INGREDIENTS
 document.addEventListener('DOMContentLoaded', () => {
   const ingredientsLabel = document.querySelector('label[for="ingredients"]');
   const ingredientsInputContainer = document.getElementById('ingredients-input-container');
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const ingredientsInputContainer = document.getElementById('ingredients-input-container');
   const ingredientsSelect = document.getElementById('ingredients');
   const ingredientsInput = document.getElementById('ingredients-search'); // L'input de recherche des ingrédients
-  const clearSearchBtn = document.getElementById('clear-search'); // Le bouton croix pour effacer
+  const clearSearchBtn = document.getElementById('ingredients-clear-search'); // Le bouton croix pour effacer
 
   let isInputVisible = false; // Gérer l'état d'affichage de l'input
   let placeholderText = ingredientsInput.placeholder; // Stocker le texte initial du placeholder
@@ -202,6 +203,204 @@ document.addEventListener('DOMContentLoaded', () => {
       isInputVisible = true;
       ingredientsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible si besoin
       ingredientsLabel.classList.remove('label-hidden'); // Garde le padding
+    }
+  });
+});
+
+
+//APPAREILS
+document.addEventListener('DOMContentLoaded', () => {
+  const appareilsLabel = document.querySelector('label[for="appareils"]');
+  const appareilsInputContainer = document.getElementById('appareils-input-container');
+  const appareilsSelect = document.getElementById('appareils');
+
+  let isInputVisible = false; // Gérer l'état d'affichage de l'input
+
+  // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+  appareilsLabel.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut du label
+    isInputVisible = !isInputVisible;
+
+    if (isInputVisible) {
+      appareilsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
+      appareilsLabel.classList.remove('label-hidden'); // Garde le padding
+      appareilsInputContainer.querySelector('input').focus(); // Met le focus sur l'input
+    } else {
+      appareilsInputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+      appareilsLabel.classList.add('label-hidden'); // Réduit le padding
+    }
+  });
+
+  // Garde le conteneur affiché après la sélection d'un ingrédient
+  appareilsSelect.addEventListener('change', () => {
+    // Quand un ingrédient est sélectionné, on garde le conteneur ouvert
+    if (appareilsSelect.value) {
+      isInputVisible = true;
+      appareilsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde visible
+      appareilsLabel.classList.remove('label-hidden'); // Garde le padding
+    }
+  });
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+  const appareilsLabel = document.querySelector('label[for="appareils"]');
+  const appareilsInputContainer = document.getElementById('appareils-input-container');
+  const appareilsSelect = document.getElementById('appareils');
+  const appareilsInput = document.getElementById('appareils-search'); // L'input de recherche des ingrédients
+  const clearSearchBtn = document.getElementById('appareils-clear-search'); // Le bouton croix pour effacer
+
+  let isInputVisible = false; // Gérer l'état d'affichage de l'input
+  let placeholderText = appareilsInput.placeholder; // Stocker le texte initial du placeholder
+
+  // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+  appareilsLabel.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut du label
+    isInputVisible = !isInputVisible;
+
+    if (isInputVisible) {
+      appareilsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
+      appareilsLabel.classList.remove('label-hidden'); // Garde le padding
+      appareilsInput.focus(); // Met le focus sur l'input
+    } else {
+      appareilsInputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+      appareilsLabel.classList.add('label-hidden'); // Réduit le padding
+    }
+  });
+
+  // Efface le placeholder au focus
+  appareilsInput.addEventListener('focus', () => {
+    appareilsInput.placeholder = ''; // Vide le placeholder
+  });
+
+  // Remet le placeholder si l'input est vide après avoir perdu le focus
+  appareilsInput.addEventListener('blur', () => {
+    if (appareilsInput.value === '') {
+      appareilsInput.placeholder = placeholderText; // Remet le placeholder initial
+    }
+  });
+
+  // Affiche la croix lorsque du texte est saisi
+  appareilsInput.addEventListener('input', () => {
+    if (appareilsInput.value !== '') {
+      clearSearchBtn.classList.remove('hidden'); // Affiche la croix
+    } else {
+      clearSearchBtn.classList.add('hidden'); // Masque la croix si l'input est vide
+    }
+  });
+
+  // Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+  clearSearchBtn.addEventListener('click', () => {
+    appareilsInput.value = ''; // Efface le texte de l'input
+    clearSearchBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+    appareilsInput.focus(); // Remet le focus sur l'input après avoir effacé
+  });
+
+  // Vide le texte de recherche après la sélection d'un ingrédient
+  appareilsSelect.addEventListener('change', () => {
+    if (appareilsSelect.value) {
+      appareilsInput.value = ''; // Efface le texte saisi dans l'input
+      clearSearchBtn.classList.add('hidden'); // Masque la croix
+      isInputVisible = true;
+      appareilsInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible si besoin
+      appareilsLabel.classList.remove('label-hidden'); // Garde le padding
+    }
+  });
+});
+
+// USTENSILES
+document.addEventListener('DOMContentLoaded', () => {
+  const ustensilesLabel = document.querySelector('label[for="ustensiles"]');
+  const ustensilesInputContainer = document.getElementById('ustensiles-input-container');
+  const ustensilesSelect = document.getElementById('ustensiles');
+
+  let isInputVisible = false; // Gérer l'état d'affichage de l'input
+
+  // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+  ustensilesLabel.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut du label
+    isInputVisible = !isInputVisible;
+
+    if (isInputVisible) {
+      ustensilesInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
+      ustensilesLabel.classList.remove('label-hidden'); // Garde le padding
+      ustensilesInputContainer.querySelector('input').focus(); // Met le focus sur l'input
+    } else {
+      ustensilesInputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+      ustensilesLabel.classList.add('label-hidden'); // Réduit le padding
+    }
+  });
+
+  // Garde le conteneur affiché après la sélection d'un ustensile
+  ustensilesSelect.addEventListener('change', () => {
+    // Quand un ustensile est sélectionné, on garde le conteneur ouvert
+    if (ustensilesSelect.value) {
+      isInputVisible = true;
+      ustensilesInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde visible
+      ustensilesLabel.classList.remove('label-hidden'); // Garde le padding
+    }
+  });
+});
+document.addEventListener('DOMContentLoaded', () => {
+  const ustensilesLabel = document.querySelector('label[for="ustensiles"]');
+  const ustensilesInputContainer = document.getElementById('ustensiles-input-container');
+  const ustensilesSelect = document.getElementById('ustensiles');
+  const ustensilesInput = document.getElementById('ustensiles-search'); // L'input de recherche des ustensiles
+  const clearSearchBtn = document.getElementById('ustensiles-clear-search'); // Le bouton croix pour effacer
+
+  let isInputVisible = false; // Gérer l'état d'affichage de l'input
+  let placeholderText = ustensilesInput.placeholder; // Stocker le texte initial du placeholder
+
+  // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+  ustensilesLabel.addEventListener('click', (e) => {
+    e.preventDefault(); // Empêche le comportement par défaut du label
+    isInputVisible = !isInputVisible;
+
+    if (isInputVisible) {
+      ustensilesInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
+      ustensilesLabel.classList.remove('label-hidden'); // Garde le padding
+      ustensilesInput.focus(); // Met le focus sur l'input
+    } else {
+      ustensilesInputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+      ustensilesLabel.classList.add('label-hidden'); // Réduit le padding
+    }
+  });
+
+  // Efface le placeholder au focus
+  ustensilesInput.addEventListener('focus', () => {
+    ustensilesInput.placeholder = ''; // Vide le placeholder
+  });
+
+  // Remet le placeholder si l'input est vide après avoir perdu le focus
+  ustensilesInput.addEventListener('blur', () => {
+    if (ustensilesInput.value === '') {
+      ustensilesInput.placeholder = placeholderText; // Remet le placeholder initial
+    }
+  });
+
+  // Affiche la croix lorsque du texte est saisi
+  ustensilesInput.addEventListener('input', () => {
+    if (ustensilesInput.value !== '') {
+      clearSearchBtn.classList.remove('hidden'); // Affiche la croix
+    } else {
+      clearSearchBtn.classList.add('hidden'); // Masque la croix si l'input est vide
+    }
+  });
+
+  // Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+  clearSearchBtn.addEventListener('click', () => {
+    ustensilesInput.value = ''; // Efface le texte de l'input
+    clearSearchBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+    ustensilesInput.focus(); // Remet le focus sur l'input après avoir effacé
+  });
+
+  // Vide le texte de recherche après la sélection d'un ustensile
+  ustensilesSelect.addEventListener('change', () => {
+    if (ustensilesSelect.value) {
+      ustensilesInput.value = ''; // Efface le texte saisi dans l'input
+      clearSearchBtn.classList.add('hidden'); // Masque la croix
+      isInputVisible = true;
+      ustensilesInputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible si besoin
+      ustensilesLabel.classList.remove('label-hidden'); // Garde le padding
     }
   });
 });

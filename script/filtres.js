@@ -218,6 +218,15 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
+  document.querySelectorAll('.arrow').forEach(arrow => {
+    arrow.addEventListener('click', () => {
+      arrow.classList.toggle('rotate');
+      const filterDropdown = arrow.closest('.relative').querySelector('select');
+      filterDropdown.classList.toggle('hidden');
+    });
+  });
+  
+
   // Écouteurs pour chaque label
   const filters = [
     { id: 'ingredients', label: 'Ingrédients' },
