@@ -21,13 +21,14 @@ function displayTags() {
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span'); // Changer 'div' en 'span' pour un meilleur ajustement
-      tag.className = 'inline-flex bg-yellow-400 text-black rounded px-2 py-1 items-center'; // inline-flex pour que le contenu s'ajuste
+      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-52 ' // inline-flex pour que le contenu s'ajuste
 
       tag.textContent = tagText;
 
       const removeIcon = document.createElement('span');
-      removeIcon.textContent = '✖';
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-yellow-500'); // Ajout d'une couleur au survol
+      removeIcon.textContent = 'x';
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700-rounded', 'text-2xl' ); // Ajout d'une couleur au survol
+
 
       tag.appendChild(removeIcon);
 
@@ -208,9 +209,12 @@ document.addEventListener("DOMContentLoaded", function() {
     const dropdown = document.getElementById(dropdownId);
     const arrow = label.querySelector('.arrow');
 
+    
+
     // Alterner la visibilité du dropdown
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
+      
       arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'
     } else {
       dropdown.classList.add('hidden');
@@ -222,11 +226,9 @@ document.addEventListener("DOMContentLoaded", function() {
     arrow.addEventListener('click', () => {
       arrow.classList.toggle('rotate');
       const filterDropdown = arrow.closest('.relative').querySelector('select');
-      filterDropdown.classList.toggle('hidden');
+      
     });
   });
-  
-
   // Écouteurs pour chaque label
   const filters = [
     { id: 'ingredients', label: 'Ingrédients' },

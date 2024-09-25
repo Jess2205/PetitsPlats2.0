@@ -7,6 +7,8 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="./dist/output.css" rel="stylesheet">
   <style>
+    
+
      /* Flèche de filtre */
      .arrow {
       cursor: pointer;
@@ -25,31 +27,31 @@
     overflow: hidden; /* Supprime le scroll */
     background-color: white;
   }
-  .label-hidden {
-  padding: 0.5rem 0;
-  padding-bottom: 0; /* Ajuste les valeurs selon tes besoins */
-  }
+
+  
+
   .opacity-0 {
   opacity: 0;
   visibility: hidden;
-}
+  }
 
-.pointer-events-none {
+  .pointer-events-none {
   pointer-events: none;
-}
+  }
 
-.transition-opacity {
+  .transition-opacity {
   transition: opacity 0.3s ease-in-out;
-}
+  }
 
 #clear-search {
   font-size: 1.5rem; /* Taille de la croix */
   cursor: pointer;
 }
 
-#clear-search.hidden {
+#clear-search {
   display: none;
 }
+
 
 
   </style>
@@ -88,13 +90,13 @@
   </header>
 
  <!-- Filters Section -->
- <div class="container mx-auto py-4">
-  <div class="flex justify-between items-start mb-2">
+ <div class=" absolute container mx-20 py-4">
+  <div class="relative items-start mb-4">
     <!-- Les filtres sont placés côte à côte -->
-    <div class="flex gap-8">
+    <div class="flex gap-8 ">
 
       <!-- Filtres dynamiques des ingrédients -->
-<div class="relative w-52 bg-white ml-2 pl-2 rounded">
+<div class="relative w-52 pl-2  bg-white ml-2 rounded">
   <label for="ingredients" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Ingrédients  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -103,22 +105,22 @@
   </label>
   <!-- Conteneur pour l'input et la loupe -->
   <div id="ingredients-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-2 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
-  <button id="ingredients-clear-search" class="absolute right-10 bottom-24 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise " ><!-- Symbole de la croix -->
+  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
+  <button id="ingredients-clear-search" class="absolute right-10 bottom-24 text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise w-4 h-7 pb-3" ><!-- Symbole de la croix -->
   </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-1 hidden " multiple>
+  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-1 pl-2 hidden " multiple>
     <option value="">Ingrédients</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
 
  <!-- Filtres dynamiques des appareils -->
- <div class="relative w-52 bg-white ml-2 pl-2 rounded">
+ <div class="relative w-52 ml-2  rounded">
   <label for="appareils" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Appareils  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -126,23 +128,23 @@
     </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="appareils-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-2 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
+  <div id="appareils-input-container" class=" flex w-52 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
   <button id="appareils-clear-search" class="absolute right-10 bottom-24 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise " ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise w-4 h-7 pb-3 " ><!-- Symbole de la croix -->
   </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-1 hidden " multiple>
+  <select  aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-1 pl-2 hidden " multiple>
     <option value="">Appareils</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
 
 <!-- Filtres dynamiques des appareils -->
-<div class="relative w-52 bg-white ml-2 pl-2 rounded">
+<div class="relative w-52 ml-2 pl-2 bg-white rounded">
   <label for="ustensiles" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Ustensiles  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -151,31 +153,30 @@
   </label>
   <!-- Conteneur pour l'input et la loupe -->
   <div id="ustensiles-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-2 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
-  <button id="ustensiles-clear-search" class="absolute right-10 bottom-24 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise " ><!-- Symbole de la croix -->
+  <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
+  <button id="ustensiles-clear-search" class="absolute right-10 bottom-24  text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise w-4 h-7 pb-3" ><!-- Symbole de la croix -->
   </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-1 hidden " multiple>
+  <select  aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-1 pl-2 hidden " multiple>
     <option value="">Ustensiles</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
 
  <!-- Compteur de recettes -->
- <p id="total-recipes" class="text-black-500 text-2xl font-medium pt-2">1500 recettes</p>
+ <p id="total-recipes" class="text-black-700 text-2xl font-medium pt-2 pl-96">1500 recettes</p>
 </div>
  <!-- Conteneur pour les tags sélectionnés -->
-    <div id="tag-container" class=" mt-2 flex flex-wrap gap-4 text-black pl-2"></div>
+    <div id="tag-container" class="ml-2 mt-2 flex flex-wrap gap-2 text-black">
+    </div>
   </div>
 
- 
-
   <!-- Section où les médias seront affichés -->
-  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 pl-20 pr-20">
+  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pl-10 pr-10 h-[600px] overflow-y-auto">
     <!-- Les recettes/médias seront injectés dynamiquement ici -->
   </div>
 
