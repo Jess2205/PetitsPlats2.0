@@ -52,9 +52,25 @@
   display: none;
 }
 
+/* CSS pour gérer le comportement au survol */
+button:hover .img-default {
+display: none;
+}
+        
+button:hover .img-hover {
+display: block;
+}
+.search-input {
+  padding-right: 30px; /* Espace pour la croix */
+}
 
+#main-clear-search {
+  top: 50%;
+  transform: translateY(-50%);
+}
 
-  </style>
+</style>
+
 </head>
 <body class="bg-gray-100 text-gray-800">
 
@@ -66,22 +82,30 @@
     <h2 class="text-6xl mt-6 flex w-2/3 text-center  text-yellow-400">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h2>
 
     <!-- Barre de recherche principale -->
-    <div class="mt-6 flex w-2/3">
-      <input 
-        id="search-input" 
-        type="text" 
-        placeholder="Rechercher une recette, un ingrédient, ..." 
-        class="text-black w-full rounded-l p-4 focus:outline-none focus:placeholder-transparent"
-      >
-      <button class="bg-white text-white px-4 py-3 rounded-r hover:bg-green-700" aria-label="Rechercher">
-        <img src="./assets/loupe.png" alt="icone d'une loupe">
-      </button>
-    </div>
+<div class="relative mt-6 flex w-2/3">
+  <input 
+    id="search-input" 
+    type="text" 
+    placeholder="Rechercher une recette, un ingrédient, ..." 
+    class="text-black w-full rounded-l p-4 focus:outline-none focus:placeholder-transparent"
+  >
+  <button id="main-clear-search" class="absolute right-14 top-2  text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4">
+  </button>
+  <button class="absolute w-10 h-10 mt-2 right-2" aria-label="Rechercher">
+    <!-- Image par défaut -->
+    <img src="./assets/loupe.png" alt="Icône d'une loupe" class="w-full h-full object-cover img-default absolute inset-0">
+    
+    <!-- Image au survol (hover) -->
+    <img src="./assets/loupe-jaune.png" alt="Image au survol" class="w-full h-full object-cover img-hover absolute inset-0 hidden">
+  </button>  
+</div>
 
-    <!-- Conteneur pour le message d'erreur -->
-    <div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
-      Aucune recette trouvée.
-    </div>
+<!-- Conteneur pour le message d'erreur -->
+<div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
+  Aucune recette trouvée.
+</div>
+
 
     <!-- Conteneur pour les résultats de recherche -->
     <div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
@@ -107,7 +131,7 @@
   <div id="ingredients-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
   <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
   <button id="ingredients-clear-search" class="absolute right-10 bottom-24 text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise w-4 h-7 pb-3" ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4" ><!-- Symbole de la croix -->
   </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
@@ -131,7 +155,7 @@
   <div id="appareils-input-container" class=" flex w-52 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
   <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
   <button id="appareils-clear-search" class="absolute right-10 bottom-24 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise w-4 h-7 pb-3 " ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4 " ><!-- Symbole de la croix -->
   </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
@@ -155,7 +179,7 @@
   <div id="ustensiles-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
   <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
   <button id="ustensiles-clear-search" class="absolute right-10 bottom-24  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise w-4 h-7 pb-3" ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4" ><!-- Symbole de la croix -->
   </button>
   <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >

@@ -75,6 +75,25 @@ function filterRecipes() {
     return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
   });
 
+  // Écouteur d'événements pour la barre de recherche principale
+document.getElementById('search-input').addEventListener('input', function () {
+  const clearBtn = document.getElementById('main-clear-search');
+  // Vérifiez si le champ de recherche a du texte
+  if (this.value.length > 0) {
+    clearBtn.classList.remove('hidden'); // Affiche la croix
+  } else {
+    clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
+  }
+});
+
+// Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+document.getElementById('main-clear-search').addEventListener('click', function () {
+  const searchInput = document.getElementById('search-input');
+  searchInput.value = ''; // Efface le texte de l'input
+  this.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+  searchInput.focus(); // Remet le focus sur l'input après avoir effacé
+});
+
   // Mise à jour du compteur de recettes
   document.getElementById('total-recipes').textContent = `${recettesFiltrees.length} recettes`;
 
