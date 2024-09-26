@@ -50,13 +50,13 @@ function filterOptions(searchInputId, selectElementId) {
 
 // Fonction de filtrage des recettes
 function filterRecipes() {
-  const texteRecherche = document.getElementById('search-input').value.toLowerCase();
-  const searchText = searchInput.value.trim().toLowerCase();
+  const searchInput = document.getElementById('search-input');
+  const searchText = searchInput.value.trim().toLowerCase(); // Renommé pour éviter les conflits
 
   console.log('Search Text:', searchText); // Vérifie ce qui est saisi
 
   if (searchText.length < 3) {
-    return;
+    return; // Ne pas filtrer si moins de 3 caractères
   }
 
   const selectedIngredients = Array.from(document.getElementById('ingredients').selectedOptions).map(option => option.value.toLowerCase());
@@ -75,7 +75,31 @@ function filterRecipes() {
     return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
   });
 
-  // Écouteur d'événements pour la barre de recherche principale
+  // Mise à jour du compteur de recettes
+  const totalRecipes = recettesFiltrees.length;
+
+  // Formater le compteur
+  const formattedTotal = totalRecipes < 10 ? totalRecipes.toString().padStart(2, '0') : totalRecipes;
+
+  // Déterminer le suffixe
+  const suffix = totalRecipes === 1 ? 'recette' : 'recettes'; // 'recette' si totalRecipes est 1, sinon 'recettes'
+
+  // Si totalRecipes est 0, utiliser 'recette' sans 's'
+  const finalSuffix = totalRecipes === 0 ? 'recette' : suffix; // 'recette' si totalRecipes est 0
+
+  // Mettre à jour le texte du compteur
+  document.getElementById('total-recipes').textContent = `${formattedTotal} ${finalSuffix}`;
+
+  if (totalRecipes === 0) {
+    showErrorMessage(searchText); // Montre un message d'erreur si aucune recette ne correspond
+  } else {
+    hideErrorMessage(); // Masque le message d'erreur
+    displayRecipes(recettesFiltrees); // Affiche les recettes filtrées
+    updateAdvancedFilters(recettesFiltrees); // Met à jour les filtres avancés
+  }
+}
+
+// Écouteur d'événements pour la barre de recherche principale
 document.getElementById('search-input').addEventListener('input', function () {
   const clearBtn = document.getElementById('main-clear-search');
   // Vérifiez si le champ de recherche a du texte
@@ -94,39 +118,13 @@ document.getElementById('main-clear-search').addEventListener('click', function 
   searchInput.focus(); // Remet le focus sur l'input après avoir effacé
 });
 
-
-// Mise à jour du compteur de recettes
-const totalRecipes = recettesFiltrees.length;
-
-// Formater le compteur
-const formattedTotal = totalRecipes < 10 ? totalRecipes.toString().padStart(2, '0') : totalRecipes;
-
-// Déterminer le suffixe
-const suffix = totalRecipes === 1 ? 'recette' : 'recettes'; // 'recette' si totalRecipes est 1, sinon 'recettes'
-
-// Si totalRecipes est 0, utiliser 'recette' sans 's'
-const finalSuffix = totalRecipes === 0 ? 'recette' : suffix; // 'recette' si totalRecipes est 0
-
-// Mettre à jour le texte du compteur
-document.getElementById('total-recipes').textContent = `${formattedTotal} ${finalSuffix}`;
-
-if (totalRecipes === 0) {
-    showErrorMessage(searchText);
-} else {
-    hideErrorMessage();
-    displayRecipes(recettesFiltrees);
-    updateAdvancedFilters(recettesFiltrees); // Met à jour les filtres avancés
-}
-
-}
-
 // Ajouter les écouteurs d'événements
 window.addEventListener('load', () => {
   displayRecipes(recipes); // Affiche toutes les recettes au chargement de la page
   updateAdvancedFilters(recipes); // Met à jour les filtres avancés avec toutes les recettes
 
   // Ajoute l'écouteur d'événement pour le champ de recherche
-document.getElementById('search-input').addEventListener('input', filterRecipes);
+  document.getElementById('search-input').addEventListener('input', filterRecipes);
 
   // Écouteurs pour les champs de recherche des filtres avancés
   document.getElementById('ingredients-search').addEventListener('input', () => filterOptions('ingredients-search', 'ingredients'));
@@ -136,8 +134,7 @@ document.getElementById('search-input').addEventListener('input', filterRecipes)
   // Écouteurs pour les changements dans les filtres
   const filtres = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
   filtres.forEach(filtre => {
-    filtre.addEventListener('change', filterRecipes);
-
+    filtre.addEventListener('change', filterRecipes); // Appelle la fonction filterRecipes lors du changement
   });
 });
 
