@@ -17,7 +17,7 @@
     .arrow.rotate {
       transform: rotate(180deg);
     }
-    select {
+    ul {
     border: none; /* Supprime la bordure */
     -webkit-appearance: none; /* Pour les navigateurs WebKit */
     -moz-appearance: none; /* Pour Firefox */
@@ -69,7 +69,24 @@ display: block;
   transform: translateY(-50%);
 }
 
+.filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: calc(1.5em * 6); /* 1.5em est la hauteur de ligne moyenne, pour 6 lignes */
+  overflow: hidden;           
+  padding-right: 2px;         /* Optionnel : Ajouter un peu de padding pour éviter la superposition avec la scrollbar */
+}
 
+.filter-list-item {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e7eb;
+  }
+
+.filter-list-item:hover {
+  background-color: #f3f4f6;
+  }
 
 </style>
 
@@ -116,14 +133,12 @@ display: block;
   </header>
 
  <!-- Filters Section -->
- <div class=" absolute container mx-20 py-4"></div>
-  <div class="relative items-start mb-4">
-    <!-- Les filtres sont placés côte à côte -->
-    <div class="flex gap-8 pl-8">
+ <div class="relative items-start mb-4">
+  <div class="flex gap-8 pl-8">
   
 
       <!-- Filtres dynamiques des ingrédients -->
-<div class="  relative w-52 ml-2 rounded">
+<div class="relative w-52 ml-2 rounded">
   <label for="ingredients" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Ingrédients  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -140,11 +155,9 @@ display: block;
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche  " >
   </button>
 </div>
-  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded  pl-2 hidden " multiple>
-    <option value="">Ingrédients</option>
-    <!-- Options injectées dynamiquement ici -->
-  </select>
+<ul id="ingredients" class="filter-list hidden bg-white rounded mt-2 " multiple></ul>
 </div>
+
 
  <!-- Filtres dynamiques des appareils -->
  <div class="relative w-52 ml-2 rounded">
@@ -164,11 +177,9 @@ display: block;
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border pl-2 hidden " multiple>
-    <option value="">Appareils</option>
-    <!-- Options injectées dynamiquement ici -->
-  </select>
+<ul id="appareils" class="filter-list hidden bg-white rounded mt-2 " multiple></ul>
 </div>
+
 
 <!-- Filtres dynamiques des ustensiles -->
 <div class="relative w-52 ml-2  rounded">
@@ -188,18 +199,16 @@ display: block;
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded pl-2 hidden " multiple>
-    <option value="">Ustensiles</option>
-    <!-- Options injectées dynamiquement ici -->
-  </select>
+<ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 " multiple></ul>
 </div>
+
 
 
  <!-- Compteur de recettes -->
  <p id="total-recipes" class="text-black-700 text-2xl font-medium pt-2 pl-96">1500 recettes</p>
 </div>
  <!-- Conteneur pour les tags sélectionnés -->
-    <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 text-black">
+    <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 mt-4 text-black">
     </div>
   </div>
 

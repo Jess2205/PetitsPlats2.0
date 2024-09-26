@@ -15,43 +15,35 @@ function updateAdvancedFilters(recipes) {
     recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
   });
 
-  const updateOptions = (selectElement, items) => {
-    selectElement.innerHTML = '<option value=""></option>';
+  const updateOptions = (ulElement, items) => {
+    ulElement.innerHTML = ''; // Réinitialiser le contenu de la liste
     items.forEach(item => {
-      const option = document.createElement('option');
-      option.value = item;
-      option.textContent = item;
-      selectElement.appendChild(option);
-      
-      
+      const li = document.createElement('li');
+      li.textContent = item;
+      li.dataset.value = item; // Ajouter une donnée pour la sélection
+      ulElement.appendChild(li);
     });
   };
-  const selectElement = document.querySelector('select');
-  const optionTous = Array.from(selectElement.options).find(option => option.text === '');
-  
-  if (optionTous) {
-      selectElement.removeChild(optionTous);
-  }
-  
+
   updateOptions(document.getElementById('ingredients'), [...filters.ingredients]);
   updateOptions(document.getElementById('appareils'), [...filters.appareils]);
   updateOptions(document.getElementById('ustensiles'), [...filters.ustensiles]);
 }
 
 // Fonction de filtrage des options dans les filtres avancés
-function filterOptions(searchInputId, selectElementId) {
-  const searchText = document.getElementById(searchInputId).value.toLowerCase();
-  const selectElement = document.getElementById(selectElementId);
+function filterOptions(inputId, ulElementId) {
+  const searchText = document.getElementById(inputId).value.toLowerCase();
+  const ulElement = document.getElementById(ulElementId);
   
-  Array.from(selectElement.options).forEach(option => {
-    option.style.display = option.value.toLowerCase().includes(searchText) || option.value === "" ? "block" : "none";
+  Array.from(ulElement.children).forEach(li => {
+    li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
 }
 
 // Fonction de filtrage des recettes
 function filterRecipes() {
   const searchInput = document.getElementById('search-input');
-  const searchText = searchInput.value.trim().toLowerCase(); // Renommé pour éviter les conflits
+  const searchText = searchInput.value.trim().toLowerCase();
 
   console.log('Search Text:', searchText); // Vérifie ce qui est saisi
 
@@ -59,9 +51,9 @@ function filterRecipes() {
     return; // Ne pas filtrer si moins de 3 caractères
   }
 
-  const selectedIngredients = Array.from(document.getElementById('ingredients').selectedOptions).map(option => option.value.toLowerCase());
-  const selectedAppareils = Array.from(document.getElementById('appareils').selectedOptions).map(option => option.value.toLowerCase());
-  const selectedUstensiles = Array.from(document.getElementById('ustensiles').selectedOptions).map(option => option.value.toLowerCase());
+  const selectedIngredients = Array.from(document.querySelectorAll('#ingredients li.selected')).map(li => li.dataset.value.toLowerCase());
+  const selectedAppareils = Array.from(document.querySelectorAll('#appareils li.selected')).map(li => li.dataset.value.toLowerCase());
+  const selectedUstensiles = Array.from(document.querySelectorAll('#ustensiles li.selected')).map(li => li.dataset.value.toLowerCase());
 
   const recettesFiltrees = recipes.filter(recette => {
     const correspondTexte = recette.name.toLowerCase().includes(searchText) ||
@@ -82,13 +74,10 @@ function filterRecipes() {
   const formattedTotal = totalRecipes < 10 ? totalRecipes.toString().padStart(2, '0') : totalRecipes;
 
   // Déterminer le suffixe
-  const suffix = totalRecipes === 1 ? 'recette' : 'recettes'; // 'recette' si totalRecipes est 1, sinon 'recettes'
-
-  // Si totalRecipes est 0, utiliser 'recette' sans 's'
-  const finalSuffix = totalRecipes === 0 ? 'recette' : suffix; // 'recette' si totalRecipes est 0
+  const suffix = totalRecipes === 1 ? 'recette' : 'recettes';
 
   // Mettre à jour le texte du compteur
-  document.getElementById('total-recipes').textContent = `${formattedTotal} ${finalSuffix}`;
+  document.getElementById('total-recipes').textContent = `${formattedTotal} ${suffix}`;
 
   if (totalRecipes === 0) {
     showErrorMessage(searchText); // Montre un message d'erreur si aucune recette ne correspond
@@ -134,7 +123,12 @@ window.addEventListener('load', () => {
   // Écouteurs pour les changements dans les filtres
   const filtres = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
   filtres.forEach(filtre => {
-    filtre.addEventListener('change', filterRecipes); // Appelle la fonction filterRecipes lors du changement
+    filtre.addEventListener('click', (e) => {
+      if (e.target.tagName === 'LI') {
+        e.target.classList.toggle('selected'); // Ajoute ou enlève la classe 'selected'
+        filterRecipes(); // Filtrer les recettes après la sélection
+      }
+    });
   });
 });
 
