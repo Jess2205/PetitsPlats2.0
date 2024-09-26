@@ -94,16 +94,30 @@ document.getElementById('main-clear-search').addEventListener('click', function 
   searchInput.focus(); // Remet le focus sur l'input après avoir effacé
 });
 
-  // Mise à jour du compteur de recettes
-  document.getElementById('total-recipes').textContent = `${recettesFiltrees.length} recettes`;
 
-  if (recettesFiltrees.length === 0) {
+// Mise à jour du compteur de recettes
+const totalRecipes = recettesFiltrees.length;
+
+// Formater le compteur
+const formattedTotal = totalRecipes < 10 ? totalRecipes.toString().padStart(2, '0') : totalRecipes;
+
+// Déterminer le suffixe
+const suffix = totalRecipes === 1 ? 'recette' : 'recettes'; // 'recette' si totalRecipes est 1, sinon 'recettes'
+
+// Si totalRecipes est 0, utiliser 'recette' sans 's'
+const finalSuffix = totalRecipes === 0 ? 'recette' : suffix; // 'recette' si totalRecipes est 0
+
+// Mettre à jour le texte du compteur
+document.getElementById('total-recipes').textContent = `${formattedTotal} ${finalSuffix}`;
+
+if (totalRecipes === 0) {
     showErrorMessage(searchText);
-  } else {
+} else {
     hideErrorMessage();
     displayRecipes(recettesFiltrees);
     updateAdvancedFilters(recettesFiltrees); // Met à jour les filtres avancés
-  }
+}
+
 }
 
 // Ajouter les écouteurs d'événements

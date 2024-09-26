@@ -69,6 +69,8 @@ display: block;
   transform: translateY(-50%);
 }
 
+
+
 </style>
 
 </head>
@@ -120,7 +122,7 @@ display: block;
     <div class="flex gap-8 ">
 
       <!-- Filtres dynamiques des ingrédients -->
-<div class="relative w-52 pl-2  bg-white ml-2 rounded">
+<div class="  relative w-52 ml-2 rounded">
   <label for="ingredients" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Ingrédients  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -128,23 +130,23 @@ display: block;
     </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="ingredients-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
-  <button id="ingredients-clear-search" class="absolute right-10 bottom-24 text-gray-400 hidden" aria-label="Effacer la recherche">
+  <div id="ingredients-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent " autocomplete="off">
+  <button id="ingredients-clear-search" class="absolute right-16 top-16 text-gray-400 hidden" aria-label="Effacer la recherche">
     <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4" ><!-- Symbole de la croix -->
   </button>
-  <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
-    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche  " >
   </button>
 </div>
-  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded border mt-1 pl-2 hidden " multiple>
+  <select  aria-label="Rechercher un ingrédient" id="ingredients" class=" w-full rounded  pl-2 hidden " multiple>
     <option value="">Ingrédients</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
 
  <!-- Filtres dynamiques des appareils -->
- <div class="relative w-52 ml-2  rounded">
+ <div class="relative w-52 ml-2 rounded">
   <label for="appareils" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Appareils  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -152,23 +154,23 @@ display: block;
     </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="appareils-input-container" class=" flex w-52 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
-  <button id="appareils-clear-search" class="absolute right-10 bottom-24 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
+  <div id="appareils-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
+  <button id="appareils-clear-search" class="absolute right-16 top-16 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
     <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4 " ><!-- Symbole de la croix -->
   </button>
-  <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border mt-1 pl-2 hidden " multiple>
+  <select  aria-label="Rechercher un appareil" id="appareils" class=" w-full rounded border pl-2 hidden " multiple>
     <option value="">Appareils</option>
     <!-- Options injectées dynamiquement ici -->
   </select>
 </div>
 
-<!-- Filtres dynamiques des appareils -->
-<div class="relative w-52 ml-2 pl-2 bg-white rounded">
+<!-- Filtres dynamiques des ustensiles -->
+<div class="relative w-52 ml-2  rounded">
   <label for="ustensiles" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
     Ustensiles  
     <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
@@ -176,16 +178,16 @@ display: block;
     </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="ustensiles-input-container" class=" flex w-48 border rounded  border-gray-300 opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full px-2 py-1 pr-10 focus:outline-none focus:placeholder-transparent " autocomplete="off">
-  <button id="ustensiles-clear-search" class="absolute right-10 bottom-24  text-gray-400 hidden" aria-label="Effacer la recherche">
+  <div id="ustensiles-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
+  <button id="ustensiles-clear-search" class="absolute right-16 top-16  text-gray-400 hidden" aria-label="Effacer la recherche">
     <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4" ><!-- Symbole de la croix -->
   </button>
-  <button class="bg-white text-white px-4 py-3 rounded-r" aria-label="Rechercher">
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <select  aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded border mt-1 pl-2 hidden " multiple>
+  <select  aria-label="Rechercher un ustensile" id="ustensiles" class=" w-full rounded pl-2 hidden " multiple>
     <option value="">Ustensiles</option>
     <!-- Options injectées dynamiquement ici -->
   </select>

@@ -123,6 +123,17 @@ function filterRecipesWithAdvancedFilters() {
 
     return matchesIngredients && matchesAppareils && matchesUstensiles;
   });
+// Fonction pour mettre à jour le compteur de recettes avec formatage
+function updateRecipeCount(count) {
+  // Formater le compteur
+  const formattedCount = count < 10 ? count.toString().padStart(2, '0') : count;
+
+  // Déterminer le suffixe
+  const suffix = count === 1 ? 'recette' : 'recettes'; // 'recette' si count est 1, sinon 'recettes'
+
+  // Mettre à jour le texte du compteur
+  document.getElementById('total-recipes').textContent = `${formattedCount} ${suffix}`;
+}
 
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
 
@@ -178,6 +189,8 @@ function filterRecipes() {
     hideErrorMessage();
     displayRecipes(filteredRecipes);
   }
+
+  
 }
 
 // Ajouter des écouteurs d'événements pour les filtres
@@ -208,17 +221,17 @@ document.addEventListener("DOMContentLoaded", function() {
   function toggleDropdown(dropdownId, label) {
     const dropdown = document.getElementById(dropdownId);
     const arrow = label.querySelector('.arrow');
+    const container = label.closest('.relative'); // Sélection de la div conteneur
 
     
 
     // Alterner la visibilité du dropdown
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
-      
-      arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'
+     arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'
     } else {
       dropdown.classList.add('hidden');
-      arrow.innerHTML = '<img src="./assets/flèche-descendante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'
+      arrow.innerHTML = '<img src="./assets/flèche-descendante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">'  
     }
   }
 
@@ -229,6 +242,9 @@ document.addEventListener("DOMContentLoaded", function() {
       
     });
   });
+
+
+  
   // Écouteurs pour chaque label
   const filters = [
     { id: 'ingredients', label: 'Ingrédients' },
