@@ -191,3 +191,44 @@ document.addEventListener("DOMContentLoaded", function() {
     });
   });
 });
+
+// Fonction pour filtrer les recettes en fonction de la recherche dans les filtres
+function filterRecipes(searchText, filterType) {
+  const lowerCasedSearchText = searchText.toLowerCase();
+
+  const filteredRecipes = recipes.filter(recipe => {
+    if (filterType === 'ingredients') {
+      return recipe.ingredients.some(ingredient =>
+        ingredient.ingredient.toLowerCase().includes(lowerCasedSearchText)
+      );
+    } else if (filterType === 'appareils') {
+      return recipe.appliance.toLowerCase().includes(lowerCasedSearchText);
+    } else if (filterType === 'ustensiles') {
+      return recipe.utensils.some(utensil =>
+        utensil.toLowerCase().includes(lowerCasedSearchText)
+      );
+    }
+    return true;
+  });
+
+  // Mettre à jour l'affichage des recettes
+  displayRecipes(filteredRecipes);
+
+  // Mettre à jour le compteur
+  updateRecipeCount(filteredRecipes.length);
+}
+
+// Écouteur pour la recherche en temps réel sur les ingrédients
+document.getElementById('ingredients-search').addEventListener('input', (e) => {
+  filterRecipes(e.target.value, 'ingredients');
+});
+
+// Écouteur pour la recherche en temps réel sur les appareils
+document.getElementById('appareils-search').addEventListener('input', (e) => {
+  filterRecipes(e.target.value, 'appareils');
+});
+
+// Écouteur pour la recherche en temps réel sur les ustensiles
+document.getElementById('ustensiles-search').addEventListener('input', (e) => {
+  filterRecipes(e.target.value, 'ustensiles');
+});
