@@ -250,3 +250,38 @@ document.getElementById('ingredients-search').addEventListener('input', filterRe
 document.getElementById('appareils-search').addEventListener('input', filterRecipes);
 document.getElementById('ustensiles-search').addEventListener('input', filterRecipes);
 
+// Fonction pour gérer le clic sur un élément de la liste
+// Fonction pour gérer le clic sur un élément de la liste
+function handleListItemClick(event) {
+  const listItem = event.target;
+
+  // Vérifie si l'élément cliqué est un item de liste
+  if (listItem.classList.contains('list-item')) {
+      // Vérifie si l'élément est déjà sélectionné
+      if (!listItem.classList.contains('bg-yellow-custom')) {
+          // Ajouter la classe de fond jaune
+          listItem.classList.add('bg-yellow-custom');
+
+          // Créer l'élément de fermeture
+          const closeIcon = document.createElement('span');
+          closeIcon.textContent = '✖'; // Ou une autre icône de fermeture
+          closeIcon.classList.add('close-icon');
+
+          // Écouteur d'événements pour la fermeture
+          closeIcon.addEventListener('click', (e) => {
+              e.stopPropagation(); // Empêche le clic sur l'élément de liste
+              listItem.classList.remove('bg-yellow-custom'); // Enlève la sélection
+              closeIcon.remove(); // Retire l'icône de fermeture
+          });
+
+          // Ajouter l'icône de fermeture à l'élément de liste
+          listItem.appendChild(closeIcon);
+      }
+  }
+}
+
+// Ajouter des écouteurs d'événements sur tous les éléments de la liste
+const listItems = document.querySelectorAll('.list-item');
+listItems.forEach(item => {
+  item.addEventListener('click', handleListItemClick);
+});
