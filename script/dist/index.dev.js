@@ -30,35 +30,43 @@ function displayRecipes(recipes) {
 
   recipes.forEach(function (recipe) {
     var recipeElement = document.createElement('div');
-    recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'p-6', 'mb-6', 'w-full', 'max-w-lg', 'mx-auto'); // Conteneur d'image
+    recipeElement.classList.add('recipe-item', 'bg-white', 'shadow-md', 'rounded-lg', 'mb-6', 'line-clamp-4', 'h-auto'); // Conteneur d'image
 
     var imageContainer = document.createElement('div');
     imageContainer.classList.add('relative');
     var recipeImage = document.createElement('img');
     recipeImage.src = "dataMedia/".concat(recipe.image);
     recipeImage.alt = recipe.name;
-    recipeImage.classList.add('w-full', 'h-auto', 'rounded-t-lg', 'object-cover'); // Badge de temps
+    recipeImage.classList.add('w-full', 'h-64', 'rounded-t-lg', 'object-cover', 'pb-4'); // Badge de temps
 
     var timeBadge = document.createElement('span');
     timeBadge.textContent = "".concat(recipe.time, " min");
-    timeBadge.classList.add('absolute', 'top-3', 'right-3', 'bg-yellow-400', 'text-black', 'rounded-full', 'px-3', 'py-1', 'text-xs', 'font-bold'); // Titre de la recette
+    timeBadge.classList.add('absolute', 'top-2', 'right-3', 'bg-yellow-400', 'text-black', 'rounded-full', 'px-3', 'py-1', 'text-xs', 'font-bold'); // Titre de la recette
 
     var recipeTitle = document.createElement('h2');
     recipeTitle.textContent = recipe.name;
-    recipeTitle.classList.add('text-xl', 'font-bold', 'mb-2', 'text-gray-900'); // Description de la recette
+    recipeTitle.classList.add('text-xl', 'font-bold', 'mb-2', 'text-gray-900', 'pb-4', 'py-4', 'px-4'); // Label recette
+
+    var recipeLabel = document.createElement('h3');
+    recipeLabel.textContent = "RECETTE";
+    recipeLabel.classList.add('text-m', 'py-2', 'px-4', 'text-gray-700'); // Description de la recette
 
     var description = document.createElement('p');
     description.textContent = recipe.description;
-    description.classList.add('text-base', 'my-2', 'text-gray-700'); // Ingrédients
+    description.classList.add('text-base', 'py-2', 'px-4', 'w-84', 'my-2', 'text-m', 'text-gray-900', 'pb-8', 'h-32', 'overflow-hidden'); // Label ingrédients
+
+    var ingredientLabel = document.createElement('h3');
+    ingredientLabel.textContent = "INGREDIENTS";
+    ingredientLabel.classList.add('text-m', 'py-4', 'px-4', 'text-gray-700'); // Ingrédients
 
     var ingredientsGrid = document.createElement('div');
-    ingredientsGrid.classList.add('grid', 'grid-cols-2', 'gap-4', 'text-gray-700', 'mt-2');
+    ingredientsGrid.classList.add('grid', 'py-1', 'px-4', 'grid-cols-2', 'gap-4', 'text-gray-700');
     recipe.ingredients.forEach(function (ingredient) {
       var ingredientElement = document.createElement('div');
-      ingredientElement.classList.add('flex', 'flex-col', 'text-sm', 'font-semibold');
+      ingredientElement.classList.add('flex', 'flex-col', 'text-sm', 'py-2', 'px-4', 'font-semibold');
       var ingredientName = document.createElement('span');
       ingredientName.textContent = "".concat(ingredient.ingredient);
-      ingredientName.classList.add('mb-1');
+      ingredientName.classList.add('mb-0');
       var ingredientQuantity = document.createElement('span');
 
       if (ingredient.quantity) {
@@ -75,7 +83,9 @@ function displayRecipes(recipes) {
     imageContainer.appendChild(timeBadge);
     recipeElement.appendChild(imageContainer);
     recipeElement.appendChild(recipeTitle);
+    recipeElement.appendChild(recipeLabel);
     recipeElement.appendChild(description);
+    recipeElement.appendChild(ingredientLabel);
     recipeElement.appendChild(ingredientsGrid);
     mediaContainer.appendChild(recipeElement);
   });
@@ -109,11 +119,19 @@ function hideErrorMessage() {
 
 
 function updateRecipeCount(count) {
-  var recipeCountElement = document.getElementById('total-recipes');
+  var recipeCountElement = document.getElementById('total-recipes'); // Assurez-vous que cet ID correspond à l'élément dans votre HTML
+  // Formater le compteur avec un préfixe de zéro
 
-  if (recipeCountElement) {
-    recipeCountElement.textContent = "".concat(count, " Recettes");
+  var formattedCount = count.toString().padStart(2, '0'); // Logique pour déterminer le texte
+
+  var recipeText = '';
+
+  if (count === 0) {
+    recipeText = 'recette'; // Aucun 's' pour 0
   } else {
-    console.error('Élément #total-recipes non trouvé');
-  }
+    recipeText = count === 1 ? 'recette' : 'recettes'; // Singular ou plural
+  } // Mettre à jour l'élément d'affichage
+
+
+  recipeCountElement.textContent = "".concat(formattedCount, " ").concat(recipeText);
 }
