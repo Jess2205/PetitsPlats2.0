@@ -195,8 +195,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Initialise les filtres
-  setupFilter('ingredients-search', 'ingredients-container', 'ingredients', 'ingredients-search', 'ingredients-clear');
-  setupFilter('appareils-search', 'appareils-container', 'appareils', 'appareils-search', 'appareils-clear');
-  setupFilter('ustensiles-search', 'ustensiles-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear');
+  /// Configuration des filtres
+  setupFilter('ingredients', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
+  setupFilter('appareils', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
+  setupFilter('ustensiles', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
 });
