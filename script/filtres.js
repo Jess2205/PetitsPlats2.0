@@ -18,7 +18,6 @@ function displayTags() {
 
   tagContainer.innerHTML = ''; // Efface les tags existants
   
-
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span');
@@ -28,7 +27,7 @@ function displayTags() {
 
       const removeIcon = document.createElement('span');
       removeIcon.textContent = 'x';
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700-rounded', 'text-2xl'); // Ajout d'une couleur au survol
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
 
       tag.appendChild(removeIcon);
 
@@ -37,7 +36,6 @@ function displayTags() {
         removeTag(tagText, category);
         filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
         displayTags(); // Met à jour l'affichage des tags après la suppression
-        
       });
 
       tagContainer.appendChild(tag);
@@ -51,7 +49,6 @@ function addTag(tagText, category) {
     selectedTags[category].push(tagText);
     displayTags(); // Affiche les tags sélectionnés
     filterRecipesWithAdvancedFilters(); // Met à jour les recettes avec les filtres avancés
-    
   }
 }
 
@@ -100,15 +97,12 @@ function updateFilterOptions(filteredRecipes) {
       });
 
       ulElement.appendChild(li);
-      
     });
   };
 
   updateListItems(ingredientsList, [...uniqueIngredients]);
   updateListItems(appareilsList, [...uniqueAppareils]);
   updateListItems(ustensilesList, [...uniqueUstensiles]);
-
-  
 }
 
 // Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
@@ -135,8 +129,6 @@ function filterRecipesWithAdvancedFilters() {
   });
 
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
-  
-  
 
   if (filteredRecipes.length === 0) {
     hideRecipes(); // Cacher les recettes si aucune recette ne correspond
@@ -145,8 +137,6 @@ function filterRecipesWithAdvancedFilters() {
     hideErrorMessage();
     displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
     updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
-    
-    
   }
 }
 
@@ -170,7 +160,6 @@ function listenToFilterChanges() {
 window.addEventListener('load', () => {
   updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
   listenToFilterChanges();
-  
 });
 
 // Toggle des dropdowns pour les listes d'ingrédients, appareils et ustensiles
@@ -199,13 +188,11 @@ document.addEventListener("DOMContentLoaded", function() {
     const label = document.querySelector(`label[for="${filter.id}"]`);
     label.addEventListener('click', function() {
       toggleDropdown(filter.id, label);
-      
-      
     });
   });
 });
 
-
+// Fonction de filtrage des recettes en fonction des recherches dans les trois filtres
 function filterRecipes() {
   const ingredientSearchText = document.getElementById('ingredients-search').value.toLowerCase();
   const applianceSearchText = document.getElementById('appareils-search').value.toLowerCase();
@@ -241,47 +228,20 @@ function filterRecipes() {
     hideErrorMessage();
   }
 
-  // Met à jour les options des filtres avancés
-  updateFilterOptions(filteredRecipes);
+  updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés
 }
 
-// Écouteurs pour la recherche en temps réel sur les trois filtres
+// Ajoutez un écouteur d'événements pour les champs de recherche
 document.getElementById('ingredients-search').addEventListener('input', filterRecipes);
 document.getElementById('appareils-search').addEventListener('input', filterRecipes);
 document.getElementById('ustensiles-search').addEventListener('input', filterRecipes);
 
-// Fonction pour gérer le clic sur un élément de la liste
-// Fonction pour gérer le clic sur un élément de la liste
-function handleListItemClick(event) {
-  const listItem = event.target;
-
-  // Vérifie si l'élément cliqué est un item de liste
-  if (listItem.classList.contains('list-item')) {
-      // Vérifie si l'élément est déjà sélectionné
-      if (!listItem.classList.contains('bg-yellow-custom')) {
-          // Ajouter la classe de fond jaune
-          listItem.classList.add('bg-yellow-custom');
-
-          // Créer l'élément de fermeture
-          const closeIcon = document.createElement('span');
-          closeIcon.textContent = '✖'; // Ou une autre icône de fermeture
-          closeIcon.classList.add('close-icon');
-
-          // Écouteur d'événements pour la fermeture
-          closeIcon.addEventListener('click', (e) => {
-              e.stopPropagation(); // Empêche le clic sur l'élément de liste
-              listItem.classList.remove('bg-yellow-custom'); // Enlève la sélection
-              closeIcon.remove(); // Retire l'icône de fermeture
-          });
-
-          // Ajouter l'icône de fermeture à l'élément de liste
-          listItem.appendChild(closeIcon);
-      }
+// Fonction pour masquer les recettes
+function hideRecipes() {
+  const recipesContainer = document.getElementById('recipes-container');
+  if (recipesContainer) {
+    recipesContainer.innerHTML = ''; // Efface le conteneur des recettes
   }
 }
 
-// Ajouter des écouteurs d'événements sur tous les éléments de la liste
-const listItems = document.querySelectorAll('.list-item');
-listItems.forEach(item => {
-  item.addEventListener('click', handleListItemClick);
-});
+export { filterRecipesWithAdvancedFilters, updateFilterOptions, selectedTags };
