@@ -55,7 +55,11 @@ function filterRecipes() {
   const selectedAppareils = Array.from(document.querySelectorAll('#appareils li.selected')).map(li => li.dataset.value.toLowerCase());
   const selectedUstensiles = Array.from(document.querySelectorAll('#ustensiles li.selected')).map(li => li.dataset.value.toLowerCase());
 
-  const recettesFiltrees = recipes.filter(recette => {
+  const recettesFiltrees = [];
+  
+  // Remplacer la méthode filter par une boucle for
+  for (let i = 0; i < recipes.length; i++) {
+    const recette = recipes[i];
     const correspondTexte = recette.name.toLowerCase().includes(searchText) ||
                             recette.description.toLowerCase().includes(searchText) ||
                             recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(searchText));
@@ -64,8 +68,10 @@ function filterRecipes() {
     const correspondAppareils = !selectedAppareils.length || selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
     const correspondUstensiles = !selectedUstensiles.length || recette.ustensils?.some(ustensile => selectedUstensiles.includes(ustensile.toLowerCase())) || false;
 
-    return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
-  });
+    if (correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles) {
+      recettesFiltrees.push(recette);
+    }
+  }
 
   // Mise à jour du compteur de recettes
   const totalRecipes = recettesFiltrees.length;
@@ -132,7 +138,7 @@ window.addEventListener('load', () => {
   });
 });
 
-//Filtres Ingrédients, appareils et ustensiles
+// Filtres Ingrédients, appareils et ustensiles
 document.addEventListener('DOMContentLoaded', () => {
   function setupFilter(labelFor, containerId, selectId, inputId, clearBtnId) {
     const label = document.querySelector(`label[for="${labelFor}"]`);
@@ -176,31 +182,21 @@ document.addEventListener('DOMContentLoaded', () => {
       if (input.value !== '') {
         clearBtn.classList.remove('hidden'); // Affiche la croix
       } else {
-        clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
+        clearBtn.classList.add('hidden'); // Masque la croix
       }
     });
 
-    // Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+    // Efface le texte de l'input et masque la croix
     clearBtn.addEventListener('click', () => {
       input.value = ''; // Efface le texte de l'input
-      clearBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
-      input.focus(); // Remet le focus sur l'input après avoir effacé
-    });
-
-    // Garde le conteneur affiché après la sélection d'un ingrédient/appareil/ustensile
-    select.addEventListener('change', () => {
-      if (select.value) {
-        input.value = ''; // Efface le texte saisi dans l'input
-        clearBtn.classList.add('hidden'); // Masque la croix
-        isInputVisible = true;
-        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible
-        label.classList.remove('label-hidden'); // Garde le padding
-      }
+      clearBtn.classList.add('hidden'); // Masque la croix
+      filterOptions(inputId, containerId); // Met à jour les options filtrées
+      input.focus(); // Remet le focus sur l'input
     });
   }
 
-  // Configuration des filtres
-  setupFilter('ingredients', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
-  setupFilter('appareils', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
-  setupFilter('ustensiles', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
+  // Initialise les filtres
+  setupFilter('ingredients-search', 'ingredients-container', 'ingredients', 'ingredients-search', 'ingredients-clear');
+  setupFilter('appareils-search', 'appareils-container', 'appareils', 'appareils-search', 'appareils-clear');
+  setupFilter('ustensiles-search', 'ustensiles-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear');
 });
