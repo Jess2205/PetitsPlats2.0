@@ -119,11 +119,19 @@ function hideErrorMessage() {
 
 
 function updateRecipeCount(count) {
-  var recipeCountElement = document.getElementById('total-recipes');
+  var recipeCountElement = document.getElementById('total-recipes'); // Assurez-vous que cet ID correspond à l'élément dans votre HTML
+  // Formater le compteur avec un préfixe de zéro
 
-  if (recipeCountElement) {
-    recipeCountElement.textContent = "".concat(count, " Recettes");
+  var formattedCount = count.toString().padStart(2, '0'); // Logique pour déterminer le texte
+
+  var recipeText = '';
+
+  if (count === 0) {
+    recipeText = 'recette'; // Aucun 's' pour 0
   } else {
-    console.error('Élément #total-recipes non trouvé');
-  }
+    recipeText = count === 1 ? 'recette' : 'recettes'; // Singular ou plural
+  } // Mettre à jour l'élément d'affichage
+
+
+  recipeCountElement.textContent = "".concat(formattedCount, " ").concat(recipeText);
 }

@@ -17,6 +17,7 @@ function displayTags() {
   }
 
   tagContainer.innerHTML = ''; // Efface les tags existants
+  
 
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
@@ -36,6 +37,7 @@ function displayTags() {
         removeTag(tagText, category);
         filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
         displayTags(); // Met à jour l'affichage des tags après la suppression
+        
       });
 
       tagContainer.appendChild(tag);
@@ -49,6 +51,7 @@ function addTag(tagText, category) {
     selectedTags[category].push(tagText);
     displayTags(); // Affiche les tags sélectionnés
     filterRecipesWithAdvancedFilters(); // Met à jour les recettes avec les filtres avancés
+    
   }
 }
 
@@ -97,12 +100,15 @@ function updateFilterOptions(filteredRecipes) {
       });
 
       ulElement.appendChild(li);
+      
     });
   };
 
   updateListItems(ingredientsList, [...uniqueIngredients]);
   updateListItems(appareilsList, [...uniqueAppareils]);
   updateListItems(ustensilesList, [...uniqueUstensiles]);
+
+  
 }
 
 // Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
@@ -129,6 +135,8 @@ function filterRecipesWithAdvancedFilters() {
   });
 
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
+  
+  
 
   if (filteredRecipes.length === 0) {
     hideRecipes(); // Cacher les recettes si aucune recette ne correspond
@@ -137,6 +145,8 @@ function filterRecipesWithAdvancedFilters() {
     hideErrorMessage();
     displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
     updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
+    
+    
   }
 }
 
@@ -160,6 +170,7 @@ function listenToFilterChanges() {
 window.addEventListener('load', () => {
   updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
   listenToFilterChanges();
+  
 });
 
 // Toggle des dropdowns pour les listes d'ingrédients, appareils et ustensiles
@@ -188,47 +199,54 @@ document.addEventListener("DOMContentLoaded", function() {
     const label = document.querySelector(`label[for="${filter.id}"]`);
     label.addEventListener('click', function() {
       toggleDropdown(filter.id, label);
+      
+      
     });
   });
 });
 
-// Fonction pour filtrer les recettes en fonction de la recherche dans les filtres
-function filterRecipes(searchText, filterType) {
-  const lowerCasedSearchText = searchText.toLowerCase();
 
+function filterRecipes() {
+  const ingredientSearchText = document.getElementById('ingredients-search').value.toLowerCase();
+  const applianceSearchText = document.getElementById('appareils-search').value.toLowerCase();
+  const utensilSearchText = document.getElementById('ustensiles-search').value.toLowerCase();
+
+  // Filtre les recettes
   const filteredRecipes = recipes.filter(recipe => {
-    if (filterType === 'ingredients') {
-      return recipe.ingredients.some(ingredient =>
-        ingredient.ingredient.toLowerCase().includes(lowerCasedSearchText)
-      );
-    } else if (filterType === 'appareils') {
-      return recipe.appliance.toLowerCase().includes(lowerCasedSearchText);
-    } else if (filterType === 'ustensiles') {
-      return recipe.utensils.some(utensil =>
-        utensil.toLowerCase().includes(lowerCasedSearchText)
-      );
-    }
-    return true;
+    const matchesIngredients = ingredientSearchText === '' || recipe.ingredients.some(ingredient =>
+      ingredient.ingredient.toLowerCase().includes(ingredientSearchText)
+    );
+
+    const matchesAppareils = applianceSearchText === '' || recipe.appliance.toLowerCase().includes(applianceSearchText);
+
+    const matchesUstensiles = utensilSearchText === '' || recipe.ustensils.some(utensil =>
+      utensil.toLowerCase().includes(utensilSearchText)
+    );
+
+    return matchesIngredients && matchesAppareils && matchesUstensiles;
   });
 
-  // Mettre à jour l'affichage des recettes
+  // Affiche les recettes filtrées
+  console.log(filteredRecipes); // Log pour voir les recettes filtrées
   displayRecipes(filteredRecipes);
 
-  // Mettre à jour le compteur
+  // Met à jour le compteur
   updateRecipeCount(filteredRecipes.length);
+
+  // Gérer l'affichage des messages d'erreur
+  if (filteredRecipes.length === 0) {
+    hideRecipes();
+    showErrorMessage();
+  } else {
+    hideErrorMessage();
+  }
+
+  // Met à jour les options des filtres avancés
+  updateFilterOptions(filteredRecipes);
 }
 
-// Écouteur pour la recherche en temps réel sur les ingrédients
-document.getElementById('ingredients-search').addEventListener('input', (e) => {
-  filterRecipes(e.target.value, 'ingredients');
-});
+// Écouteurs pour la recherche en temps réel sur les trois filtres
+document.getElementById('ingredients-search').addEventListener('input', filterRecipes);
+document.getElementById('appareils-search').addEventListener('input', filterRecipes);
+document.getElementById('ustensiles-search').addEventListener('input', filterRecipes);
 
-// Écouteur pour la recherche en temps réel sur les appareils
-document.getElementById('appareils-search').addEventListener('input', (e) => {
-  filterRecipes(e.target.value, 'appareils');
-});
-
-// Écouteur pour la recherche en temps réel sur les ustensiles
-document.getElementById('ustensiles-search').addEventListener('input', (e) => {
-  filterRecipes(e.target.value, 'ustensiles');
-});

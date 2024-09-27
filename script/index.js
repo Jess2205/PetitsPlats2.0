@@ -119,10 +119,20 @@ export function hideErrorMessage() {
 }
 // Fonction pour mettre à jour le compteur de recettes affichées
 export function updateRecipeCount(count) {
-  const recipeCountElement = document.getElementById('total-recipes');
-  if (recipeCountElement) {
-    recipeCountElement.textContent = `${count} Recettes`;
+  const recipeCountElement = document.getElementById('total-recipes'); // Assurez-vous que cet ID correspond à l'élément dans votre HTML
+
+  // Formater le compteur avec un préfixe de zéro
+  const formattedCount = count.toString().padStart(2, '0');
+
+  // Logique pour déterminer le texte
+  let recipeText = '';
+  if (count === 0) {
+    recipeText = 'recette'; // Aucun 's' pour 0
   } else {
-    console.error('Élément #total-recipes non trouvé');
+    recipeText = count === 1 ? 'recette' : 'recettes'; // Singular ou plural
   }
+
+  // Mettre à jour l'élément d'affichage
+  recipeCountElement.textContent = `${formattedCount} ${recipeText}`;
 }
+
