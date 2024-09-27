@@ -3,118 +3,236 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Les Petits Plats V2</title>
+  <title>Les Petits Plats</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="./dist/output.css" rel="stylesheet">
   <style>
-    /* Assure-toi que le conteneur est bien aligné en ligne */
-    .filters-container {
-      display: flex;
-      align-items: flex-start; /* Aligne les éléments en haut */
-      justify-content: space-between; /* Répartit l'espace entre les filtres et le compteur */
+    
+
+     /* Flèche de filtre */
+     .arrow {
+      cursor: pointer;
+      transition: transform 0.3s ease;
     }
-    .filter-group {
-      flex: 1; /* Permet aux groupes de filtre de se redimensionner également */
-      margin-right: 16px; /* Espace entre les filtres */
+    .arrow.rotate {
+      transform: rotate(180deg);
     }
-    .search-input {
-      width: 100%;
-    }
-    .search-input, .filter-group select {
-      margin-bottom: 0.5rem;
-    }
-  </style>
+    ul {
+    border: none; /* Supprime la bordure */
+    -webkit-appearance: none; /* Pour les navigateurs WebKit */
+    -moz-appearance: none; /* Pour Firefox */
+    appearance: none; /* Supprime le style par défaut du navigateur */
+    background: transparent; /* Pour un fond transparent */
+    
+    overflow: hidden; /* Supprime le scroll */
+    background-color: white;
+  }
+
+  
+
+  .opacity-0 {
+  opacity: 0;
+  visibility: hidden;
+  }
+
+  .pointer-events-none {
+  pointer-events: none;
+  }
+
+  .transition-opacity {
+  transition: opacity 0.3s ease-in-out;
+  }
+
+#clear-search {
+  font-size: 1.5rem; /* Taille de la croix */
+  cursor: pointer;
+}
+
+#clear-search {
+  display: none;
+}
+
+/* CSS pour gérer le comportement au survol */
+button:hover .img-default {
+display: none;
+}
+        
+button:hover .img-hover {
+display: block;
+}
+.search-input {
+  padding-right: 30px; /* Espace pour la croix */
+}
+
+#main-clear-search {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: calc(1.5em * 6); /* 1.5em est la hauteur de ligne moyenne, pour 6 lignes */
+  overflow: hidden;           
+  padding-right: 2px;         /* Optionnel : Ajouter un peu de padding pour éviter la superposition avec la scrollbar */
+}
+
+.filter-list-item {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e7eb;
+  }
+
+.filter-list-item:hover {
+  background-color: #f3f4f6;
+  }
+
+  .list-itemClick {
+  padding: 10px;
+  cursor: pointer;
+  position: relative; /* Pour le positionnement de la croix */
+}
+
+.selected {
+  background-color: #FFD15B;
+  ; /* Code hexadécimal pour bg-yellow-400 */
+}
+
+.close-icon {
+    margin-left: 8px; /* Un petit espacement */
+    cursor: pointer; /* Pour indiquer que c'est cliquable */
+    font-weight: bold; /* Pour rendre l'icône plus visible */
+}
+
+
+
+</style>
+
 </head>
 <body class="bg-gray-100 text-gray-800">
 
   <!-- Header Section -->
-  <header class="h-screen flex flex-col justify-center items-center text-white" style="background-image: url('./assets/header-background.png'); background-size: cover; background-position: center;">
+  <header class="h-screen flex flex-col justify-center items-center text-white mb-8" style="background-image: url('./assets/header-background.png'); background-size: cover; background-position: center;">
     <h1 class="text-4xl font-bold absolute p-0 gap-0 opacity-1 transition ease-out duration-300" style="top: 51px; left: 69px;">
       Les Petits Plats ©
     </h1>
-    <h2 class="text-7xl mt-6 text-center text-yellow-400">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h2>
+    <h2 class="text-6xl mt-6 flex w-2/3 text-center  text-yellow-400">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h2>
 
     <!-- Barre de recherche principale -->
-    <div class="mt-6 flex w-2/3">
-      <input 
-        id="search-input" 
-        type="text" 
-        placeholder="Rechercher une recette, un ingrédient, ..." 
-        class="text-black w-full p-4 focus:outline-none"
-      >
-      <button class="bg-white text-white px-4 py-3 rounded-r-full hover:bg-green-700" aria-label="Rechercher">
-        <img src="./assets/loupe.png" alt="icone d'une loupe">
-      </button>
-    </div>
+<div class="relative mt-6 flex w-2/3">
+  <input 
+    id="search-input" 
+    type="text" 
+    placeholder="Rechercher une recette, un ingrédient, ..." 
+    class="text-black w-full rounded-l p-4 focus:outline-none focus:placeholder-transparent"
+  >
+  <button id="main-clear-search" class="absolute right-14 top-2  text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4">
+  </button>
+  <button class="absolute w-10 h-10 mt-2 right-2" aria-label="Rechercher">
+    <!-- Image par défaut -->
+    <img src="./assets/loupe.png" alt="Icône d'une loupe" class="w-full h-full object-cover img-default absolute inset-0">
+    
+    <!-- Image au survol (hover) -->
+    <img src="./assets/loupe-jaune.png" alt="Image au survol" class="w-full h-full object-cover img-hover absolute inset-0 hidden">
+  </button>  
+</div>
 
-    <!-- Conteneur pour le message d'erreur -->
-    <div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
-      Aucune recette trouvée.
-    </div>
+<!-- Conteneur pour le message d'erreur -->
+<div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
+  Aucune recette trouvée.
+</div>
+
 
     <!-- Conteneur pour les résultats de recherche -->
     <div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
       <!-- Les résultats injectés dynamiquement ici -->
     </div>
-
-    <!-- Conteneur pour les tags -->
-    <div id="tag-container" class="mt-2 w-full flex flex-wrap justify-center gap-2 text-black bg-yellow-400">
-      <!-- Tags ajoutés dynamiquement ici -->
-    </div>
   </header>
 
-  <!-- Filters Section -->
-  <div class="py-8 filters-container mt-6">
-    <!-- Filtres dynamiques des ingrédients -->
-    <div class="filter-group">
-      <input 
-        id="ingredients-search" 
-        type="text" 
-        placeholder="Rechercher un ingrédient" 
-        class="search-input p-2 rounded border"
-      >
-      <select aria-label="Rechercher un ingrédient"  id="ingredients" class="p-2 rounded border" multiple>
-        <option value="">Ingrédients</option>
-        <!-- Options injectées dynamiquement ici -->
-      </select>
-    </div>
+ <!-- Filters Section -->
+ <div class="relative items-start mb-4">
+  <div class="flex gap-8 pl-8">
+  
 
-    <!-- Filtres dynamiques des appareils -->
-    <div class="filter-group">
-      <input 
-        id="appareils-search" 
-        type="text" 
-        placeholder="Rechercher un appareil" 
-        class="search-input p-2 rounded border"
-      >
-      <select aria-label="Rechercher un appareil"   id="appareils" class="p-2 rounded border" multiple>
-        <option value="">Appareils</option>
-        <!-- Options injectées dynamiquement ici -->
-      </select>
-    </div>
+      <!-- Filtres dynamiques des ingrédients -->
+<div class="relative w-52 ml-2 rounded">
+  <label for="ingredients" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
+    Ingrédients  
+    <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
+      <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
+    </span>
+  </label>
+  <!-- Conteneur pour l'input et la loupe -->
+  <div id="ingredients-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent " autocomplete="off">
+  <button id="ingredients-clear-search" class="absolute right-16 top-16 text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4" ><!-- Symbole de la croix -->
+  </button>
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche  " >
+  </button>
+</div>
+<ul id="ingredients" class="filter-list hidden bg-white rounded mt-2 " multiple></ul>
+</div>
 
-    <!-- Filtres dynamiques des ustensiles -->
-    <div class="filter-group">
-      <input 
-        id="ustensiles-search" 
-        type="text" 
-        placeholder="Rechercher un ustensile" 
-        class="search-input p-2 rounded border"
-      >
-      <select aria-label="Rechercher un ustensile"   id="ustensiles" class="p-2 rounded border" multiple>
-        <option value="">Ustensiles</option>
-        <!-- Options injectées dynamiquement ici -->
-      </select>
-    </div>
 
-    <!-- Compteur de recettes -->
-    <p id="total-recipes" class="text-black-400 text-2xl">
-      1500 recettes
-    </p>
+ <!-- Filtres dynamiques des appareils -->
+ <div class="relative w-52 ml-2 rounded">
+  <label for="appareils" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
+    Appareils  
+    <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
+      <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
+    </span>
+  </label>
+  <!-- Conteneur pour l'input et la loupe -->
+  <div id="appareils-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
+  <button id="appareils-clear-search" class="absolute right-16 top-16 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4 " ><!-- Symbole de la croix -->
+  </button>
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
+  </button>
+</div>
+<ul id="appareils" class="filter-list hidden bg-white rounded mt-2 " multiple></ul>
+</div>
+
+
+<!-- Filtres dynamiques des ustensiles -->
+<div class="relative w-52 ml-2  rounded">
+  <label for="ustensiles" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
+    Ustensiles  
+    <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
+      <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
+    </span>
+  </label>
+  <!-- Conteneur pour l'input et la loupe -->
+  <div id="ustensiles-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
+  <button id="ustensiles-clear-search" class="absolute right-16 top-16  text-gray-400 hidden" aria-label="Effacer la recherche">
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise pl-2 pb-4" ><!-- Symbole de la croix -->
+  </button>
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+    <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
+  </button>
+</div>
+<ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 " multiple></ul>
+</div>
+
+
+
+ <!-- Compteur de recettes -->
+ <p id="total-recipes" class="text-black-700 text-2xl font-medium pt-2 pl-96">1500 recettes</p>
+</div>
+ <!-- Conteneur pour les tags sélectionnés -->
+    <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 mt-4 text-black">
+    </div>
   </div>
 
   <!-- Section où les médias seront affichés -->
-  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-6">
+  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pl-10 pr-10 h-[600px] overflow-y-auto">
     <!-- Les recettes/médias seront injectés dynamiquement ici -->
   </div>
 
@@ -128,34 +246,6 @@
   <script type="module" src="./script/filtres.js" ></script>
   <script type="module" src="./script/main.js" ></script>
 
-  <script>
-    // Test console logs
-    console.log('Document loaded');
-
-    // Log elements to ensure they are correctly selected
-    const searchInput = document.getElementById('search-input');
-    console.log('Search input element:', searchInput);
-
-    const ingredientsSelect = document.getElementById('ingredients');
-    console.log('Ingredients select element:', ingredientsSelect);
-
-    const appareilsSelect = document.getElementById('appareils');
-    console.log('Appareils select element:', appareilsSelect);
-
-    const ustensilesSelect = document.getElementById('ustensiles');
-    console.log('Ustensiles select element:', ustensilesSelect);
-
-    const mediaContainer = document.getElementById('media-container');
-    console.log('Media container element:', mediaContainer);
-
-    const resultsContainer = document.getElementById('results-container');
-    console.log('Results container element:', resultsContainer);
-
-    const tagContainer = document.getElementById('tag-container');
-    console.log('Tag container element:', tagContainer);
-
-    const errorMessage = document.getElementById('error-message');
-    console.log('Error message element:', errorMessage);
-  </script>
+  
 </body>
 </html>
