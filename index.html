@@ -16,7 +16,83 @@
     
   
 
-  
+  .opacity-0 {
+  opacity: 0;
+  visibility: hidden;
+  }
+
+  .pointer-events-none {
+  pointer-events: none;
+  }
+
+  .transition-opacity {
+  transition: opacity 0.3s ease-in-out;
+  }
+
+#clear-search {
+  font-size: 1.5rem; /* Taille de la croix */
+  cursor: pointer;
+}
+
+#clear-search {
+  display: none;
+}
+
+/* CSS pour gérer le comportement au survol */
+button:hover .img-default {
+display: none;
+}
+        
+button:hover .img-hover {
+display: block;
+}
+.search-input {
+  padding-right: 30px; /* Espace pour la croix */
+}
+
+#main-clear-search {
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.filter-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: calc(1.5em * 6); /* 1.5em est la hauteur de ligne moyenne, pour 6 lignes */
+  overflow: hidden;           
+  padding-right: 2px;         /* Optionnel : Ajouter un peu de padding pour éviter la superposition avec la scrollbar */
+}
+
+.li {
+  padding: 0.5rem;
+  cursor: pointer;
+  border-bottom: 1px solid #e5e7eb;
+  }
+
+.filter-list-item:hover {
+  background-color: #f3f4f6;
+  }
+
+  .list-itemClick {
+  padding: 10px;
+  cursor: pointer;
+  position: relative; /* Pour le positionnement de la croix */
+}
+
+.selected {
+  background-color: #FFD15B;
+  ; /* Code hexadécimal pour bg-yellow-400 */
+}
+
+.close-icon {
+    margin-left: 8px; /* Un petit espacement */
+    cursor: pointer; /* Pour indiquer que c'est cliquable */
+    font-weight: bold; /* Pour rendre l'icône plus visible */
+}
+
+
+
 </style>
 
 </head>
