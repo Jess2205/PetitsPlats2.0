@@ -1,5 +1,6 @@
 import { recipes } from './recipes.js'; // Assurez-vous que le chemin est correct
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Assurez-vous que le chemin est correct
+import { displayTags } from './filtres.js';
 
 // Fonction pour mettre à jour les options des filtres avancés
 function updateAdvancedFilters(recipes) {
