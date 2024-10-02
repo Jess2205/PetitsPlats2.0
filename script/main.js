@@ -140,12 +140,12 @@ window.addEventListener('load', () => {
   });
 });
 
-// Filtres Ingrédients, appareils et ustensiles
+//Filtres Ingrédients, appareils et ustensiles
 document.addEventListener('DOMContentLoaded', () => {
-  function setupFilter(labelFor, containerId, selectId, inputId, clearBtnId) {
+  function setupFilter(labelFor, containerId, ulId, inputId, clearBtnId) {
     const label = document.querySelector(`label[for="${labelFor}"]`);
     const inputContainer = document.getElementById(containerId);
-    const select = document.getElementById(selectId);
+    const ul = document.getElementById(ulId);
     const input = document.getElementById(inputId);
     const clearBtn = document.getElementById(clearBtnId);
 
@@ -184,21 +184,31 @@ document.addEventListener('DOMContentLoaded', () => {
       if (input.value !== '') {
         clearBtn.classList.remove('hidden'); // Affiche la croix
       } else {
-        clearBtn.classList.add('hidden'); // Masque la croix
+        clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
       }
     });
 
-    // Efface le texte de l'input et masque la croix
+    // Efface le texte de recherche lorsque l'utilisateur clique sur la croix
     clearBtn.addEventListener('click', () => {
       input.value = ''; // Efface le texte de l'input
-      clearBtn.classList.add('hidden'); // Masque la croix
-      filterOptions(inputId, containerId); // Met à jour les options filtrées
-      input.focus(); // Remet le focus sur l'input
+      clearBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+      input.focus(); // Remet le focus sur l'input après avoir effacé
+    });
+
+    // Garde le conteneur affiché après la sélection d'un ingrédient/appareil/ustensile
+    ul.addEventListener('click', () => {
+      if (ul.value) {
+        input.value = ''; // Efface le texte saisi dans l'input
+        clearBtn.classList.add('hidden'); // Masque la croix
+        isInputVisible = true;
+        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible
+        label.classList.remove('label-hidden'); // Garde le padding
+      }
     });
   }
 
-  /// Configuration des filtres
-  setupFilter('ingredients', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
-  setupFilter('appareils', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
-  setupFilter('ustensiles', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
+  // Configuration des filtres
+  setupFilter('ingredients-search', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
+  setupFilter('appareils-search', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
+  setupFilter('ustensiles-search', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
 });
