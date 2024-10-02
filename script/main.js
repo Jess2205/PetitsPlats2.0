@@ -15,13 +15,13 @@ function updateAdvancedFilters(recipes) {
     recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
   });
 
-  const updateOptions = (ulElement, items) => {
-    ulElement.innerHTML = ''; // Réinitialiser le contenu de la liste
+  const updateOptions = (ul, items) => {
+    ul.innerHTML = ''; // Réinitialiser le contenu de la liste
     items.forEach(item => {
       const li = document.createElement('li');
       li.textContent = item;
       li.dataset.value = item; // Ajouter une donnée pour la sélection
-      ulElement.appendChild(li);
+      ul.appendChild(li);
     });
   };
 
@@ -31,11 +31,11 @@ function updateAdvancedFilters(recipes) {
 }
 
 // Fonction de filtrage des options dans les filtres avancés
-function filterOptions(inputId, ulElementId) {
+function filterOptions(inputId, ulId) {
   const searchText = document.getElementById(inputId).value.toLowerCase();
-  const ulElement = document.getElementById(ulElementId);
+  const ul = document.getElementById(ulId);
   
-  Array.from(ulElement.children).forEach(li => {
+  Array.from(ul.children).forEach(li => {
     li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
 }
@@ -127,6 +127,7 @@ window.addEventListener('load', () => {
       if (e.target.tagName === 'LI') {
         e.target.classList.toggle('selected'); // Ajoute ou enlève la classe 'selected'
         filterRecipes(); // Filtrer les recettes après la sélection
+        displayTags(); // Afficher les tags sélectionnés
       }
     });
   });
@@ -134,10 +135,10 @@ window.addEventListener('load', () => {
 
 //Filtres Ingrédients, appareils et ustensiles
 document.addEventListener('DOMContentLoaded', () => {
-  function setupFilter(labelFor, containerId, selectId, inputId, clearBtnId) {
+  function setupFilter(labelFor, containerId, ulId, inputId, clearBtnId) {
     const label = document.querySelector(`label[for="${labelFor}"]`);
     const inputContainer = document.getElementById(containerId);
-    const select = document.getElementById(selectId);
+    const ul = document.getElementById(ulId);
     const input = document.getElementById(inputId);
     const clearBtn = document.getElementById(clearBtnId);
 
@@ -188,8 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Garde le conteneur affiché après la sélection d'un ingrédient/appareil/ustensile
-    select.addEventListener('change', () => {
-      if (select.value) {
+    ul.addEventListener('click', () => {
+      if (ul.value) {
         input.value = ''; // Efface le texte saisi dans l'input
         clearBtn.classList.add('hidden'); // Masque la croix
         isInputVisible = true;
@@ -200,7 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Configuration des filtres
-  setupFilter('ingredients', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
-  setupFilter('appareils', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
-  setupFilter('ustensiles', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
+  setupFilter('ingredients-search', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
+  setupFilter('appareils-search', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
+  setupFilter('ustensiles-search', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
 });

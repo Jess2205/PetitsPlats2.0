@@ -9,7 +9,7 @@ const selectedTags = {
 };
 
 // Fonction pour afficher les tags dans le conteneur
-function displayTags() {
+export function displayTags() {
   const tagContainer = document.getElementById('tag-container');
   if (!tagContainer) {
     console.error('Élément #tag-container non trouvé');
@@ -17,27 +17,26 @@ function displayTags() {
   }
 
   tagContainer.innerHTML = ''; // Efface les tags existants
-  
 
+  // Afficher chaque catégorie et ses tags
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span');
-      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-52'; // inline-flex pour que le contenu s'ajuste
+      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-52';
 
       tag.textContent = tagText;
 
       const removeIcon = document.createElement('span');
       removeIcon.textContent = 'x';
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700-rounded', 'text-2xl'); // Ajout d'une couleur au survol
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
 
       tag.appendChild(removeIcon);
 
       // Event listener pour supprimer le tag
       removeIcon.addEventListener('click', () => {
         removeTag(tagText, category);
-        filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
-        displayTags(); // Met à jour l'affichage des tags après la suppression
-        
+        // Refiltre les recettes et met à jour l'affichage des tags après suppression
+        filterRecipesWithAdvancedFilters();
       });
 
       tagContainer.appendChild(tag);
@@ -51,7 +50,7 @@ function addTag(tagText, category) {
     selectedTags[category].push(tagText);
     displayTags(); // Affiche les tags sélectionnés
     filterRecipesWithAdvancedFilters(); // Met à jour les recettes avec les filtres avancés
-    
+    updateFilterOptions(recipes); // Met à jour les options des filtres après ajout du tag
   }
 }
 
@@ -62,15 +61,18 @@ function removeTag(tagText, category) {
     if (index > -1) {
       selectedTags[category].splice(index, 1);
       displayTags(); // Re-affiche les tags
+      filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
+      updateFilterOptions(recipes); // Met à jour les options des filtres après suppression du tag
     }
   }
 }
 
+
 // Mettre à jour les options des filtres avancés en fonction des recettes affichées
 function updateFilterOptions(filteredRecipes) {
-  const ingredientsList = document.getElementById('ingredients');
-  const appareilsList = document.getElementById('appareils');
-  const ustensilesList = document.getElementById('ustensiles');
+  const ingredientsList = document.getElementById('ingredients-search');
+  const appareilsList = document.getElementById('appareils-search');
+  const ustensilesList = document.getElementById('ustensiles-search');
 
   if (!ingredientsList || !appareilsList || !ustensilesList) {
     console.error('Un ou plusieurs éléments de filtre non trouvés');
@@ -87,22 +89,24 @@ function updateFilterOptions(filteredRecipes) {
     recipe.ustensils.forEach(ustensile => uniqueUstensiles.add(ustensile));
   });
 
-  const updateListItems = (ulElement, items) => {
-    ulElement.innerHTML = '';
+  function updateListItems(ul, items) {
+    ul.innerHTML = '';
     items.forEach(item => {
       const li = document.createElement('li');
       li.textContent = item;
       li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
-
+  
       // Ajouter un tag lorsqu'un élément de la liste est cliqué
       li.addEventListener('click', () => {
-        addTag(item, ulElement.id); // Utilise l'ID pour retrouver la catégorie
+        const category = ul.id.includes('ingredients') ? 'ingredients' :
+                        ul.id.includes('appareils') ? 'appareils' : 'ustensiles';
+        addTag(item, category); // Utilise l'ID pour retrouver la catégorie
       });
-
-      ulElement.appendChild(li);
-      
+  
+      ul.appendChild(li);
     });
-  };
+  }
+  
 
   updateListItems(ingredientsList, [...uniqueIngredients]);
   updateListItems(appareilsList, [...uniqueAppareils]);
@@ -135,8 +139,6 @@ function filterRecipesWithAdvancedFilters() {
   });
 
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
-  
-  
 
   if (filteredRecipes.length === 0) {
     hideRecipes(); // Cacher les recettes si aucune recette ne correspond
@@ -145,9 +147,8 @@ function filterRecipesWithAdvancedFilters() {
     hideErrorMessage();
     displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
     updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
-    
-    
   }
+  
 }
 
 // Ajouter des écouteurs d'événements pour les filtres
@@ -166,6 +167,8 @@ function listenToFilterChanges() {
   });
 }
 
+
+
 // Initialisation des filtres lors du chargement de la page
 window.addEventListener('load', () => {
   updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
@@ -173,12 +176,17 @@ window.addEventListener('load', () => {
   
 });
 
-// Toggle des dropdowns pour les listes d'ingrédients, appareils et ustensiles
 document.addEventListener("DOMContentLoaded", function() {
+
+  
   function toggleDropdown(dropdownId, label) {
     const dropdown = document.getElementById(dropdownId);
     const arrow = label.querySelector('.arrow');
-    const container = label.closest('.relative');
+    
+    if (!dropdown) {
+      console.error(`Dropdown avec l'ID ${dropdownId} non trouvé.`);
+      return;
+    }
 
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
@@ -196,14 +204,17 @@ document.addEventListener("DOMContentLoaded", function() {
   ];
 
   filters.forEach(filter => {
-    const label = document.querySelector(`label[for="${filter.id}"]`);
-    label.addEventListener('click', function() {
-      toggleDropdown(filter.id, label);
-      
-      
-    });
+    const label = document.querySelector(`label[for="${filter.id}-search"]`); // Ajustement ici pour utiliser -search
+    if (label) {
+      label.addEventListener('click', function() {
+        toggleDropdown(filter.id, label);
+      });
+    } else {
+      console.warn(`Label pour ${filter.id} non trouvé.`);
+    }
   });
 });
+
 
 
 function filterRecipes() {
