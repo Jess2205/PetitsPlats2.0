@@ -1,5 +1,6 @@
 import { recipes } from './recipes.js'; // Assurez-vous que le chemin est correct
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Assurez-vous que le chemin est correct
+import { displayTags } from './filtres.js';
 
 // Fonction pour mettre à jour les options des filtres avancés
 function updateAdvancedFilters(recipes) {
@@ -15,13 +16,13 @@ function updateAdvancedFilters(recipes) {
     recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
   });
 
-  const updateOptions = (ulElement, items) => {
-    ulElement.innerHTML = ''; // Réinitialiser le contenu de la liste
+  const updateOptions = (ul, items) => {
+    ul.innerHTML = ''; // Réinitialiser le contenu de la liste
     items.forEach(item => {
       const li = document.createElement('li');
       li.textContent = item;
       li.dataset.value = item; // Ajouter une donnée pour la sélection
-      ulElement.appendChild(li);
+      ul.appendChild(li);
     });
   };
 
@@ -29,6 +30,7 @@ function updateAdvancedFilters(recipes) {
   updateOptions(document.getElementById('appareils'), [...filters.appareils]);
   updateOptions(document.getElementById('ustensiles'), [...filters.ustensiles]);
 }
+
 
 // Fonction de filtrage des options dans les filtres avancés
 function filterOptions(inputId, ulElementId) {
