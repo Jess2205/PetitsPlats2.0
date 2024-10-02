@@ -33,11 +33,11 @@ function updateAdvancedFilters(recipes) {
 
 
 // Fonction de filtrage des options dans les filtres avancés
-function filterOptions(inputId, ulElementId) {
+function filterOptions(inputId, ulId) {
   const searchText = document.getElementById(inputId).value.toLowerCase();
-  const ulElement = document.getElementById(ulElementId);
+  const ul = document.getElementById(ulId);
   
-  Array.from(ulElement.children).forEach(li => {
+  Array.from(ul.children).forEach(li => {
     li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
 }
@@ -52,7 +52,7 @@ function filterRecipes() {
   if (searchText.length < 3) {
     return; // Ne pas filtrer si moins de 3 caractères
   }
-
+  
   const selectedIngredients = Array.from(document.querySelectorAll('#ingredients li.selected')).map(li => li.dataset.value.toLowerCase());
   const selectedAppareils = Array.from(document.querySelectorAll('#appareils li.selected')).map(li => li.dataset.value.toLowerCase());
   const selectedUstensiles = Array.from(document.querySelectorAll('#ustensiles li.selected')).map(li => li.dataset.value.toLowerCase());
