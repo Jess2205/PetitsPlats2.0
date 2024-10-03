@@ -1,31 +1,31 @@
-import { recipes } from './recipes.js'; // Assurez-vous que le chemin est correct
-import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Assurez-vous que le chemin est correct
-import { displayTags } from './filtres.js';
+import { recipes } from './recipes.js'; // Importation des données des recettes
+import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
+import { displayTags } from './filtres.js';// Importation de la fonction qui affiche les tags
 
 // Fonction pour mettre à jour les options des filtres avancés
 function updateAdvancedFilters(recipes) {
   const filters = {
-    ingredients: new Set(),
+    ingredients: new Set(),// Utilisation d'un Set pour éviter les doublons
     appareils: new Set(),
     ustensiles: new Set()
   };
-
+// Parcourt chaque recette pour extraire les ingrédients, appareils et ustensiles
   recipes.forEach(recipe => {
-    recipe.ingredients.forEach(ingredient => filters.ingredients.add(ingredient.ingredient));
-    if (recipe.appliance) filters.appareils.add(recipe.appliance);
-    recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
+    recipe.ingredients.forEach(ingredient => filters.ingredients.add(ingredient.ingredient));// Ajout des ingrédients
+    if (recipe.appliance) filters.appareils.add(recipe.appliance);// Ajout des appareils s'ils existent
+    recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));// Ajout des ustensiles
   });
-
+// Fonction pour mettre à jour les listes d'options des filtres (ingrédients, appareils, ustensiles)
   const updateOptions = (ul, items) => {
     ul.innerHTML = ''; // Réinitialiser le contenu de la liste
     items.forEach(item => {
       const li = document.createElement('li');
-      li.textContent = item;
-      li.dataset.value = item; // Ajouter une donnée pour la sélection
-      ul.appendChild(li);
+      li.textContent = item;// Nom de l'option
+      li.dataset.value = item; // Stocke la valeur dans un dataset pour faciliter la sélection
+      ul.appendChild(li);// Ajoute l'élément à la liste
     });
   };
-
+// Mise à jour des listes des filtres avec les nouvelles options disponibles
   updateOptions(document.getElementById('ingredients'), [...filters.ingredients]);
   updateOptions(document.getElementById('appareils'), [...filters.appareils]);
   updateOptions(document.getElementById('ustensiles'), [...filters.ustensiles]);
@@ -33,9 +33,9 @@ function updateAdvancedFilters(recipes) {
 
 // Fonction de filtrage des options dans les filtres avancés
 function filterOptions(inputId, ulId) {
-  const searchText = document.getElementById(inputId).value.toLowerCase();
+  const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
   const ul = document.getElementById(ulId);
-  
+// Parcourt chaque élément de la liste et ajuste leur affichage selon la correspondance avec le texte de recherche  
   Array.from(ul.children).forEach(li => {
     li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
@@ -49,13 +49,14 @@ function filterRecipes() {
   console.log('Search Text:', searchText); // Vérifie ce qui est saisi
 
   if (searchText.length < 3) {
-    return; // Ne pas filtrer si moins de 3 caractères
+    return; // Ne commence le filtrage qu'après 3 caractères
   }
 
+// Récupère les tags sélectionnés dans chaque filtre
   const selectedIngredients = Array.from(document.querySelectorAll('#ingredients li.selected')).map(li => li.dataset.value.toLowerCase());
   const selectedAppareils = Array.from(document.querySelectorAll('#appareils li.selected')).map(li => li.dataset.value.toLowerCase());
   const selectedUstensiles = Array.from(document.querySelectorAll('#ustensiles li.selected')).map(li => li.dataset.value.toLowerCase());
-
+// Filtrage des recettes en fonction des critères de texte et des tags sélectionnés
   const recettesFiltrees = recipes.filter(recette => {
     const correspondTexte = recette.name.toLowerCase().includes(searchText) ||
                             recette.description.toLowerCase().includes(searchText) ||
@@ -64,7 +65,7 @@ function filterRecipes() {
     const correspondIngredients = !selectedIngredients.length || recette.ingredients.some(ingredient => selectedIngredients.includes(ingredient.ingredient.toLowerCase()));
     const correspondAppareils = !selectedAppareils.length || selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
     const correspondUstensiles = !selectedUstensiles.length || recette.ustensils?.some(ustensile => selectedUstensiles.includes(ustensile.toLowerCase())) || false;
-
+// Retourne vrai si la recette correspond à tous les critères
     return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
   });
 
@@ -77,9 +78,9 @@ function filterRecipes() {
   // Déterminer le suffixe
   const suffix = totalRecipes === 1 ? 'recette' : 'recettes';
 
-  // Mettre à jour le texte du compteur
+// Mise à jour du texte avec le nombre de recettes trouvées
   document.getElementById('total-recipes').textContent = `${formattedTotal} ${suffix}`;
-
+// Affichage ou non du message d'erreur
   if (totalRecipes === 0) {
     showErrorMessage(searchText); // Montre un message d'erreur si aucune recette ne correspond
   } else {
@@ -94,13 +95,13 @@ document.getElementById('search-input').addEventListener('input', function () {
   const clearBtn = document.getElementById('main-clear-search');
   // Vérifiez si le champ de recherche a du texte
   if (this.value.length > 0) {
-    clearBtn.classList.remove('hidden'); // Affiche la croix
+    clearBtn.classList.remove('hidden'); // Affiche la croix si du texte est saisi
   } else {
     clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
   }
 });
 
-// Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+// Efface le texte et remet le focus sur l'input après clic sur la croix
 document.getElementById('main-clear-search').addEventListener('click', function () {
   const searchInput = document.getElementById('search-input');
   searchInput.value = ''; // Efface le texte de l'input
@@ -108,33 +109,33 @@ document.getElementById('main-clear-search').addEventListener('click', function 
   searchInput.focus(); // Remet le focus sur l'input après avoir effacé
 });
 
-// Ajouter les écouteurs d'événements
+// Initialisation au chargement de la page
 window.addEventListener('load', () => {
-  displayRecipes(recipes); // Affiche toutes les recettes au chargement de la page
-  updateAdvancedFilters(recipes); // Met à jour les filtres avancés avec toutes les recettes
+  displayRecipes(recipes); // Affiche toutes les recettes au départ
+  updateAdvancedFilters(recipes); // Met à jour les filtres avec toutes les recettes
 
   // Ajoute l'écouteur d'événement pour le champ de recherche
   document.getElementById('search-input').addEventListener('input', filterRecipes);
 
-  // Écouteurs pour les champs de recherche des filtres avancés
+  // Ajout des écouteurs pour les champs de recherche et les filtres avancés
   document.getElementById('ingredients-search').addEventListener('input', () => filterOptions('ingredients-search', 'ingredients'));
   document.getElementById('appareils-search').addEventListener('input', () => filterOptions('appareils-search', 'appareils'));
   document.getElementById('ustensiles-search').addEventListener('input', () => filterOptions('ustensiles-search', 'ustensiles'));
 
-  // Écouteurs pour les changements dans les filtres
+  // Gérer les clics dans les filtres avancés pour la sélection des options
   const filtres = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
   filtres.forEach(filtre => {
     filtre.addEventListener('click', (e) => {
       if (e.target.tagName === 'LI') {
         e.target.classList.toggle('selected'); // Ajoute ou enlève la classe 'selected'
-        filterRecipes(); // Filtrer les recettes après la sélection
+        filterRecipes(); // Filtrer les recettes après modification
         displayTags(); // Afficher les tags sélectionnés
       }
     });
   });
 });
 
-//Filtres Ingrédients, appareils et ustensiles
+//Configuration des filtres Ingrédients, appareils et ustensiles
 document.addEventListener('DOMContentLoaded', () => {
   function setupFilter(labelFor, containerId, ulId, inputId, clearBtnId) {
     const label = document.querySelector(`label[for="${labelFor}"]`);
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isInputVisible = false; // Gérer l'état d'affichage de l'input
     let placeholderText = input.placeholder; // Stocker le texte initial du placeholder
 
-    // Affiche ou masque le conteneur d'input lorsque le label est cliqué
+     // Affiche ou masque le champ de recherche du filtre
     label.addEventListener('click', (e) => {
       e.preventDefault(); // Empêche le comportement par défaut du label
       isInputVisible = !isInputVisible;
