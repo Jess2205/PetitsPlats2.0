@@ -7,93 +7,69 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link href="./dist/output.css" rel="stylesheet">
   <style>
-    
-
-     
-    
-    
-
-    
-  
-
   .opacity-0 {
   opacity: 0;
   visibility: hidden;
   }
-
   .pointer-events-none {
   pointer-events: none;
   }
-
   .transition-opacity {
   transition: opacity 0.3s ease-in-out;
   }
-
-#clear-search {
+  #clear-search {
   font-size: 1.5rem; /* Taille de la croix */
   cursor: pointer;
-}
-
-#clear-search {
+  }
+  #clear-search {
   display: none;
-}
+  }
 
-/* CSS pour gérer le comportement au survol */
-button:hover .img-default {
+  /* CSS pour gérer le comportement au survol */
+  button:hover .img-default {
 display: none;
-}
-        
-button:hover .img-hover {
-display: block;
-}
-.search-input {
+  }
+  button:hover .img-hover {
+  display: block;
+  }
+  .search-input {
   padding-right: 30px; /* Espace pour la croix */
-}
-
-#main-clear-search {
+  }
+  #main-clear-search {
   top: 50%;
   transform: translateY(-50%);
-}
-
-.filter-list {
+  }
+  .filter-list {
   list-style: none;
   margin: 0;
   padding: 0;
   max-height: calc(1.5em * 6); /* 1.5em est la hauteur de ligne moyenne, pour 6 lignes */
   overflow: hidden;           
   padding-right: 2px;         /* Optionnel : Ajouter un peu de padding pour éviter la superposition avec la scrollbar */
-}
-
-.li {
+  }
+  .li {
   padding: 0.5rem;
   cursor: pointer;
   border-bottom: 1px solid #e5e7eb;
   }
-
-.filter-list-item:hover {
+  .filter-list-item:hover {
   background-color: #f3f4f6;
   }
-
   .list-itemClick {
   padding: 10px;
   cursor: pointer;
   position: relative; /* Pour le positionnement de la croix */
-}
-
-.selected {
+  }
+  .selected {
   background-color: #FFD15B;
   ; /* Code hexadécimal pour bg-yellow-400 */
-}
-
-.close-icon {
+  }
+  .close-icon {
     margin-left: 8px; /* Un petit espacement */
     cursor: pointer; /* Pour indiquer que c'est cliquable */
     font-weight: bold; /* Pour rendre l'icône plus visible */
-}
-
-
-
-</style>
+  }
+  </style>
 
 </head>
 <body class="bg-gray-100 text-gray-800">
@@ -103,7 +79,7 @@ display: block;
     <h1 class="text-4xl font-bold absolute p-0 gap-0 opacity-1 transition ease-out duration-300" style="top: 51px; left: 69px;">
       Les Petits Plats ©
     </h1>
-    <h2 class="text-6xl mt-6 flex w-2/3 text-center  text-yellow-400">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h2>
+    <h2 class="text-6xl mt-6 flex w-2/3 text-center text-yellow-400">Cherchez parmi plus de 1500 recettes du quotidien, simples et délicieuses</h2>
 
     <!-- Barre de recherche principale -->
 <div class="relative mt-6 flex w-2/3">
@@ -130,25 +106,22 @@ display: block;
   Aucune recette trouvée.
 </div>
 
-
-    <!-- Conteneur pour les résultats de recherche -->
-    <div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
+<!-- Conteneur pour les résultats de recherche -->
+<div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
       <!-- Les résultats injectés dynamiquement ici -->
-    </div>
-  </header>
+</div>
+</header>
 
- <!-- Filters Section -->
- <div class="relative items-start mb-4">
+<!-- Filters Section -->
+<div class="relative items-start mb-4">
   <div class="flex gap-8 pl-8">
-  
-
-      <!-- Filtres dynamiques des ingrédients -->
+  <!-- Filtres dynamiques des ingrédients -->
 <div class="relative w-52 ml-2 rounded">
   <label for="ingredients-search" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
-    Ingrédients  
-    <span class="arrow ml-20 cursor-pointer transition-transform duration-300 ease"> <!-- Ajoute un espace entre le texte et l'image -->
-      <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
-    </span>
+  Ingrédients  
+  <span class="arrow ml-20 cursor-pointer transition-transform duration-300 ease"> <!-- Ajoute un espace entre le texte et l'image -->
+    <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
+  </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
   <div id="ingredients-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
@@ -160,17 +133,15 @@ display: block;
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche  " >
   </button>
 </div>
-<ul id="ingredients" class="filter-list hidden rounded mt-2 appearance-none border-none bg-transparent overflow-hidden bg-white" ></ul>
+  <ul id="ingredients" class="filter-list hidden rounded mt-2 appearance-none border-none bg-transparent overflow-hidden bg-white" ></ul>
 </div>
-
-
- <!-- Filtres dynamiques des appareils -->
- <div class="relative w-52 ml-2 rounded">
+<!-- Filtres dynamiques des appareils -->
+<div class="relative w-52 ml-2 rounded">
   <label for="appareils-search" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
-    Appareils  
-    <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
-      <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
-    </span>
+  Appareils  
+  <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
+    <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
+  </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
   <div id="appareils-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
@@ -182,17 +153,15 @@ display: block;
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-<ul id="appareils" class="filter-list hidden bg-white rounded mt-2 " ></ul>
+  <ul id="appareils" class="filter-list hidden bg-white rounded mt-2 " ></ul>
 </div>
-
-
 <!-- Filtres dynamiques des ustensiles -->
 <div class="relative w-52 ml-2  rounded">
   <label for="ustensiles-search" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
-    Ustensiles  
-    <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
-      <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
-    </span>
+  Ustensiles  
+  <span class="arrow ml-20"> <!-- Ajoute un espace entre le texte et l'image -->
+    <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block"> <!-- Image de la flèche -->
+  </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
   <div id="ustensiles-input-container" class=" flex w-52 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
@@ -204,34 +173,29 @@ display: block;
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-<ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 " ></ul>
+  <ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 " ></ul>
 </div>
-
-
-
  <!-- Compteur de recettes -->
- <p id="total-recipes" class="text-black-700 text-2xl font-medium pt-2 pl-96">1500 recettes</p>
+  <p id="total-recipes" class="text-black-700 text-2xl font-medium pt-2 pl-96">1500 recettes</p>
 </div>
  <!-- Conteneur pour les tags sélectionnés -->
-    <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 mt-4 text-black">
-    </div>
+  <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 mt-4 text-black">
   </div>
-
-  <!-- Section où les médias seront affichés -->
-  <div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pl-10 pr-10 h-[600px] overflow-y-auto">
+</div>
+<!-- Section où les médias seront affichés -->
+<div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pl-10 pr-10 h-[600px] overflow-y-auto">
     <!-- Les recettes/médias seront injectés dynamiquement ici -->
-  </div>
+</div>
 
-  <!-- Footer Section -->
-  <footer class="bg-gray-800 text-white text-center py-4">
-    <p>&copy; 2024 Les Petits Plats</p>
-  </footer>
+<!-- Footer Section -->
+<footer class="bg-gray-800 text-white text-center py-4">
+  <p>&copy; 2024 Les Petits Plats</p>
+</footer>
 
-  <!-- Scripts JS -->
-  <script type="module" src="./script/index.js"  ></script>
-  <script type="module" src="./script/filtres.js" ></script>
-  <script type="module" src="./script/main.js" ></script>
-
-  
+<!-- Scripts JS -->
+<script type="module" src="./script/index.js"  ></script>
+<script type="module" src="./script/filtres.js" ></script>
+<script type="module" src="./script/main.js" ></script>
+ 
 </body>
 </html>

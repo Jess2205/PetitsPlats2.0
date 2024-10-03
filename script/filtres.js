@@ -1,14 +1,14 @@
-import { recipes } from './recipes.js'; // Assurez-vous que le chemin est correct
-import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount } from './index.js'; // Assurez-vous que le chemin est correct
+import { recipes } from './recipes.js'; // Importe les données des recettes
+import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount } from './index.js'; // Importe des fonctions pour afficher les recettes, gérer les erreurs et mettre à jour le compteur
 
-// Objet pour stocker les tags sélectionnés
+// Objet pour stocker les tags sélectionnés par catégorie
 const selectedTags = {
-  ingredients: [],
-  appareils: [],
-  ustensiles: []
+  ingredients: [],// Tags d'ingrédients sélectionnés
+  appareils: [],// Tags d'appareils sélectionnés
+  ustensiles: []// Tags d'ustensiles sélectionnés
 };
 
-// Fonction pour afficher les tags dans le conteneur
+// Fonction pour afficher les tags dans l'interface
 export function displayTags() {
   const tagContainer = document.getElementById('tag-container');
   if (!tagContainer) {
@@ -18,57 +18,57 @@ export function displayTags() {
 
   tagContainer.innerHTML = ''; // Efface les tags existants
 
-  // Afficher chaque catégorie et ses tags
+  // Affiche chaque catégorie de tags (ingrédients, appareils, ustensiles)
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span');
       tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-52';
 
-      tag.textContent = tagText;
+      tag.textContent = tagText;// Texte du tag
 
       const removeIcon = document.createElement('span');
-      removeIcon.textContent = 'x';
+      removeIcon.textContent = 'x';// Icône pour supprimer le tag
       removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
 
-      tag.appendChild(removeIcon);
+      tag.appendChild(removeIcon);// Ajoute l'icône au tag
 
-      // Event listener pour supprimer le tag
+      // Écouteur d'événement pour supprimer le tag
       removeIcon.addEventListener('click', () => {
-        removeTag(tagText, category);
-        // Refiltre les recettes et met à jour l'affichage des tags après suppression
-        filterRecipesWithAdvancedFilters();
+        removeTag(tagText, category);// Supprime le tag lorsqu'on clique sur l'icône
+        filterRecipesWithAdvancedFilters();// Refiltre les recettes après la suppression du tag
       });
 
-      tagContainer.appendChild(tag);
+      tagContainer.appendChild(tag);// Ajoute le tag au conteneur
     });
   }
 }
 
 // Fonction pour ajouter un tag dans la catégorie correspondante
 function addTag(tagText, category) {
+  // Vérifie si le tag n'est pas déjà sélectionné dans la catégorie
   if (selectedTags[category] && !selectedTags[category].includes(tagText)) {
-    selectedTags[category].push(tagText);
-    displayTags(); // Affiche les tags sélectionnés
-    filterRecipesWithAdvancedFilters(); // Met à jour les recettes avec les filtres avancés
-    updateFilterOptions(recipes); // Met à jour les options des filtres après ajout du tag
+    selectedTags[category].push(tagText);// Ajoute le tag
+    displayTags(); //Affiche les tags mis à jour
+    filterRecipesWithAdvancedFilters(); // Filtre les recettes avec les nouveaux tags
+    updateFilterOptions(recipes); // Met à jour les options de filtre en fonction des recettes restantes
   }
 }
 
 // Fonction pour retirer un tag
 function removeTag(tagText, category) {
   if (selectedTags[category]) {
+    // Vérifie que le tag existe dans la catégorie
     const index = selectedTags[category].indexOf(tagText);
     if (index > -1) {
-      selectedTags[category].splice(index, 1);
-      displayTags(); // Re-affiche les tags
-      filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
-      updateFilterOptions(recipes); // Met à jour les options des filtres après suppression du tag
+      selectedTags[category].splice(index, 1);// Supprime le tag
+      displayTags(); // Affiche les tags mis à jour
+      filterRecipesWithAdvancedFilters(); // Filtre les recettes après la suppression du tag
+      updateFilterOptions(recipes); // Met à jour les options de filtre
     }
   }
 }
 
-
-// Mettre à jour les options des filtres avancés en fonction des recettes affichées
+// Mettre à jour les options des filtres avancés (Ingrédients, Appareils, Ustensiles) en fonction des recettes affichées
 function updateFilterOptions(filteredRecipes) {
   const ingredientsList = document.getElementById('ingredients-search');
   const appareilsList = document.getElementById('appareils-search');
@@ -83,44 +83,46 @@ function updateFilterOptions(filteredRecipes) {
   const uniqueAppareils = new Set();
   const uniqueUstensiles = new Set();
 
+// Collecte des ingrédients, appareils et ustensiles uniques à partir des recettes filtrées
   filteredRecipes.forEach(recipe => {
     recipe.ingredients.forEach(ingredient => uniqueIngredients.add(ingredient.ingredient));
     if (recipe.appliance) uniqueAppareils.add(recipe.appliance);
     recipe.ustensils.forEach(ustensile => uniqueUstensiles.add(ustensile));
   });
 
+// Fonction pour mettre à jour les éléments d'une liste (Ingrédients, Appareils, Ustensiles)
   function updateListItems(ul, items) {
-    ul.innerHTML = '';
+    ul.innerHTML = '';// Efface les options existantes
     items.forEach(item => {
       const li = document.createElement('li');
       li.textContent = item;
-      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
+      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');// Style des éléments de la liste
   
-      // Ajouter un tag lorsqu'un élément de la liste est cliqué
+      // Ajoute un tag lorsqu'on clique sur un élément de la liste
       li.addEventListener('click', () => {
         const category = ul.id.includes('ingredients') ? 'ingredients' :
                         ul.id.includes('appareils') ? 'appareils' : 'ustensiles';
-        addTag(item, category); // Utilise l'ID pour retrouver la catégorie
+        addTag(item, category); // Ajoute le tag dans la catégorie correspondante
       });
   
-      ul.appendChild(li);
+      ul.appendChild(li);// Ajoute l'élément de la liste
     });
   }
   
-
-  updateListItems(ingredientsList, [...uniqueIngredients]);
-  updateListItems(appareilsList, [...uniqueAppareils]);
-  updateListItems(ustensilesList, [...uniqueUstensiles]);
-
+  updateListItems(ingredientsList, [...uniqueIngredients]);// Met à jour la liste des ingrédients
+  updateListItems(appareilsList, [...uniqueAppareils]);// Met à jour la liste des appareils
+  updateListItems(ustensilesList, [...uniqueUstensiles]);// Met à jour la liste des ustensiles
   
 }
 
-// Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
+// Fonction de filtrage des recettes avec les filtres avancés (tags)
 function filterRecipesWithAdvancedFilters() {
+   // Récupère les tags sélectionnés en minuscule
   const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
   const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
   const selectedUstensiles = selectedTags.ustensiles.map(tag => tag.toLowerCase());
 
+  // Filtre les recettes en fonction des tags sélectionnés
   const filteredRecipes = recipes.filter(recipe => {
     const matchesIngredients = selectedIngredients.length === 0 ||
       recipe.ingredients.some(ingredient => 
@@ -139,55 +141,53 @@ function filterRecipesWithAdvancedFilters() {
   });
 
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
-
+   // Gère l'affichage des recettes et des messages d'erreur
   if (filteredRecipes.length === 0) {
-    hideRecipes(); // Cacher les recettes si aucune recette ne correspond
-    showErrorMessage(); 
+    hideRecipes(); // Cache les recettes
+    showErrorMessage();// Affiche un message d'erreur si aucune recette ne correspond
   } else {
-    hideErrorMessage();
-    displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
-    updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
+    hideErrorMessage();// Cache le message d'erreur
+    displayRecipes(filteredRecipes); // Affiche les recettes filtrées
+    updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avec les recettes filtrées
   }
   
 }
 
-// Ajouter des écouteurs d'événements pour les filtres
+// Ajouter des écouteurs d'événements pour les filtres avancés
 function listenToFilterChanges() {
   const filters = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
   filters.forEach(filter => {
     if (filter) {
       filter.addEventListener('click', event => {
-        const category = event.target.closest('ul').id; // Utilise l'ID du UL comme catégorie
-        const selectedOption = event.target.textContent;
+        const category = event.target.closest('ul').id; // Récupère la catégorie depuis l'ID du UL
+        const selectedOption = event.target.textContent;// Récupère l'option sélectionnée
         if (selectedOption) {
-          addTag(selectedOption, category);
+          addTag(selectedOption, category);// Ajoute le tag correspondant
         }
       });
     }
   });
 }
 
-
-
 // Initialisation des filtres lors du chargement de la page
 window.addEventListener('load', () => {
-  updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
-  listenToFilterChanges();
-  
+  updateFilterOptions(recipes); // Met à jour les options des filtres avec toutes les recettes initiales les recettes initiales
+  listenToFilterChanges();// Ajoute les écouteurs d'événements pour les filtres
 });
 
 document.addEventListener("DOMContentLoaded", function() {
 
-  
+// Gère l'ouverture et la fermeture des listes déroulantes pour les filtres
   function toggleDropdown(dropdownId, label) {
     const dropdown = document.getElementById(dropdownId);
-    const arrow = label.querySelector('.arrow');
+    const arrow = label.querySelector('.arrow');// Sélectionne l'icône de la flèche
+
     
     if (!dropdown) {
       console.error(`Dropdown avec l'ID ${dropdownId} non trouvé.`);
       return;
     }
-
+// Alterne entre affichage et masquage du dropdown
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
       arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">';
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", function() {
     { id: 'appareils', label: 'Appareils' },
     { id: 'ustensiles', label: 'Ustensiles' },
   ];
-
+// Ajoute des écouteurs d'événements pour les labels des filtres
   filters.forEach(filter => {
     const label = document.querySelector(`label[for="${filter.id}-search"]`); // Ajustement ici pour utiliser -search
     if (label) {
@@ -214,8 +214,6 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   });
 });
-
-
 
 function filterRecipes() {
   const ingredientSearchText = document.getElementById('ingredients-search').value.toLowerCase();
