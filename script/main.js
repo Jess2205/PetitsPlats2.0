@@ -22,6 +22,7 @@ function updateAdvancedFilters(recipes) {
       const li = document.createElement('li');
       li.textContent = item;
       li.dataset.value = item; // Ajouter une donnée pour la sélection
+      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
       ul.appendChild(li);
     });
   };
