@@ -103,6 +103,7 @@ document.getElementById('search-input').addEventListener('input', function () {
   // Vérifiez si le champ de recherche a du texte
   if (this.value.length > 0) {
     clearBtn.classList.remove('hidden'); // Affiche la croix
+    hideErrorMessage();
   } else {
     clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
   }
@@ -113,6 +114,7 @@ document.getElementById('main-clear-search').addEventListener('click', function 
   const searchInput = document.getElementById('search-input');
   searchInput.value = ''; // Efface le texte de l'input
   this.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+  hideErrorMessage();
   searchInput.focus(); // Remet le focus sur l'input après avoir effacé
 });
 
