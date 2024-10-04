@@ -96,7 +96,7 @@ function updateFilterOptions(filteredRecipes) {
     items.forEach(item => {
       const li = document.createElement('li');
       li.textContent = item;
-      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');// Style des éléments de la liste
+      li.classList.add('cursor-pointer', 'hover:bg-yellow-400', 'py-2', 'px-4');// Style des éléments de la liste
   
       // Ajoute un tag lorsqu'on clique sur un élément de la liste
       li.addEventListener('click', () => {

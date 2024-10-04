@@ -22,6 +22,7 @@ function updateAdvancedFilters(recipes) {
       const li = document.createElement('li');
       li.textContent = item;// Nom de l'option
       li.dataset.value = item; // Stocke la valeur dans un dataset pour faciliter la sélection
+      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
       ul.appendChild(li);// Ajoute l'élément à la liste
     });
   };
