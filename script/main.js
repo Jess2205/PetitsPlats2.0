@@ -1,6 +1,6 @@
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
-import { displayTags } from './filtres.js';// Importation de la fonction qui affiche les tags
+import { displayTags, filterRecipesWithAdvancedFilters } from './filtres.js';// Importation de la fonction qui affiche les tags
 import { updateRecipeCount } from './index.js';
 
 // Fonction pour mettre à jour les options des filtres avancés
@@ -41,6 +41,7 @@ function filterOptions(inputId, ulId) {
   Array.from(ul.children).forEach(li => {
     li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
+  filterRecipesWithAdvancedFilters();
 }
 
 // Fonction de filtrage des recettes
@@ -60,6 +61,7 @@ function MainfilterRecipes() {
     displayRecipes([]); // Affiche un tableau vide
     return;
   }
+  document.getElementById('main-search-input').addEventListener('input', MainfilterRecipes);
 
   // Filtrage des recettes
   const recettesFiltrees = recipes.filter(recette => {

@@ -37,6 +37,7 @@ export function displayTags() {
       removeIcon.addEventListener('click', () => {
         removeTag(tagText, category);// Supprime le tag lorsqu'on clique sur l'icône
         filterRecipesWithAdvancedFilters();// Refiltre les recettes après la suppression du tag
+        MainfilterRecipes();
       });
 
       tagContainer.appendChild(tag);// Ajoute le tag au conteneur
@@ -70,6 +71,8 @@ function removeTag(tagText, category) {
     }
   }
 }
+
+
 
 // Mettre à jour les options des filtres avancés (Ingrédients, Appareils, Ustensiles) en fonction des recettes affichées
 function updateFilterOptions(filteredRecipes) {
@@ -119,7 +122,7 @@ function updateFilterOptions(filteredRecipes) {
 }
 
 // Fonction de filtrage des recettes avec les filtres avancés (tags)
-function filterRecipesWithAdvancedFilters() {
+export function filterRecipesWithAdvancedFilters() {
    // Récupère les tags sélectionnés en minuscule
   const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
   const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
@@ -223,6 +226,9 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
+
+
+
 // Fonction de filtrage des recettes
 // Fonction de filtrage des recettes
  // Fonction de filtrage des recettes
@@ -242,6 +248,7 @@ function MainfilterRecipes() {
     displayRecipes([]); // Affiche un tableau vide
     return;
   }
+  document.getElementById('main-search-input').addEventListener('input', MainfilterRecipes);
 
   // Filtrage des recettes
   const recettesFiltrees = recipes.filter(recette => {
