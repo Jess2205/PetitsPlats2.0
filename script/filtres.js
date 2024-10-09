@@ -1,5 +1,6 @@
 import { recipes } from './recipes.js'; // Importe les données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount } from './index.js'; // Importe des fonctions pour afficher les recettes, gérer les erreurs et mettre à jour le compteur
+import { updateAdvancedFilters } from './main.js';
 
 // Objet pour stocker les tags sélectionnés par catégorie
 const selectedTags = {
@@ -51,6 +52,7 @@ function addTag(tagText, category) {
     displayTags(); //Affiche les tags mis à jour
     filterRecipesWithAdvancedFilters(); // Filtre les recettes avec les nouveaux tags
     updateFilterOptions(recipes); // Met à jour les options de filtre en fonction des recettes restantes
+    MainfilterRecipes();
   }
 }
 
@@ -64,6 +66,7 @@ function removeTag(tagText, category) {
       displayTags(); // Affiche les tags mis à jour
       filterRecipesWithAdvancedFilters(); // Filtre les recettes après la suppression du tag
       updateFilterOptions(recipes); // Met à jour les options de filtre
+      MainfilterRecipes();
     }
   }
 }
@@ -127,6 +130,7 @@ function filterRecipesWithAdvancedFilters() {
     const matchesIngredients = selectedIngredients.length === 0 ||
       recipe.ingredients.some(ingredient => 
         selectedIngredients.includes(ingredient.ingredient.toLowerCase())
+        
       );
 
     const matchesAppareils = selectedAppareils.length === 0 ||
@@ -150,6 +154,9 @@ function filterRecipesWithAdvancedFilters() {
     displayRecipes(filteredRecipes); // Affiche les recettes filtrées
     updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avec les recettes filtrées
   }
+
+  
+ 
   
 }
 
@@ -173,6 +180,7 @@ function listenToFilterChanges() {
 window.addEventListener('load', () => {
   updateFilterOptions(recipes); // Met à jour les options des filtres avec toutes les recettes initiales les recettes initiales
   listenToFilterChanges();// Ajoute les écouteurs d'événements pour les filtres
+ 
 });
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -215,49 +223,67 @@ document.addEventListener("DOMContentLoaded", function() {
   });
 });
 
-function filterRecipes() {
-  const ingredientSearchText = document.getElementById('ingredients-search').value.toLowerCase();
-  const applianceSearchText = document.getElementById('appareils-search').value.toLowerCase();
-  const utensilSearchText = document.getElementById('ustensiles-search').value.toLowerCase();
+// Fonction de filtrage des recettes
+// Fonction de filtrage des recettes
+ // Fonction de filtrage des recettes
+function MainfilterRecipes() {
+  const MainsearchInput = document.getElementById('main-search-input');
+  const MainsearchText = MainsearchInput.value.trim().toLowerCase();
 
-  // Filtre les recettes
-  const filteredRecipes = recipes.filter(recipe => {
-    const matchesIngredients = ingredientSearchText === '' || recipe.ingredients.some(ingredient =>
-      ingredient.ingredient.toLowerCase().includes(ingredientSearchText)
-    );
+  // Récupération des tags sélectionnés dans chaque filtre
+  const selectedIngredients = Array.from(document.querySelectorAll('#ingredients li.selected')).map(li => li.dataset.value.toLowerCase());
+  const selectedAppareils = Array.from(document.querySelectorAll('#appareils li.selected')).map(li => li.dataset.value.toLowerCase());
+  const selectedUstensiles = Array.from(document.querySelectorAll('#ustensiles li.selected')).map(li => li.dataset.value.toLowerCase());
 
-    const matchesAppareils = applianceSearchText === '' || recipe.appliance.toLowerCase().includes(applianceSearchText);
-
-    const matchesUstensiles = utensilSearchText === '' || recipe.ustensils.some(utensil =>
-      utensil.toLowerCase().includes(utensilSearchText)
-    );
-
-    return matchesIngredients && matchesAppareils && matchesUstensiles;
-  });
-
-  // Affiche les recettes filtrées
-  console.log(filteredRecipes); // Log pour voir les recettes filtrées
-  displayRecipes(filteredRecipes);
-
-  // Met à jour le compteur
-  updateRecipeCount(filteredRecipes.length);
-
-  // Gérer l'affichage des messages d'erreur
-  if (filteredRecipes.length === 0) {
-    hideRecipes();
-    showErrorMessage();
-  } else {
-    hideErrorMessage();
+  // Si moins de 3 caractères dans la barre de recherche ET aucun tag sélectionné, ne rien faire
+  if (MainsearchText.length < 3 && selectedIngredients.length === 0 && selectedAppareils.length === 0 && selectedUstensiles.length === 0) {
+    hideErrorMessage(); // Masque le message d'erreur si la recherche est trop courte
+    updateRecipeCount(0); // Réinitialise le compteur
+    displayRecipes([]); // Affiche un tableau vide
+    return;
   }
 
-  // Met à jour les options des filtres avancés
-  updateFilterOptions(filteredRecipes);
+  // Filtrage des recettes
+  const recettesFiltrees = recipes.filter(recette => {
+    // Vérifier si la recette correspond au texte de recherche OU s'il n'y a pas de recherche texte
+    const correspondTexte = MainsearchText === '' || recette.name.toLowerCase().includes(MainsearchText) ||
+                            recette.description.toLowerCase().includes(MainsearchText) ||
+                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
+
+    // Vérifier si la recette correspond aux ingrédients sélectionnés (intersection)
+    const correspondIngredients = selectedIngredients.length === 0 || 
+      selectedIngredients.every(selected => 
+        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === selected)
+      );
+
+    // Vérifier si la recette correspond aux appareils sélectionnés
+    const correspondAppareils = selectedAppareils.length === 0 || 
+      selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
+
+    // Vérifier si la recette correspond aux ustensiles sélectionnés
+    const correspondUstensiles = selectedUstensiles.length === 0 || 
+      recette.ustensils?.some(ustensile => selectedUstensiles.includes(ustensile.toLowerCase())) || false;
+
+    // Retourner vrai si la recette correspond à tous les critères
+    return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
+  });
+
+  // Mettez à jour l'affichage des recettes filtrées
+  displayRecipes(recettesFiltrees);
+  updateRecipeCount(recettesFiltrees.length);
+
+  // Gérer l'affichage du message d'erreur
+  if (recettesFiltrees.length === 0) { // Vérifier le nombre de recettes filtrées
+    showErrorMessage(MainsearchText); // Montre un message d'erreur si aucune recette ne correspond
+  } else {
+    hideErrorMessage(); // Masque le message d'erreur si des recettes sont trouvées
+  }
 }
 
 // Écouteurs pour la recherche en temps réel sur les trois filtres
-document.getElementById('ingredients-search').addEventListener('input', filterRecipes);
-document.getElementById('appareils-search').addEventListener('input', filterRecipes);
-document.getElementById('ustensiles-search').addEventListener('input', filterRecipes);
+document.getElementById('ingredients-search').addEventListener('input', MainfilterRecipes);
+document.getElementById('appareils-search').addEventListener('input', MainfilterRecipes);
+document.getElementById('ustensiles-search').addEventListener('input', MainfilterRecipes);
 
 // Fonction pour gérer le clic sur un élément de la liste
 // Fonction pour gérer le clic sur un élément de la liste
@@ -293,4 +319,5 @@ function handleListItemClick(event) {
 const listItems = document.querySelectorAll('.list-item');
 listItems.forEach(item => {
   item.addEventListener('click', handleListItemClick);
+ 
 });
