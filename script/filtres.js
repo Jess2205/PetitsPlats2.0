@@ -90,11 +90,28 @@ function updateFilterOptions(filteredRecipes) {
   const uniqueUstensiles = new Set();
 
 // Collecte des ingrédients, appareils et ustensiles uniques à partir des recettes filtrées
-  filteredRecipes.forEach(recipe => {
-    recipe.ingredients.forEach(ingredient => uniqueIngredients.add(ingredient.ingredient));
-    if (recipe.appliance) uniqueAppareils.add(recipe.appliance);
-    recipe.ustensils.forEach(ustensile => uniqueUstensiles.add(ustensile));
-  });
+filteredRecipes.forEach(recipe => {
+  if (recipe.ingredients) {
+    recipe.ingredients.forEach(ingredient => {
+      uniqueIngredients.add(ingredient.ingredient.toLowerCase().trim());
+    });
+  }
+  
+  if (recipe.appliance) {
+    uniqueAppareils.add(recipe.appliance.toLowerCase().trim());
+  }
+  
+  if (recipe.ustensils) {
+    recipe.ustensils.forEach(ustensile => {
+      uniqueUstensiles.add(ustensile.toLowerCase().trim());
+    });
+  }
+});
+console.log('filteredRecipes:', filteredRecipes);
+console.log('Unique Ingredients:', uniqueIngredients);
+console.log('Unique Appareils:', uniqueAppareils);
+console.log('Unique Ustensiles:', uniqueUstensiles);
+
 
 // Fonction pour mettre à jour les éléments d'une liste (Ingrédients, Appareils, Ustensiles)
   function updateListItems(ul, items) {
@@ -123,20 +140,34 @@ function updateFilterOptions(filteredRecipes) {
 
 // Fonction pour masquer les recettes
 function hideRecipes() {
-  const recipeContainer = document.getElementById('recipe-container');
+  const recipeContainer = document.getElementById('results-container');
   if (recipeContainer) {
     recipeContainer.innerHTML = ''; // Efface les recettes affichées
   }
 }
+export function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+}
+// Récupère les tags sélectionnés avec la première lettre en majuscule et trie par ordre alphabétique
+const selectedIngredients = selectedTags.ingredients
+  .map(tag => capitalizeFirstLetter(tag))
+  .sort();
+  const selectedAppareils = selectedTags.appareils
+  .map(tag => capitalizeFirstLetter(tag))
+  .sort();
 
+const selectedUstensiles = selectedTags.ustensiles
+  .map(tag => capitalizeFirstLetter(tag))
+  .sort();
 // Fonction de filtrage des recettes avec les filtres avancés (tags)
 export function filterRecipesWithAdvancedFilters() {
+  console.log('Selected Tags:', selectedTags);
   hideRecipes(); // Assurez-vous que hideRecipes est définie avant cet appel
 
-  // Récupère les tags sélectionnés en minuscule
-  const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
-  const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
-  const selectedUstensiles = selectedTags.ustensiles.map(tag => tag.toLowerCase());
+  // Récupère les tags avec la première lettre en majuscule et le reste en minuscule
+const selectedIngredients = selectedTags.ingredients.map(tag => capitalizeFirstLetter(tag));
+const selectedAppareils = selectedTags.appareils.map(tag => capitalizeFirstLetter(tag));
+const selectedUstensiles = selectedTags.ustensiles.map(tag => capitalizeFirstLetter(tag));
 
   // Filtre les recettes en fonction des tags sélectionnés
   const filteredRecipes = recipes.filter(recipe => {

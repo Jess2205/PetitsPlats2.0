@@ -1,38 +1,63 @@
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
-import { displayTags, filterRecipesWithAdvancedFilters } from './filtres.js';// Importation de la fonction qui affiche les tags
+import { displayTags, filterRecipesWithAdvancedFilters, capitalizeFirstLetter } from './filtres.js';// Importation de la fonction qui affiche les tags
 import { updateRecipeCount } from './index.js';
+
 
 // Fonction pour mettre à jour les options des filtres avancés
 export function updateAdvancedFilters(recipes) {
   const filters = {
-    ingredients: new Set(),// Utilisation d'un Set pour éviter les doublons
+    ingredients: new Set(),
     appareils: new Set(),
     ustensiles: new Set()
   };
-// Parcourt chaque recette pour extraire les ingrédients, appareils et ustensiles
+
+  // Parcourt chaque recette pour extraire les ingrédients, appareils et ustensiles
   recipes.forEach(recipe => {
-    recipe.ingredients.forEach(ingredient => filters.ingredients.add(ingredient.ingredient));// Ajout des ingrédients
-    if (recipe.appliance) filters.appareils.add(recipe.appliance);// Ajout des appareils s'ils existent
-    recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));// Ajout des ustensiles
+    recipe.ingredients.forEach(ingredient => filters.ingredients.add(ingredient.ingredient));
+    if (recipe.appliance) filters.appareils.add(recipe.appliance);
+    recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
   });
-// Fonction pour mettre à jour les listes d'options des filtres (ingrédients, appareils, ustensiles)
+
+  
+   // Conversion des Set en tableau, capitalisation des premières lettres
+  // et élimination des doublons après tri
+  const sortedIngredients = [...new Set(
+    Array.from(filters.ingredients)
+      .map(item => capitalizeFirstLetter(item))
+      .sort()
+  )];
+  
+  const sortedAppareils = [...new Set(
+    Array.from(filters.appareils)
+      .map(item => capitalizeFirstLetter(item))
+      .sort()
+  )];
+  
+  const sortedUstensiles = [...new Set(
+    Array.from(filters.ustensiles)
+      .map(item => capitalizeFirstLetter(item))
+      .sort()
+  )];
+
+
+  // Fonction pour mettre à jour les listes d'options des filtres
   const updateOptions = (ul, items) => {
     ul.innerHTML = ''; // Réinitialiser le contenu de la liste
     items.forEach(item => {
       const li = document.createElement('li');
-      li.textContent = item;// Nom de l'option
-      li.dataset.value = item; // Stocke la valeur dans un dataset pour faciliter la sélection
+      li.textContent = item; // Nom de l'option
+      li.dataset.value = item.toLowerCase(); // Stocke la valeur en minuscules
       li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
-      ul.appendChild(li);// Ajoute l'élément à la liste
+      ul.appendChild(li); // Ajoute l'élément à la liste
     });
   };
-// Mise à jour des listes des filtres avec les nouvelles options disponibles
-  updateOptions(document.getElementById('ingredients'), [...filters.ingredients]);
-  updateOptions(document.getElementById('appareils'), [...filters.appareils]);
-  updateOptions(document.getElementById('ustensiles'), [...filters.ustensiles]);
-}
 
+  // Mise à jour des listes des filtres avec les options triées
+  updateOptions(document.getElementById('ingredients'), sortedIngredients);
+  updateOptions(document.getElementById('appareils'), sortedAppareils);
+  updateOptions(document.getElementById('ustensiles'), sortedUstensiles);
+}
 // Fonction de filtrage des options dans les filtres avancés
 function filterOptions(inputId, ulId) {
   const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
