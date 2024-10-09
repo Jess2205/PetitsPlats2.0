@@ -253,16 +253,16 @@ function MainfilterRecipes() {
     // Vérifier si la recette correspond aux ingrédients sélectionnés (intersection)
     const correspondIngredients = selectedIngredients.length === 0 || 
       selectedIngredients.every(selected => 
-        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === selected)
+        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes (selected))
       );
 
     // Vérifier si la recette correspond aux appareils sélectionnés
     const correspondAppareils = selectedAppareils.length === 0 || 
-      selectedAppareils.includes(recette.appliance?.toLowerCase() || '');
+    selectedAppareils.some(selected => recette.appliance?.toLowerCase().includes(selected));
 
     // Vérifier si la recette correspond aux ustensiles sélectionnés
     const correspondUstensiles = selectedUstensiles.length === 0 || 
-      recette.ustensils?.some(ustensile => selectedUstensiles.includes(ustensile.toLowerCase())) || false;
+      recette.ustensils?.some(ustensile => selectedUstensiles.some(selected => ustensile.toLowerCase().includes(selected))) || false;
 
     // Retourner vrai si la recette correspond à tous les critères
     return correspondTexte && correspondIngredients && correspondAppareils && correspondUstensiles;
@@ -271,6 +271,8 @@ function MainfilterRecipes() {
   // Mettez à jour l'affichage des recettes filtrées
   displayRecipes(recettesFiltrees);
   updateRecipeCount(recettesFiltrees.length);
+
+  
 
   // Gérer l'affichage du message d'erreur
   if (recettesFiltrees.length === 0) { // Vérifier le nombre de recettes filtrées
