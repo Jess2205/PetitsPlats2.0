@@ -121,9 +121,19 @@ function updateFilterOptions(filteredRecipes) {
   
 }
 
+// Fonction pour masquer les recettes
+function hideRecipes() {
+  const recipeContainer = document.getElementById('recipe-container');
+  if (recipeContainer) {
+    recipeContainer.innerHTML = ''; // Efface les recettes affichées
+  }
+}
+
 // Fonction de filtrage des recettes avec les filtres avancés (tags)
 export function filterRecipesWithAdvancedFilters() {
-   // Récupère les tags sélectionnés en minuscule
+  hideRecipes(); // Assurez-vous que hideRecipes est définie avant cet appel
+
+  // Récupère les tags sélectionnés en minuscule
   const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
   const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
   const selectedUstensiles = selectedTags.ustensiles.map(tag => tag.toLowerCase());
@@ -131,9 +141,10 @@ export function filterRecipesWithAdvancedFilters() {
   // Filtre les recettes en fonction des tags sélectionnés
   const filteredRecipes = recipes.filter(recipe => {
     const matchesIngredients = selectedIngredients.length === 0 ||
-      recipe.ingredients.some(ingredient => 
-        selectedIngredients.includes(ingredient.ingredient.toLowerCase())
-        
+      selectedIngredients.every(tag => 
+        recipe.ingredients.some(ingredient => 
+          ingredient.ingredient.toLowerCase().includes(tag)
+        )
       );
 
     const matchesAppareils = selectedAppareils.length === 0 ||
@@ -146,6 +157,11 @@ export function filterRecipesWithAdvancedFilters() {
 
     return matchesIngredients && matchesAppareils && matchesUstensiles;
   });
+
+  // Affiche les recettes filtrées
+  displayRecipes(filteredRecipes);
+
+  
 
   updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
    // Gère l'affichage des recettes et des messages d'erreur
