@@ -86,10 +86,8 @@ export function MainfilterRecipes() {
 
   // Filtrage des recettes
   const filteredRecipes = recipes.filter(recette => {
-    // Vérifier si la recette correspond au texte de recherche principal
+    // Vérifier si la recette a des ingrédients correspondants au texte de recherche principal
     const correspondTexte = MainsearchText === '' || 
-      recette.name.toLowerCase().includes(MainsearchText) ||
-      recette.description.toLowerCase().includes(MainsearchText) ||
       recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
 
     // Vérifier si la recette correspond à la saisie dans les champs avancés (ingrédients, appareils, ustensiles)
