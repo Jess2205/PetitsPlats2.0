@@ -28,8 +28,18 @@ export function displayTags() {
       tag.textContent = tagText; // Texte du tag
 
       const removeIcon = document.createElement('span');
-      removeIcon.textContent = 'x'; // Icône pour supprimer le tag
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
+      // Créez l'élément image
+const img = document.createElement('img');
+
+// Définir le chemin de l'image et d'autres attributs si nécessaire
+img.src = './assets/icone close tag.png'; // Remplacez par le chemin de votre image
+img.alt = 'Supprimer'; // Texte alternatif pour l'accessibilité
+img.style.width = '17px'; // Ajustez la taille selon vos besoins
+img.style.height = '17px'; // Ajustez la taille selon vos besoins
+
+// Ajoutez l'image à l'élément removeIcon
+removeIcon.appendChild(img);
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'text-black-700','bold', 'text-2xl'); // Ajout d'une couleur au survol
 
       tag.appendChild(removeIcon); // Ajoute l'icône au tag
 
