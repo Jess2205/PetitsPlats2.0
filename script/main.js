@@ -118,10 +118,33 @@ export function MainfilterRecipes() {
     return (correspondTexte || isAllEmpty) && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags;
   });
 
+  // Nettoyer les doublons et garder ceux dont la première lettre est en majuscule
+  const uniqueIngredients = [...new Set(recipes.flatMap(recette => 
+    recette.ingredients.map(ingredient => ingredient.ingredient)
+  ))]
+    .filter(ingredient => ingredient.charAt(0) === ingredient.charAt(0).toUpperCase() && 
+      (ingredient.slice(-1) !== 's' || ingredient.length === 1)) // Exclure le pluriel en retirant le 's'
+    .map(ingredient => ingredient.charAt(0).toUpperCase() + ingredient.slice(1)); // Mise en majuscule
+
+  const uniqueAppareils = [...new Set(recipes.flatMap(recette => 
+    [recette.appliance]
+  ))]
+    .filter(appareil => appareil.charAt(0) === appareil.charAt(0).toUpperCase() && 
+      (appareil.slice(-1) !== 's' || appareil.length === 1)) // Exclure le pluriel
+    .map(appareil => appareil.charAt(0).toUpperCase() + appareil.slice(1)); // Mise en majuscule
+
+  const uniqueUstensiles = [...new Set(recipes.flatMap(recette => 
+    recette.ustensils
+  ))]
+    .filter(ustensile => ustensile.charAt(0) === ustensile.charAt(0).toUpperCase() && 
+      (ustensile.slice(-1) !== 's' || ustensile.length === 1)) // Exclure le pluriel
+    .map(ustensile => ustensile.charAt(0).toUpperCase() + ustensile.slice(1)); // Mise en majuscule
+
   // Mettez à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
   updateRecipeCount(filteredRecipes.length);
   updateAdvancedFilters(filteredRecipes);
+
   // Gérer l'affichage du message d'erreur
   if (filteredRecipes.length === 0) {
     showErrorMessage(MainsearchText); // Afficher un message d'erreur si aucune recette ne correspond
@@ -135,7 +158,6 @@ export function MainfilterRecipes() {
   console.log('Ustensiles filtrés:', ustensileInput);
   console.log('Recettes filtrées:', filteredRecipes);
 }
-
 
 // Écouteur d'événements pour la barre de recherche principale
 document.getElementById('main-search-input').addEventListener('input', function () {
@@ -171,20 +193,8 @@ window.addEventListener('load', () => {
   document.getElementById('ingredients-search').addEventListener('input', () => filterOptions('ingredients-search', 'ingredients'));
   document.getElementById('appareils-search').addEventListener('input', () => filterOptions('appareils-search', 'appareils'));
   document.getElementById('ustensiles-search').addEventListener('input', () => filterOptions('ustensiles-search', 'ustensiles'));
-
-  // Gérer les clics dans les filtres avancés pour la sélection des options
-  const filtres = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
-filtres.forEach(filtre => {
-  filtre.addEventListener('click', (e) => {
-    if (e.target.tagName === 'LI') {
-      e.target.classList.toggle('selected'); // Ajoute ou enlève la classe 'selected'
-      MainfilterRecipes(); // Refiltrer les recettes après modification
-      displayTags(); // Affiche les tags sélectionnés
-      }
-    });
   });
-});
-
+  
 //Configuration des filtres Ingrédients, appareils et ustensiles
 document.addEventListener('DOMContentLoaded', () => {
   function setupFilter(labelFor, containerId, ulId, inputId, clearBtnId) {
