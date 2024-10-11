@@ -19,24 +19,17 @@ export function updateAdvancedFilters(recipes) {
     recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
   });
 
-  // Conversion des Set en tableau, capitalisation des premières lettres
-  // et élimination des doublons après tri
+  // Conversion des Set en tableau et capitalisation des premières lettres sans tri
   const sortedIngredients = [...new Set(
-    Array.from(filters.ingredients)
-      .map(item => capitalizeFirstLetter(item))
-      .sort()
+    Array.from(filters.ingredients).map(item => capitalizeFirstLetter(item))
   )];
   
   const sortedAppareils = [...new Set(
-    Array.from(filters.appareils)
-      .map(item => capitalizeFirstLetter(item))
-      .sort()
+    Array.from(filters.appareils).map(item => capitalizeFirstLetter(item))
   )];
   
   const sortedUstensiles = [...new Set(
-    Array.from(filters.ustensiles)
-      .map(item => capitalizeFirstLetter(item))
-      .sort()
+    Array.from(filters.ustensiles).map(item => capitalizeFirstLetter(item))
   )];
 
   // Fonction pour mettre à jour les listes d'options des filtres
