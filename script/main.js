@@ -1,11 +1,11 @@
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
-import { displayTags, filterRecipesWithAdvancedFilters, capitalizeFirstLetter, selectedTags } from './filtres.js';// Importation de la fonction qui affiche les tags
+import { displayTags, filterRecipesWithAdvancedFilters, capitalizeFirstLetter, selectedTags, updateFilterOptions } from './filtres.js';// Importation de la fonction qui affiche les tags
 import { updateRecipeCount } from './index.js';
 
 
 // Fonction pour mettre à jour les options des filtres avancés
-function updateAdvancedFilters(recipes) {
+export function updateAdvancedFilters(recipes) {
   const filters = {
     ingredients: new Set(),
     appareils: new Set(),
@@ -19,8 +19,7 @@ function updateAdvancedFilters(recipes) {
     recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
   });
 
-  
-   // Conversion des Set en tableau, capitalisation des premières lettres
+  // Conversion des Set en tableau, capitalisation des premières lettres
   // et élimination des doublons après tri
   const sortedIngredients = [...new Set(
     Array.from(filters.ingredients)
@@ -40,17 +39,20 @@ function updateAdvancedFilters(recipes) {
       .sort()
   )];
 
-
   // Fonction pour mettre à jour les listes d'options des filtres
   const updateOptions = (ul, items) => {
-    ul.innerHTML = ''; // Réinitialiser le contenu de la liste
-    items.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item; // Nom de l'option
-      li.dataset.value = item.toLowerCase(); // Stocke la valeur en minuscules
-      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
-      ul.appendChild(li); // Ajoute l'élément à la liste
-    });
+    if (ul) { // Vérifie que l'élément ul existe
+      ul.innerHTML = ''; // Réinitialiser le contenu de la liste
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item; // Nom de l'option
+        li.dataset.value = item.toLowerCase(); // Stocke la valeur en minuscules
+        li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
+        ul.appendChild(li); // Ajoute l'élément à la liste
+      });
+    } else {
+      console.error(`L'élément ${ul.id} n'a pas été trouvé.`);
+    }
   };
 
   // Mise à jour des listes des filtres avec les options triées
@@ -58,6 +60,7 @@ function updateAdvancedFilters(recipes) {
   updateOptions(document.getElementById('appareils'), sortedAppareils);
   updateOptions(document.getElementById('ustensiles'), sortedUstensiles);
 }
+
 // Fonction de filtrage des options dans les filtres avancés
 function filterOptions(inputId, ulId) {
   const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
@@ -118,7 +121,7 @@ export function MainfilterRecipes() {
   // Mettez à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
   updateRecipeCount(filteredRecipes.length);
-
+  updateAdvancedFilters(filteredRecipes);
   // Gérer l'affichage du message d'erreur
   if (filteredRecipes.length === 0) {
     showErrorMessage(MainsearchText); // Afficher un message d'erreur si aucune recette ne correspond

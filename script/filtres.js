@@ -1,6 +1,6 @@
 import { recipes } from './recipes.js'; // Importe les données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount } from './index.js'; // Importe des fonctions pour afficher les recettes, gérer les erreurs et mettre à jour le compteur
-import { MainfilterRecipes } from './main.js';
+import { MainfilterRecipes, updateAdvancedFilters } from './main.js';
 
 // Objet pour stocker les tags sélectionnés par catégorie
 export const selectedTags = {
@@ -74,7 +74,7 @@ function removeTag(tagText, category) {
 
 
 // Mettre à jour les options des filtres avancés (Ingrédients, Appareils, Ustensiles) en fonction des recettes affichées
-function updateFilterOptions(filteredRecipes) {
+export function updateFilterOptions(filteredRecipes) {
   const ingredientsList = document.getElementById('ingredients-search');
   const appareilsList = document.getElementById('appareils-search');
   const ustensilesList = document.getElementById('ustensiles-search');
@@ -240,15 +240,19 @@ function listenToFilterChanges() {
   filters.forEach(filter => {
     if (filter) {
       filter.addEventListener('click', event => {
-        const category = event.target.closest('ul').id; // Récupère la catégorie depuis l'ID du UL
-        const selectedOption = event.target.textContent;// Récupère l'option sélectionnée
+        const selectedOption = event.target.closest('li'); // Récupère l'élément li cliqué
         if (selectedOption) {
-          addTag(selectedOption, category);// Ajoute le tag correspondant
+          const category = filter.id; // Utilise l'ID du UL pour déterminer la catégorie
+          addTag(selectedOption.dataset.value, category); // Ajoute le tag correspondant
         }
       });
     }
   });
 }
+
+// Assurez-vous d'appeler cette fonction après l'initialisation des options de filtre
+updateAdvancedFilters(recipes); // Appelez cette fonction pour initialiser les filtres
+listenToFilterChanges(); // Ajoutez les écouteurs d'événements après l'initialisation
 
 // Initialisation des filtres lors du chargement de la page
 window.addEventListener('load', () => {
