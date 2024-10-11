@@ -1,6 +1,6 @@
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
-import { displayTags, filterRecipesWithAdvancedFilters, capitalizeFirstLetter } from './filtres.js';// Importation de la fonction qui affiche les tags
+import { displayTags, filterRecipesWithAdvancedFilters, capitalizeFirstLetter, selectedTags } from './filtres.js';// Importation de la fonction qui affiche les tags
 import { updateRecipeCount } from './index.js';
 
 
@@ -69,7 +69,6 @@ function filterOptions(inputId, ulId) {
   
 }
 
-// Fonction de filtrage des recettes
 export function MainfilterRecipes() {
   const MainsearchInput = document.getElementById('main-search-input');
   const MainsearchText = MainsearchInput.value.trim().toLowerCase();
@@ -82,32 +81,38 @@ export function MainfilterRecipes() {
   // Vérifier si tous les champs de saisie sont vides
   const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '';
 
-  if (isAllEmpty) {
-    // Si tous les champs sont vides, aucune recette ne doit s'afficher
-    updateRecipeCount(0); // Compteur à 0
-    displayRecipes([]); // N'afficher aucune recette
-    return;
-  }
-
   // Filtrage des recettes
   const filteredRecipes = recipes.filter(recette => {
     // Vérifier si la recette correspond au texte de recherche principal
-    const correspondTexte = MainsearchText === '' || recette.name.toLowerCase().includes(MainsearchText) ||
-                            recette.description.toLowerCase().includes(MainsearchText) ||
-                            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
+    const correspondTexte = MainsearchText === '' || 
+      recette.name.toLowerCase().includes(MainsearchText) ||
+      recette.description.toLowerCase().includes(MainsearchText) ||
+      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
 
     // Vérifier si la recette correspond à la saisie dans les champs avancés (ingrédients, appareils, ustensiles)
     const correspondIngredientInput = ingredientInput === '' || 
-                                      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
+      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
 
     const correspondAppareilInput = appareilInput === '' || 
-                                    recette.appliance?.toLowerCase().includes(appareilInput);
+      recette.appliance?.toLowerCase().includes(appareilInput);
 
     const correspondUstensileInput = ustensileInput === '' || 
-                                     recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
+      recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
+
+    // Vérifier si la recette correspond aux tags sélectionnés
+    const matchesTags = 
+      selectedTags.ingredients.every(tag => 
+        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tag.toLowerCase())
+      ) && 
+      selectedTags.appareils.every(tag => 
+        recette.appliance?.toLowerCase() === tag.toLowerCase()
+      ) && 
+      selectedTags.ustensiles.every(tag => 
+        recette.ustensils?.some(ustensile => ustensile.toLowerCase() === tag.toLowerCase())
+      );
 
     // Retourner vrai si la recette correspond à tous les critères
-    return correspondTexte && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput;
+    return (correspondTexte || isAllEmpty) && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags;
   });
 
   // Mettez à jour l'affichage des recettes filtrées
@@ -120,6 +125,7 @@ export function MainfilterRecipes() {
   } else {
     hideErrorMessage(); // Masquer le message d'erreur si des recettes sont trouvées
   }
+
   console.log('Texte de recherche principal:', MainsearchText);
   console.log('Ingrédients filtrés:', ingredientInput);
   console.log('Appareils filtrés:', appareilInput);

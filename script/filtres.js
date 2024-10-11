@@ -3,7 +3,7 @@ import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount }
 import { MainfilterRecipes } from './main.js';
 
 // Objet pour stocker les tags sélectionnés par catégorie
-const selectedTags = {
+export const selectedTags = {
   ingredients: [],// Tags d'ingrédients sélectionnés
   appareils: [],// Tags d'appareils sélectionnés
   ustensiles: []// Tags d'ustensiles sélectionnés
@@ -162,11 +162,23 @@ const selectedUstensiles = selectedTags.ustensiles
 
 // Fonction de filtrage des recettes avec les filtres avancés (tags)
 export function filterRecipesWithAdvancedFilters() {
-  console.log('Selected Tags:', selectedTags);
-  hideRecipes(); // Cache les recettes avant le filtrage
+  // Vérifiez que l'élément existe avant d'accéder à sa valeur
+  const ingredientInput = document.getElementById('ingredients-search');
+  const appareilInput = document.getElementById('appareils-search');
+  const ustensileInput = document.getElementById('ustensiles-search');
 
-  // Récupérer le texte de recherche
-  const searchText = document.getElementById('search-input').value.toLowerCase(); // Assurez-vous que l'ID correspond à votre champ de recherche
+  // Déclaration des valeurs après avoir récupéré les éléments
+  const ingredientValue = ingredientInput ? ingredientInput.value.trim().toLowerCase() : '';
+  const appareilValue = appareilInput ? appareilInput.value.trim().toLowerCase() : '';
+  const ustensileValue = ustensileInput ? ustensileInput.value.trim().toLowerCase() : '';
+
+  // Récupérer le texte de recherche principal
+  const searchInputElement = document.getElementById('main-search-input'); // Assurez-vous que l'ID est correct
+  const searchText = searchInputElement ? searchInputElement.value.toLowerCase() : ''; // Vérifiez si l'élément existe
+
+  // Ajoutez un console log pour vérifier si l'élément est récupéré correctement
+  console.log('Champ de recherche principal:', searchInputElement); // Vérifiez l'élément
+  console.log('Texte de recherche principal:', searchText); // Vérifiez la valeur
 
   // Récupère les tags avec la première lettre en majuscule et le reste en minuscule
   const selectedIngredients = selectedTags.ingredients.map(tag => capitalizeFirstLetter(tag));
@@ -221,7 +233,6 @@ export function filterRecipesWithAdvancedFilters() {
     updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avec les recettes filtrées
   }
 }
-
 
 // Ajouter des écouteurs d'événements pour les filtres avancés
 function listenToFilterChanges() {
