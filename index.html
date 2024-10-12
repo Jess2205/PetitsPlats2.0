@@ -12,25 +12,23 @@
   button:hover .img-default {
   display: none;
   }
+
   button:hover .img-hover {
   display: block;
   }
   
   #main-clear-search {
-  top: 50%;
-  transform: translateY(-50%);
+  top: 40%;
+
   }
+
   .filter-list {
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: calc(1.5em * 6); /* 1.5em est la hauteur de ligne moyenne, pour 6 lignes */
-  overflow-y: auto;
-  padding-right: 2px;         /* Optionnel : Ajouter un peu de padding pour éviter la superposition avec la scrollbar */
-  /* Masquer la barre de défilement dans les navigateurs Webkit (Chrome, Safari) */
-  /* Masquer la barre de défilement dans les navigateurs Webkit (Chrome, Safari) */
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none; /* Masquer dans Firefox */
+  max-height: 260px; 
+  overflow: auto;
+  padding-right: 2px;        
   }
 
   .filter-list::-webkit-scrollbar {
@@ -39,8 +37,8 @@
 
   .selected {
   background-color: #FFD15B;
-  ; /* Code hexadécimal pour bg-yellow-400 */
   }
+
   .close-icon {
     margin-left: 8px; /* Un petit espacement */
     cursor: pointer; /* Pour indiquer que c'est cliquable */
