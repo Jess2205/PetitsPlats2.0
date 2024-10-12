@@ -198,7 +198,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let isInputVisible = false; // Gérer l'état d'affichage de l'input
     let placeholderText = input.placeholder; // Stocker le texte initial du placeholder
 
-     // Affiche ou masque le champ de recherche du filtre
+    // Affiche ou masque le champ de recherche du filtre
     label.addEventListener('click', (e) => {
       e.preventDefault(); // Empêche le comportement par défaut du label
       isInputVisible = !isInputVisible;
@@ -239,18 +239,32 @@ document.addEventListener('DOMContentLoaded', () => {
       input.value = ''; // Efface le texte de l'input
       clearBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
       input.focus(); // Remet le focus sur l'input après avoir effacé
-      
     });
 
-    // Garde le conteneur affiché après la sélection d'un ingrédient/appareil/ustensile
-    ul.addEventListener('click', () => {
-      if (ul.value) {
+    // Déplacement de l'élément sélectionné en haut de la liste et suppression des doublons
+    ul.addEventListener('click', (e) => {
+      const clickedItem = e.target; // Récupère l'élément cliqué
+      if (clickedItem.tagName.toLowerCase() === 'li') {
+        const items = ul.querySelectorAll('li'); // Récupère tous les éléments <li>
+        
+        // Supprime tous les doublons de l'élément sélectionné
+        items.forEach(item => {
+          if (item !== clickedItem && item.textContent.trim() === clickedItem.textContent.trim()) {
+            item.remove(); // Supprime les doublons
+          }
+        });
+
+        // Déplace l'élément cliqué en haut de la liste
+        ul.insertBefore(clickedItem, ul.firstChild);
+      }
+
+      // Garde le conteneur affiché après la sélection d'un ingrédient/appareil/ustensile
+      if (clickedItem) {
         input.value = ''; // Efface le texte saisi dans l'input
         clearBtn.classList.add('hidden'); // Masque la croix
         isInputVisible = true;
         inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible
         label.classList.remove('label-hidden'); // Garde le padding
-        
       }
     });
   }
