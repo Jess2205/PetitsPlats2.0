@@ -79,9 +79,11 @@ export function MainfilterRecipes() {
 
   // Filtrage des recettes
   const filteredRecipes = recipes.filter(recette => {
-    // Vérifier si la recette a des ingrédients correspondants au texte de recherche principal
+    // Recherche dans le titre, la description, ou les ingrédients
     const correspondTexte = MainsearchText === '' || 
-      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
+      recette.name.toLowerCase().includes(MainsearchText) ||  // Recherche dans le titre
+      recette.description.toLowerCase().includes(MainsearchText) ||  // Recherche dans la description
+      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));  // Recherche dans les ingrédients
 
     // Vérifier si la recette correspond à la saisie dans les champs avancés (ingrédients, appareils, ustensiles)
     const correspondIngredientInput = ingredientInput === '' || 
@@ -134,7 +136,7 @@ export function MainfilterRecipes() {
   // Mettez à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
   updateRecipeCount(filteredRecipes.length);
-  updateAdvancedFilters(filteredRecipes);
+  updateAdvancedFilters(recipes);
 
   // Gérer l'affichage du message d'erreur
   if (filteredRecipes.length === 0) {
@@ -149,6 +151,7 @@ export function MainfilterRecipes() {
   console.log('Ustensiles filtrés:', ustensileInput);
   console.log('Recettes filtrées:', filteredRecipes);
 }
+
 
 // Écouteur d'événements pour la barre de recherche principale
 document.getElementById('main-search-input').addEventListener('input', function () {
