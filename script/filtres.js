@@ -23,7 +23,7 @@ export function displayTags() {
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span');
-      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-52';
+      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-4 py-4 items-center w-44 rounded';
 
       tag.textContent = tagText; // Texte du tag
 
@@ -39,7 +39,7 @@ img.style.height = '17px'; // Ajustez la taille selon vos besoins
 
 // Ajoutez l'image à l'élément removeIcon
 removeIcon.appendChild(img);
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'text-black-700','bold', 'text-2xl'); // Ajout d'une couleur au survol
+      removeIcon.classList.add('ml-2', 'cursor-pointer', 'text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
 
       tag.appendChild(removeIcon); // Ajoute l'icône au tag
 
@@ -326,10 +326,10 @@ document.addEventListener("DOMContentLoaded", function() {
 // Alterne entre affichage et masquage du dropdown
     if (dropdown.classList.contains('hidden')) {
       dropdown.classList.remove('hidden');
-      arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">';
+      arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 ml-10 inline-block">';
     } else {
       dropdown.classList.add('hidden');
-      arrow.innerHTML = '<img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block">';
+      arrow.innerHTML = '<img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 ml-10 inline-block">';
     }
   }
 
