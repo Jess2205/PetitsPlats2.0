@@ -232,7 +232,9 @@ export function filterRecipesWithAdvancedFilters() {
   // Si aucun tag et aucun texte de recherche, afficher toutes les recettes
   if (selectedIngredients.length === 0 && selectedAppareils.length === 0 && selectedUstensiles.length === 0 && !searchText) {
     displayRecipes(recipes); // Affiche toutes les recettes
-    updateRecipeCount(recipes.length); // Met à jour le compteur de recettes
+    // Vérifiez si tous les filtres sont vides pour définir le compteur
+  const totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
+  updateRecipeCount(totalRecipesCount); // Met à jour le compteur avec 1500 ou le nombre filtré
     return; // Quitte la fonction
   }
 

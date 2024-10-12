@@ -135,7 +135,9 @@ export function MainfilterRecipes() {
 
   // Mettez à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
-  updateRecipeCount(filteredRecipes.length);
+  // Vérifiez si tous les filtres sont vides pour définir le compteur
+  const totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
+  updateRecipeCount(totalRecipesCount); // Met à jour le compteur avec 1500 ou le nombre filtré
   updateAdvancedFilters(recipes);
 
   // Gérer l'affichage du message d'erreur
