@@ -8,7 +8,10 @@
       {
         "ignore": [
           "-webkit-tap-highlight-color",
-          "text-size-adjust"
+          "text-size-adjust",
+          "-webkit-overflow-scrolling",
+          "scrollbar-width",
+          "scrollbar-width: none"
         ]
       }
     ],

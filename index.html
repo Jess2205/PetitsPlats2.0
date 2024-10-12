@@ -25,9 +25,18 @@
   margin: 0;
   padding: 0;
   max-height: calc(1.5em * 6); /* 1.5em est la hauteur de ligne moyenne, pour 6 lignes */
-  overflow: hidden;           
+  overflow-y: auto;
   padding-right: 2px;         /* Optionnel : Ajouter un peu de padding pour éviter la superposition avec la scrollbar */
+  /* Masquer la barre de défilement dans les navigateurs Webkit (Chrome, Safari) */
+  /* Masquer la barre de défilement dans les navigateurs Webkit (Chrome, Safari) */
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none; /* Masquer dans Firefox */
   }
+
+  .filter-list::-webkit-scrollbar {
+  display: none; /* Masquer dans Webkit (Chrome, Safari) */
+  }
+
   .selected {
   background-color: #FFD15B;
   ; /* Code hexadécimal pour bg-yellow-400 */
