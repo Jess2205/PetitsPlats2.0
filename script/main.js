@@ -114,7 +114,7 @@ export function MainfilterRecipes() {
   // Mettez à jour le compteur : si tout est vide (texte et tags), affichez 1500, sinon le nombre réel de recettes filtrées
   const totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
   updateRecipeCount(totalRecipesCount);
-  updateAdvancedFilters(recipes);
+  updateAdvancedFilters(filteredRecipes);
 
   // Gérer l'affichage du message d'erreur
   if (filteredRecipes.length === 0) {
