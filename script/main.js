@@ -1,6 +1,6 @@
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
-import { displayTags, filterRecipesWithAdvancedFilters, capitalizeFirstLetter, selectedTags, updateFilterOptions } from './filtres.js';// Importation de la fonction qui affiche les tags
+import { displayTags, capitalizeFirstLetter, selectedTags, updateFilterOptions } from './filtres.js';// Importation de la fonction qui affiche les tags
 import { updateRecipeCount } from './index.js';
 
 
@@ -69,23 +69,22 @@ export function MainfilterRecipes() {
   const MainsearchInput = document.getElementById('main-search-input');
   const MainsearchText = MainsearchInput.value.trim().toLowerCase();
 
-  // Récupération des saisies dans les champs de recherche des filtres
   const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase();
   const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase();
   const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase();
 
-  // Vérifier si tous les champs de saisie sont vides
-  const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '';
+  // Vérifiez si le champ de recherche principal et tous les champs de recherche des filtres sont vides
+  const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '' &&
+    selectedTags.ingredients.length === 0 &&
+    selectedTags.appareils.length === 0 &&
+    selectedTags.ustensiles.length === 0;
 
-  // Filtrage des recettes
   const filteredRecipes = recipes.filter(recette => {
-    // Recherche dans le titre, la description, ou les ingrédients
     const correspondTexte = MainsearchText === '' || 
-      recette.name.toLowerCase().includes(MainsearchText) ||  // Recherche dans le titre
-      recette.description.toLowerCase().includes(MainsearchText) ||  // Recherche dans la description
-      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));  // Recherche dans les ingrédients
+      recette.name.toLowerCase().includes(MainsearchText) ||  
+      recette.description.toLowerCase().includes(MainsearchText) ||  
+      recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
 
-    // Vérifier si la recette correspond à la saisie dans les champs avancés (ingrédients, appareils, ustensiles)
     const correspondIngredientInput = ingredientInput === '' || 
       recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
 
@@ -95,7 +94,6 @@ export function MainfilterRecipes() {
     const correspondUstensileInput = ustensileInput === '' || 
       recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
 
-    // Vérifier si la recette correspond aux tags sélectionnés
     const matchesTags = 
       selectedTags.ingredients.every(tag => 
         recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tag.toLowerCase())
@@ -107,44 +105,22 @@ export function MainfilterRecipes() {
         recette.ustensils?.some(ustensile => ustensile.toLowerCase() === tag.toLowerCase())
       );
 
-    // Retourner vrai si la recette correspond à tous les critères
     return (correspondTexte || isAllEmpty) && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags;
   });
 
-  // Nettoyer les doublons et garder ceux dont la première lettre est en majuscule
-  const uniqueIngredients = [...new Set(recipes.flatMap(recette => 
-    recette.ingredients.map(ingredient => ingredient.ingredient)
-  ))]
-    .filter(ingredient => ingredient.charAt(0) === ingredient.charAt(0).toUpperCase() && 
-      (ingredient.slice(-1) !== 's' || ingredient.length === 1)) // Exclure le pluriel en retirant le 's'
-    .map(ingredient => ingredient.charAt(0).toUpperCase() + ingredient.slice(1)); // Mise en majuscule
-
-  const uniqueAppareils = [...new Set(recipes.flatMap(recette => 
-    [recette.appliance]
-  ))]
-    .filter(appareil => appareil.charAt(0) === appareil.charAt(0).toUpperCase() && 
-      (appareil.slice(-1) !== 's' || appareil.length === 1)) // Exclure le pluriel
-    .map(appareil => appareil.charAt(0).toUpperCase() + appareil.slice(1)); // Mise en majuscule
-
-  const uniqueUstensiles = [...new Set(recipes.flatMap(recette => 
-    recette.ustensils
-  ))]
-    .filter(ustensile => ustensile.charAt(0) === ustensile.charAt(0).toUpperCase() && 
-      (ustensile.slice(-1) !== 's' || ustensile.length === 1)) // Exclure le pluriel
-    .map(ustensile => ustensile.charAt(0).toUpperCase() + ustensile.slice(1)); // Mise en majuscule
-
   // Mettez à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
-  // Vérifiez si tous les filtres sont vides pour définir le compteur
+
+  // Mettez à jour le compteur : si tout est vide (texte et tags), affichez 1500, sinon le nombre réel de recettes filtrées
   const totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
-  updateRecipeCount(totalRecipesCount); // Met à jour le compteur avec 1500 ou le nombre filtré
+  updateRecipeCount(totalRecipesCount);
   updateAdvancedFilters(recipes);
 
   // Gérer l'affichage du message d'erreur
   if (filteredRecipes.length === 0) {
-    showErrorMessage(MainsearchText); // Afficher un message d'erreur si aucune recette ne correspond
+    showErrorMessage(MainsearchText);
   } else {
-    hideErrorMessage(); // Masquer le message d'erreur si des recettes sont trouvées
+    hideErrorMessage();
   }
 
   console.log('Texte de recherche principal:', MainsearchText);
@@ -153,7 +129,6 @@ export function MainfilterRecipes() {
   console.log('Ustensiles filtrés:', ustensileInput);
   console.log('Recettes filtrées:', filteredRecipes);
 }
-
 
 // Écouteur d'événements pour la barre de recherche principale
 document.getElementById('main-search-input').addEventListener('input', function () {

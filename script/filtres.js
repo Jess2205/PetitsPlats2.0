@@ -73,15 +73,17 @@ function removeTag(tagText, category) {
   if (selectedTags[category]) {
     // Vérifie que le tag existe dans la catégorie
     const index = selectedTags[category].indexOf(tagText);
-  if (index > -1) {
-      selectedTags[category].splice(index, 1);// Supprime le tag
+    if (index > -1) {
+      selectedTags[category].splice(index, 1); // Supprime le tag
       displayTags(); // Affiche les tags mis à jour
-      filterRecipesWithAdvancedFilters(); // Filtre les recettes après la suppression du tag
       updateFilterOptions(recipes); // Met à jour les options de filtre
-      MainfilterRecipes();
+
+      // Filtre les recettes après la suppression du tag
+      MainfilterRecipes(); // Cela mettra à jour le compteur des recettes affichées
     }
   }
 }
+
   
 
 
@@ -205,6 +207,7 @@ const selectedUstensiles = selectedTags.ustensiles
 
 
 // Fonction de filtrage des recettes avec les filtres avancés (tags)
+// Fonction de filtrage des recettes avec les filtres avancés (tags)
 export function filterRecipesWithAdvancedFilters() {
   // Vérifiez que l'élément existe avant d'accéder à sa valeur
   const ingredientInput = document.getElementById('ingredients-search');
@@ -229,12 +232,13 @@ export function filterRecipesWithAdvancedFilters() {
   const selectedAppareils = selectedTags.appareils.map(tag => capitalizeFirstLetter(tag));
   const selectedUstensiles = selectedTags.ustensiles.map(tag => capitalizeFirstLetter(tag));
 
+  // Vérifiez si tous les filtres sont vides
+  const isAllEmpty = selectedIngredients.length === 0 && selectedAppareils.length === 0 && selectedUstensiles.length === 0 && !searchText;
+
   // Si aucun tag et aucun texte de recherche, afficher toutes les recettes
-  if (selectedIngredients.length === 0 && selectedAppareils.length === 0 && selectedUstensiles.length === 0 && !searchText) {
+  if (isAllEmpty) {
     displayRecipes(recipes); // Affiche toutes les recettes
-    // Vérifiez si tous les filtres sont vides pour définir le compteur
-  const totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
-  updateRecipeCount(totalRecipesCount); // Met à jour le compteur avec 1500 ou le nombre filtré
+    updateRecipeCount(1500); // Met à jour le compteur avec 1500
     return; // Quitte la fonction
   }
 
