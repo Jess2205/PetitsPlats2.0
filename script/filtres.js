@@ -10,6 +10,7 @@ export const selectedTags = {
 };
 
 // Fonction pour afficher les tags dans l'interface
+// Fonction pour afficher les tags dans l'interface
 export function displayTags() {
   const tagContainer = document.getElementById('tag-container');
   if (!tagContainer) {
@@ -23,25 +24,40 @@ export function displayTags() {
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span');
-      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-4 py-4 items-center w-44 rounded';
+      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-40';
 
       tag.textContent = tagText; // Texte du tag
 
       const removeIcon = document.createElement('span');
-      // Créez l'élément image
-const img = document.createElement('img');
+      removeIcon.style.position = 'relative'; // Pour le positionnement correct de l'icône
 
-// Définir le chemin de l'image et d'autres attributs si nécessaire
-img.src = './assets/icone close tag.png'; // Remplacez par le chemin de votre image
-img.alt = 'Supprimer'; // Texte alternatif pour l'accessibilité
-img.style.width = '17px'; // Ajustez la taille selon vos besoins
-img.style.height = '17px'; // Ajustez la taille selon vos besoins
+      // Créer l'élément image
+      const img = document.createElement('img');
+      img.src = './assets/icone close tag.png'; // Remplacez par le chemin de votre image
+      img.alt = 'Supprimer'; // Texte alternatif pour l'accessibilité
+      img.style.width = '17px'; // Ajustez la taille selon vos besoins
+      img.style.height = '17px'; // Ajustez la taille selon vos besoins
+      img.style.display = 'none'; // Cacher l'image par défaut
 
-// Ajoutez l'image à l'élément removeIcon
-removeIcon.appendChild(img);
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
+      // Ajouter un "X" comme texte
+      const xText = document.createElement('span');
+      xText.textContent = 'X'; // Définit le contenu texte par défaut
+      xText.style.fontSize = '17px'; // Ajuste la taille de la police si nécessaire
+      xText.classList.add('ml-2', 'cursor-pointer', 'text-black-700', 'text-2xl'); // Classes Tailwind pour le style
 
-      tag.appendChild(removeIcon); // Ajoute l'icône au tag
+      removeIcon.appendChild(xText); // Ajoute le "X" à l'icône
+      removeIcon.appendChild(img); // Ajoute l'image à l'icône
+
+      // Événements de survol
+      removeIcon.addEventListener('mouseenter', () => {
+          xText.style.display = 'none'; // Cacher le "X"
+          img.style.display = 'inline'; // Afficher l'image
+      });
+
+      removeIcon.addEventListener('mouseleave', () => {
+          xText.style.display = 'inline'; // Afficher le "X"
+          img.style.display = 'none'; // Cacher l'image
+      });
 
       // Écouteur d'événement pour supprimer le tag
       removeIcon.addEventListener('click', () => {
@@ -50,10 +66,12 @@ removeIcon.appendChild(img);
         MainfilterRecipes();
       });
 
+      tag.appendChild(removeIcon); // Ajoute l'icône au tag
       tagContainer.appendChild(tag); // Ajoute le tag au conteneur
     });
   }
 }
+
 // Fonction pour ajouter un tag dans la catégorie correspondante
 function addTag(tagText, category) {
   // Met la première lettre en majuscule et met le reste en minuscules
@@ -68,6 +86,7 @@ function addTag(tagText, category) {
   }
 }
 
+// Fonction pour retirer un tag
 // Fonction pour retirer un tag
 function removeTag(tagText, category) {
   if (selectedTags[category]) {
