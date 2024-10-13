@@ -43,7 +43,7 @@ export function displayTags() {
       const xText = document.createElement('span');
       xText.textContent = 'X'; // Définit le contenu texte par défaut
       xText.style.fontSize = '17px'; // Ajuste la taille de la police si nécessaire
-      xText.classList.add('ml-2', 'cursor-pointer', 'text-black-700', 'text-2xl'); // Classes Tailwind pour le style
+      xText.classList.add('ml-2', 'cursor-pointer', 'text-black-700', 'text-2xl','z-30'); // Classes Tailwind pour le style
 
       removeIcon.appendChild(xText); // Ajoute le "X" à l'icône
       removeIcon.appendChild(img); // Ajoute l'image à l'icône

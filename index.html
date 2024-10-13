@@ -101,8 +101,8 @@
   </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="ingredients-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
-  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent " autocomplete="off">
+  <div id="ingredients-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300 relative z-10">
+  <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent relative " autocomplete="off">
   <button id="ingredients-clear-search" class="absolute right-16 top-16 text-gray-400 hidden" aria-label="Effacer la recherche">
     <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise  relative top-5 left-1" ><!-- Symbole de la croix -->
   </button>
@@ -110,7 +110,7 @@
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche  " >
   </button>
 </div>
-  <ul id="ingredients" class="filter-list hidden rounded mt-2 appearance-none border-none bg-transparent overflow-hidden bg-white" ></ul>
+  <ul id="ingredients" class="filter-list hidden bg-white rounded mt-2 relative z-10" ></ul>
 </div>
 <!-- Filtres dynamiques des appareils -->
 <div class="relative w-40 ml-2 rounded">
@@ -121,7 +121,7 @@
   </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="appareils-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <div id="appareils-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300 relative z-10">
   <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
   <button id="appareils-clear-search" class="absolute right-16 top-16 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
     <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative top-5 left-1 " ><!-- Symbole de la croix -->
@@ -130,7 +130,7 @@
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <ul id="appareils" class="filter-list hidden bg-white rounded mt-2 " ></ul>
+  <ul id="appareils" class="filter-list hidden bg-white rounded mt-2 relative z-10 " ></ul>
 </div>
 <!-- Filtres dynamiques des ustensiles -->
 <div class="relative w-40 ml-2 rounded">
@@ -141,7 +141,7 @@
   </span>
   </label>
   <!-- Conteneur pour l'input et la loupe -->
-  <div id="ustensiles-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300">
+  <div id="ustensiles-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300 relative z-10">
   <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
   <button id="ustensiles-clear-search" class="absolute right-16 top-16  text-gray-400 hidden" aria-label="Effacer la recherche">
     <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative top-5 left-1" ><!-- Symbole de la croix -->
@@ -150,14 +150,14 @@
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
-  <ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 " ></ul>
+  <ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 relative z-10 " ></ul>
 </div>
  <!-- Compteur de recettes -->
 <p id="total-recipes" class="text-black-700 text-xl font-bold pt-2 relative top-1 mx-auto md:ml-20 lg:ml-40">1500 recettes</p>
 
 </div>
  <!-- Conteneur pour les tags sélectionnés -->
-  <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 text-black">
+  <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 text-black z-20">
   </div>
 </div>
 <!-- Section où les médias seront affichés -->
