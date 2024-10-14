@@ -33,26 +33,17 @@
   overflow: auto;
   padding-right: 2px;
   } 
-  /* Styles modernes avec CSS3 */
-@supports (-webkit-appearance: none) {
-    .filter-list {
-        scrollbar-width: thin; /* CSS3 */
-        scrollbar-color: transparent transparent; /* CSS3 */
-    }
-
-    /* Styles pour les barres de défilement dans WebKit */
-    .filter-list::-webkit-scrollbar {
-        width: 8px;
-    }
-
-    .filter-list::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    .filter-list::-webkit-scrollbar-thumb {
-        background: transparent; /* Couleur de la barre de défilement */
-    }
+  
+    /* Masquer la barre de défilement */
+.filter-list::-webkit-scrollbar {
+    display: none; /* Cache la barre de défilement pour Chrome/Safari */
 }
+
+.filter-list {
+    -ms-overflow-style: none;  /* Cache la barre de défilement pour Internet Explorer et Edge */
+    scrollbar-width: none; /* Cache la barre de défilement pour Firefox */
+}
+
   
 
   .selected {
