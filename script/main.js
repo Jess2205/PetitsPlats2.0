@@ -155,11 +155,8 @@ export function MainfilterRecipes() {
     hideErrorMessage();
   }
 
-  console.log('Texte de recherche principal:', MainsearchText);
-  console.log('Ingrédients filtrés:', ingredientInput);
-  console.log('Appareils filtrés:', appareilInput);
-  console.log('Ustensiles filtrés:', ustensileInput);
-  console.log('Recettes filtrées:', filteredRecipes);
+  
+  
 }
 
 

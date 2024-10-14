@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Les Petits Plats</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link href="./dist/output.css" rel="stylesheet">
+  <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style" onload="this.rel='stylesheet'">
+  <noscript><link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"></noscript>
+  <link rel="preload" href="./dist/output.css" as="style" onload="this.rel='stylesheet'">
+  <noscript><link href="./dist/output.css" rel="stylesheet"></noscript>
+
   <style>
 
   /* CSS pour gérer le comportement au survol */
@@ -26,14 +29,18 @@
   list-style: none;
   margin: 0;
   padding: 0;
-  max-height: 260px; 
-  overflow: auto;
-  padding-right: 2px;        
-  }
+  max-height: 260px;
+  overflow-y: scroll;
+  padding-right: 2px;
+  
+  /* Firefox */
+  scrollbar-width: thin;  /* Masque partiellement la barre en la rendant fine */
+  scrollbar-color: transparent transparent;  /* Cache visuellement la barre */
+}
 
-  .filter-list::-webkit-scrollbar {
-  display: none; /* Masquer dans Webkit (Chrome, Safari) */
-  }
+.filter-list::-webkit-scrollbar {
+  display: none; /* Masque la barre dans Chrome/Safari */
+}
 
   .selected {
   background-color: #FFD15B;

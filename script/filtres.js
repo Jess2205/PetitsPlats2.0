@@ -139,10 +139,7 @@ filteredRecipes.forEach(recipe => {
     });
   }
 });
-console.log('filteredRecipes:', filteredRecipes);
-console.log('Unique Ingredients:', uniqueIngredients);
-console.log('Unique Appareils:', uniqueAppareils);
-console.log('Unique Ustensiles:', uniqueUstensiles);
+
 
 
 // Fonction pour mettre à jour les éléments d'une liste (Ingrédients, Appareils, Ustensiles)
