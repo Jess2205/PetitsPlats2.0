@@ -284,3 +284,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupFilter('appareils-search', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
   setupFilter('ustensiles-search', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
 });
+
+
+

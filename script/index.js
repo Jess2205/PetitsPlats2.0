@@ -136,3 +136,5 @@ export function updateRecipeCount(count) {
   recipeCountElement.textContent = `${formattedCount} ${recipeText}`;
 }
 
+
+

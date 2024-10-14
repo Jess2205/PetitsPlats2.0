@@ -368,12 +368,11 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 
-
-
-
 // Écouteurs pour la recherche en temps réel sur les trois filtres
 document.getElementById('ingredients-search').addEventListener('input', MainfilterRecipes);
 document.getElementById('appareils-search').addEventListener('input', MainfilterRecipes);
 document.getElementById('ustensiles-search').addEventListener('input', MainfilterRecipes);
+
+
 
 

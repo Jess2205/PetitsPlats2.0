@@ -30,17 +30,30 @@
   margin: 0;
   padding: 0;
   max-height: 260px;
-  overflow-y: scroll;
+  overflow: auto;
   padding-right: 2px;
-  
-  /* Firefox */
-  scrollbar-width: thin;  /* Masque partiellement la barre en la rendant fine */
-  scrollbar-color: transparent transparent;  /* Cache visuellement la barre */
-}
+  } 
+  /* Styles modernes avec CSS3 */
+@supports (-webkit-appearance: none) {
+    .filter-list {
+        scrollbar-width: thin; /* CSS3 */
+        scrollbar-color: transparent transparent; /* CSS3 */
+    }
 
-.filter-list::-webkit-scrollbar {
-  display: none; /* Masque la barre dans Chrome/Safari */
+    /* Styles pour les barres de défilement dans WebKit */
+    .filter-list::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .filter-list::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .filter-list::-webkit-scrollbar-thumb {
+        background: transparent; /* Couleur de la barre de défilement */
+    }
 }
+  
 
   .selected {
   background-color: #FFD15B;
@@ -111,9 +124,10 @@
   <div id="ingredients-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300 relative z-10">
   <input id="ingredients-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent relative " autocomplete="off">
   <button id="ingredients-clear-search" class="absolute right-16 top-16 text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise  relative top-5 left-1" ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative bottom-10 left-3">
+
   </button>
-  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 py-2" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche  " >
   </button>
 </div>
@@ -131,9 +145,9 @@
   <div id="appareils-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300 relative z-10">
   <input id="appareils-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
   <button id="appareils-clear-search" class="absolute right-16 top-16 pb-2  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative top-5 left-1 " ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative bottom-10 left-3 " ><!-- Symbole de la croix -->
   </button>
-  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 py-2" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
@@ -151,9 +165,9 @@
   <div id="ustensiles-input-container" class=" flex w-40 p-2 bg-white opacity-0 pointer-events-none transition-opacity duration-300 relative z-10">
   <input id="ustensiles-search" type="text" placeholder="Rechercher" class="search-input w-full pl-4 rounded border border-gray-300 placeholder-gray-300 placeholder-opacity-50 focus:outline-none focus:border-gray-300 focus:ring-0 focus:inset-1 focus:placeholder-transparent" autocomplete="off">
   <button id="ustensiles-clear-search" class="absolute right-16 top-16  text-gray-400 hidden" aria-label="Effacer la recherche">
-    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative top-5 left-1" ><!-- Symbole de la croix -->
+    <img src="./assets/croix-grise.png" alt="icone d'une croix" class="croix-grise relative bottom-10 left-3" ><!-- Symbole de la croix -->
   </button>
-  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 px-2 py-3" aria-label="Rechercher">
+  <button class="bg-white text-white relative right-4 border-t border-r border-b rounded border-gray-300 py-2" aria-label="Rechercher">
     <img src="./assets/loupe-blanche.png" alt="icone d'une loupe" class="loupe-blanche " >
   </button>
 </div>
