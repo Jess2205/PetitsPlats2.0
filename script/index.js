@@ -30,7 +30,7 @@ export function displayRecipes(recipes) {
     const recipeImage = document.createElement('img');
     recipeImage.src = `dataMedia/${recipe.image}`;
     recipeImage.alt = recipe.name;
-    recipeImage.classList.add('w-full', 'h-64', 'rounded-t-lg', 'object-cover', 'pb-4');
+    recipeImage.classList.add('w-full', 'h-60', 'rounded-t-lg', 'object-cover', 'pb-2');
 
     // Badge de temps
     const timeBadge = document.createElement('span');

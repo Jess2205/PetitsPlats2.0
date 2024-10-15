@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Les Petits Plats</title>
+   <!-- Importation de la police Anton -->
+   <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet">
   <link rel="preload" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" as="style" onload="this.rel='stylesheet'">
   <noscript><link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"></noscript>
   <link rel="preload" href="./dist/output.css" as="style" onload="this.rel='stylesheet'">
@@ -55,32 +57,68 @@
     cursor: pointer; /* Pour indiquer que c'est cliquable */
     font-weight: bold; /* Pour rendre l'icône plus visible */
   }
+  /* Style pour ajouter l'image de fond */
+  .header-bg {
+            background-image: url('./assets/header-background.png');
+            background-size: contain; /* Couvrir tout le conteneur */
+            background-position: center; /* Centrer l'image dans le conteneur */
+            background-repeat: no-repeat; /* Empêcher la répétition de l'image */
+            width: 1440px;
+            height: 667px;
+        }
+  
+  .titre-ppal {
+    font-family: Anton;
+    font-size: 44px;
+    width: 1050px;
+    Line-height: 66.24px;
+    top: 230px;
+    left: 172px;
+    
+  }
+
+  .bar-rech {
+    width: 950px;
+    height:70px ;
+  }
+
+  .tag-container{
+    position: absolute;
+    left: 300px;
+  }
+
+  .media-container {
+    width: 1000px;
+    
+  }
   </style>
 
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-100 text-gray-800 relative w-[1440px] h-[4122px] top-[512px] left-[2484px] mr-0">
 
   <!-- Header Section -->
-  <header class="flex flex-col justify-center items-center text-white mb-8 min-h-screen bg-cover bg-center" style="background-image: url('./assets/header-background.png');">
-    <h1 class="text-xl md:text-4xl font-bold absolute p-0 gap-0 opacity-1 transition ease-out duration-300" style="top: 20px; left: 5%;">
-      Les Petits Plats ©
-    </h1>
-    <h2 class="text-lg md:text-4xl font-bold mt-10 flex w-3/4 md:w-2/3 text-center text-yellow-400">
+  <header class="header-bg relative w-[1440px] h-[960px] -translate-y-[214px] flex flex-col justify-center items-center bg-center bg-no-repeat">
+    <div class="flex items-center justify-center h-full">
+      <h1 class="absolute" style="top: 20px; left: 5%;">
+        <img src="./assets/Logo.png" alt="Les Petits Plats Logo" class="w-[207px] h-[25.26px]">
+      </h1>
+    </div>
+    <h2 class=" titre-ppal absolute px-44 text-center text-yellow-400">
       CHERCHEZ PARMI PLUS DE 1500 RECETTES DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES
     </h2>
   
     <!-- Barre de recherche principale -->
-    <div class="relative mt-6 flex w-3/4 md:w-2/3 h-14">
+    <div class=" bar-rech relative left-2 pb-64 mt-6 flex ">
       <input 
         id="main-search-input" 
         type="text" 
         placeholder="Rechercher une recette, un ingrédient, ..." 
-        class="text-black w-full rounded-l p-4 focus:outline-none focus:placeholder-transparent"
+        class="text-black w-full rounded p-8 focus:outline-none focus:placeholder-transparent"
       >
       <button id="main-clear-search" class="absolute right-14 top-2 text-gray-400 hidden" aria-label="Effacer la recherche">
-        <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4">
+        <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4 relative bottom-20 mt-2 mr-2">
       </button>
-      <button class="absolute w-10 h-10 mt-2 right-2" aria-label="Rechercher">
+      <button class="absolute w-12 h-12 mt-3 right-2 " aria-label="Rechercher">
         <!-- Image par défaut -->
         <img src="./assets/loupe.png" alt="Icône d'une loupe" class="w-full h-full object-cover img-default absolute inset-0">
         
@@ -90,7 +128,7 @@
     </div>
   
     <!-- Conteneur pour le message d'erreur -->
-    <div id="error-message" class="hidden mt-4 w-full text-center text-red-500">
+    <div id="error-message" class="hidden mt-4 w-full text-center text-red-500 relative bottom-2">
       Aucune recette trouvée.
     </div>
   
@@ -98,14 +136,15 @@
     <div id="results-container" class="mt-4 w-full flex flex-wrap justify-center">
       <!-- Les résultats injectés dynamiquement ici -->
     </div>
-  </header>
+  </div>
+</header>
   
 <!-- Filters Section -->
-<div class="relative items-start mb-2 h-22 z-10">
-  <div class="flex gap-8 pl-8 mb-2 h-10 z-10">
+<div class="relative w-full  pt-4 h-22 z-10">
+  <div class="flex gap-20 right-10 mb-20 h-6 z-10">
   <!-- Filtres dynamiques des ingrédients -->
-<div class="relative w-40 ml-2 rounded ">
-  <label for="ingredients-search" class=" block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
+<div class="relative w-40 ml-32 rounded ">
+  <label for="ingredients-search" class=" block  bg-white text-black-500 px-2 py-4 rounded cursor-pointer">
   Ingrédients  
   <span class="arrow "> <!-- Ajoute un espace entre le texte et l'image -->
     <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 ml-10 inline-block"> <!-- Image de la flèche -->
@@ -126,7 +165,7 @@
 </div>
 <!-- Filtres dynamiques des appareils -->
 <div class="relative w-40 ml-2 rounded">
-  <label for="appareils-search" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
+  <label for="appareils-search" class="relative block  bg-white text-black-500 px-2 py-3 rounded cursor-pointer">
   Appareils  
   <span class="arrow "> <!-- Ajoute un espace entre le texte et l'image -->
     <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 ml-10 inline-block"> <!-- Image de la flèche -->
@@ -146,7 +185,7 @@
 </div>
 <!-- Filtres dynamiques des ustensiles -->
 <div class="relative w-40 ml-2 rounded">
-  <label for="ustensiles-search" class="relative block  bg-white text-black-500 px-2 py-2 rounded-t cursor-pointer">
+  <label for="ustensiles-search" class="relative block  bg-white text-black-500 px-2 py-3 rounded cursor-pointer">
   Ustensiles  
   <span class="arrow "> <!-- Ajoute un espace entre le texte et l'image -->
     <img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 ml-10 inline-block"> <!-- Image de la flèche -->
@@ -165,15 +204,15 @@
   <ul id="ustensiles" class="filter-list hidden bg-white rounded mt-2 relative z-10 " ></ul>
 </div>
  <!-- Compteur de recettes -->
-<p id="total-recipes" class="text-black-700 text-xl font-bold pt-2 relative top-1 mx-auto md:ml-20 lg:ml-40">1500 recettes</p>
+<p id="total-recipes" class="text-black-700 text-xl font-bold pt-2 relative top-1  ">1500 recettes</p>
 
 </div>
  <!-- Conteneur pour les tags sélectionnés -->
-  <div id="tag-container" class="ml-10 pb-8 flex flex-wrap gap-2 text-black z-20">
+  <div id="tag-container" class="ml-32 pb-4 relative bottom-2  flex flex-wrap gap-2 text-black z-1">
   </div>
 </div>
 <!-- Section où les médias seront affichés -->
-<div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 pl-10 pr-10 h-[600px] overflow-y-auto">
+<div id="media-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-16 pl-20  overflow-y-auto">
     <!-- Les recettes/médias seront injectés dynamiquement ici -->
 </div>
 
