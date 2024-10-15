@@ -24,7 +24,7 @@ export function displayTags() {
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span');
-      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-40';
+      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-44';
 
       tag.textContent = tagText; // Texte du tag
 
