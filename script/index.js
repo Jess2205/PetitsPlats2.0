@@ -40,26 +40,26 @@ export function displayRecipes(recipes) {
     // Titre de la recette
     const recipeTitle = document.createElement('h2');
     recipeTitle.textContent = recipe.name;
-    recipeTitle.classList.add('text-l', 'font-bold', 'text-gray-900', 'py-6','px-6');
+    recipeTitle.classList.add('text-l', 'font-bold', 'text-gray-900', 'py-6','px-4');
 
     // Label recette
     const recipeLabel = document.createElement('h3');
     recipeLabel.textContent ="RECETTE";
-    recipeLabel.classList.add('text-sm','uppercase','font-semibold','pb-2','px-6', 'text-gray-600' );
+    recipeLabel.classList.add('text-sm','uppercase','font-semibold','pb-2','px-4', 'text-gray-600' );
 
     // Description de la recette
     const description = document.createElement('p');
     description.textContent = recipe.description;
-    description.classList.add('text-2','mb-8','px-6', 'text-gray-700','leading-tight', 'line-clamp-4', 'h-24', 'overflow-hidden');
+    description.classList.add('text-2','mb-8','px-4', 'text-gray-700','leading-tight', 'line-clamp-4', 'h-24', 'overflow-hidden');
 
     // Label ingrédients
     const ingredientLabel = document.createElement('h3');
     ingredientLabel.textContent ="INGREDIENTS";
-    ingredientLabel.classList.add('text-sm','mt-4','uppercase','font-semibold','pb-2','px-6','text-gray-600');
+    ingredientLabel.classList.add('text-sm','mt-4','uppercase','font-semibold','pb-2','px-4','text-gray-600');
 
     // Ingrédients
     const ingredientsGrid = document.createElement('div');
-    ingredientsGrid.classList.add('grid','pb-12','px-6', 'grid-cols-2', 'gap-4', 'text-gray-700');
+    ingredientsGrid.classList.add('grid','pb-12','px-4', 'grid-cols-2', 'gap-4', 'text-gray-700');
 
     recipe.ingredients.forEach(ingredient => {
       const ingredientElement = document.createElement('div');
