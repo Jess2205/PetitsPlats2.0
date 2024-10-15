@@ -72,14 +72,15 @@
     font-size: 44px;
     width: 1050px;
     Line-height: 66.24px;
-    top: 230px;
-    left: 172px;
+    top: 248px;
+    left: 188px;
     
   }
 
   .bar-rech {
-    width: 950px;
-    height:70px ;
+    width: 956px;
+    height:72px ;
+   
   }
 
   .tag-container{
@@ -99,7 +100,7 @@
   <!-- Header Section -->
   <header class="header-bg relative w-[1440px] h-[960px] -translate-y-[214px] flex flex-col justify-center items-center bg-center bg-no-repeat">
     <div class="flex items-center justify-center h-full">
-      <h1 class="absolute" style="top: 20px; left: 5%;">
+      <h1 class="absolute" style="top: 48px; left: 5%;">
         <img src="./assets/Logo.png" alt="Les Petits Plats Logo" class="w-[207px] h-[25.26px]">
       </h1>
     </div>
@@ -108,17 +109,17 @@
     </h2>
   
     <!-- Barre de recherche principale -->
-    <div class=" bar-rech relative left-2 pb-64 mt-6 flex ">
+    <div class=" bar-rech absolute bottom-48 rounded-full  mt-6 flex ">
       <input 
         id="main-search-input" 
         type="text" 
         placeholder="Rechercher une recette, un ingrédient, ..." 
         class="text-black w-full rounded p-8 focus:outline-none focus:placeholder-transparent"
       >
-      <button id="main-clear-search" class="absolute right-14 top-2 text-gray-400 hidden" aria-label="Effacer la recherche">
-        <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4 relative bottom-20 mt-2 mr-2">
+      <button id="main-clear-search" class="absolute right-14 top-4 text-gray-400 hidden" aria-label="Effacer la recherche">
+        <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4 relative bottom-2 mt-2 mr-4">
       </button>
-      <button class="absolute w-12 h-12 mt-3 right-2 " aria-label="Rechercher">
+      <button class="absolute w-12 h-12 top-3 right-4 " aria-label="Rechercher">
         <!-- Image par défaut -->
         <img src="./assets/loupe.png" alt="Icône d'une loupe" class="w-full h-full object-cover img-default absolute inset-0">
         
@@ -128,7 +129,7 @@
     </div>
   
     <!-- Conteneur pour le message d'erreur -->
-    <div id="error-message" class="hidden mt-4 w-full text-center text-red-500 relative bottom-2">
+    <div id="error-message" class="hidden w-full text-center text-red-500 relative ">
       Aucune recette trouvée.
     </div>
   
