@@ -17,98 +17,151 @@ function hideRecipes() {
 
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
-  // Masque les recettes précédemment affichées
-  hideRecipes(); // Appel de la fonction pour vider le conteneur des recettes
+  hideRecipes(); // Vide le conteneur des recettes
 
   const MainsearchInput = document.getElementById('main-search-input');
-  const MainsearchText = MainsearchInput.value.trim().toLowerCase();// Récupère la valeur du champ de recherche principal
+  const MainsearchText = MainsearchInput.value.trim().toLowerCase();
 
-  // Récupération des valeurs des champs de recherche avancés (ingrédients, appareils, ustensiles)
   const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase();
   const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase();
   const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase();
 
-  // Vérifiez si le champ de recherche principal et tous les champs de recherche des filtres sont vides
   const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '' &&
     selectedTags.ingredients.length === 0 &&
     selectedTags.appareils.length === 0 &&
     selectedTags.ustensiles.length === 0;
 
-  let filteredRecipes;
+  let filteredRecipes = [];
 
-  // Si moins de 3 caractères, afficher toutes les recettes ou celles filtrées par tags
   if (MainsearchText.length < 3) {
     if (selectedTags.ingredients.length > 0 || selectedTags.appareils.length > 0 || selectedTags.ustensiles.length > 0) {
-      // Filtrer selon les tags si présents
-      filteredRecipes = recipes.filter(recette => {
-        const matchesTags =
-          selectedTags.ingredients.every(tag => 
-            recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tag.toLowerCase())
-          ) && 
-          selectedTags.appareils.every(tag => 
-            recette.appliance?.toLowerCase() === tag.toLowerCase()
-          ) && 
-          selectedTags.ustensiles.every(tag => 
-            recette.ustensils?.some(ustensile => ustensile.toLowerCase() === tag.toLowerCase())
-          );
+      // Filtrer selon les tags
+      let i = 0;
+      while (i < recipes.length) {
+        let recette = recipes[i];
+        let matchesTags = true;
 
-        return matchesTags;
-      });
+        for (let j = 0; j < selectedTags.ingredients.length; j++) {
+          let foundIngredient = false;
+          for (let k = 0; k < recette.ingredients.length; k++) {
+            if (recette.ingredients[k].ingredient.toLowerCase() === selectedTags.ingredients[j].toLowerCase()) {
+              foundIngredient = true;
+              break;
+            }
+          }
+          if (!foundIngredient) {
+            matchesTags = false;
+            break;
+          }
+        }
+
+        for (let j = 0; j < selectedTags.appareils.length; j++) {
+          if (recette.appliance?.toLowerCase() !== selectedTags.appareils[j].toLowerCase()) {
+            matchesTags = false;
+            break;
+          }
+        }
+
+        for (let j = 0; j < selectedTags.ustensiles.length; j++) {
+          let foundUstensile = false;
+          for (let k = 0; k < recette.ustensils.length; k++) {
+            if (recette.ustensils[k].toLowerCase() === selectedTags.ustensiles[j].toLowerCase()) {
+              foundUstensile = true;
+              break;
+            }
+          }
+          if (!foundUstensile) {
+            matchesTags = false;
+            break;
+          }
+        }
+
+        if (matchesTags) {
+          filteredRecipes.push(recette);
+        }
+        i++;
+      }
     } else {
-      filteredRecipes = recipes; // Affiche toutes les recettes si aucun tag
+      filteredRecipes = recipes.slice(); // Copie de toutes les recettes si aucun tag
     }
   } else {
-    // Filtrer les recettes en fonction de la recherche principale et des filtres avancés
-    filteredRecipes = recipes.filter(recette => {
-      const correspondTexte = MainsearchText === '' || 
+    let i = 0;
+    while (i < recipes.length) {
+      let recette = recipes[i];
+      
+      let correspondTexte = MainsearchText === '' || 
         recette.name.toLowerCase().includes(MainsearchText) ||  
-        recette.description.toLowerCase().includes(MainsearchText) ||  
-        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
+        recette.description.toLowerCase().includes(MainsearchText);
 
-      const correspondIngredientInput = ingredientInput === '' || 
+      let correspondIngredientInput = ingredientInput === '' || 
         recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
 
-      const correspondAppareilInput = appareilInput === '' || 
+      let correspondAppareilInput = appareilInput === '' || 
         recette.appliance?.toLowerCase().includes(appareilInput);
 
-      const correspondUstensileInput = ustensileInput === '' || 
+      let correspondUstensileInput = ustensileInput === '' || 
         recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
 
-      const matchesTags = 
-        selectedTags.ingredients.every(tag => 
-          recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tag.toLowerCase())
-        ) && 
-        selectedTags.appareils.every(tag => 
-          recette.appliance?.toLowerCase() === tag.toLowerCase()
-        ) && 
-        selectedTags.ustensiles.every(tag => 
-          recette.ustensils?.some(ustensile => ustensile.toLowerCase() === tag.toLowerCase())
-        );
+      let matchesTags = true;
+      for (let j = 0; j < selectedTags.ingredients.length; j++) {
+        let foundIngredient = false;
+        for (let k = 0; k < recette.ingredients.length; k++) {
+          if (recette.ingredients[k].ingredient.toLowerCase() === selectedTags.ingredients[j].toLowerCase()) {
+            foundIngredient = true;
+            break;
+          }
+        }
+        if (!foundIngredient) {
+          matchesTags = false;
+          break;
+        }
+      }
 
-      return (correspondTexte || isAllEmpty) && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags;
-    });
+      for (let j = 0; j < selectedTags.appareils.length; j++) {
+        if (recette.appliance?.toLowerCase() !== selectedTags.appareils[j].toLowerCase()) {
+          matchesTags = false;
+          break;
+        }
+      }
+
+      for (let j = 0; j < selectedTags.ustensiles.length; j++) {
+        let foundUstensile = false;
+        for (let k = 0; k < recette.ustensils.length; k++) {
+          if (recette.ustensils[k].toLowerCase() === selectedTags.ustensiles[j].toLowerCase()) {
+            foundUstensile = true;
+            break;
+          }
+        }
+        if (!foundUstensile) {
+          matchesTags = false;
+          break;
+        }
+      }
+
+      if (correspondTexte && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags) {
+        filteredRecipes.push(recette);
+      }
+      i++;
+    }
   }
 
-  // Mise à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
 
-  // Mise à jour du compteur : si tout est vide (texte et tags), affiche 1500, sinon le nombre réel de recettes filtrées
   let totalRecipesCount;
   if (filteredRecipes.length === 50) {
-    totalRecipesCount = 1500; // Si le total est à 50, affiche 1500
+    totalRecipesCount = 1500;
   } else {
     totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
   }
 
-  updateRecipeCount(totalRecipesCount);// Met à jour le compteur de recettes affichées
-  updateAdvancedFilters(filteredRecipes);// Met à jour les options des filtres selon les recettes filtrées
+  updateRecipeCount(totalRecipesCount);
+  updateAdvancedFilters(filteredRecipes);
 
-  // Affiche un message d'erreur si aucune recette n'est trouvée
   if (filteredRecipes.length === 0) {
     showErrorMessage(MainsearchText);
   } else {
     hideErrorMessage();
-  } 
+  }
 }
 
 
