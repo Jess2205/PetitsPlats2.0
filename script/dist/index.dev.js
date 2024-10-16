@@ -3,6 +3,7 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.capitalizeFirstLetter = capitalizeFirstLetter;
 exports.displayRecipes = displayRecipes;
 exports.showErrorMessage = showErrorMessage;
 exports.hideErrorMessage = hideErrorMessage;
@@ -10,9 +11,31 @@ exports.updateRecipeCount = updateRecipeCount;
 
 var _recipes = require("./recipes.js");
 
+var _filtres = require("./filtres.js");
+
+//Chargement initial, gestion des événements globaux 
+//et appel des fonctions de recherche et de filtre.
 // Importation des données de recettes depuis le fichier recipes.js
 console.log(_recipes.recipes); // Affiche les recettes dans la console pour vérifier si elles sont bien importées
-// Fonction pour afficher les recettes
+// Fonction pour capitaliser la première lettre d'une chaîne et passer le reste en minuscules
+
+function capitalizeFirstLetter(string) {
+  return string.charAt(0).toUpperCase() + string.slice(1).toLowerCase();
+} // Récupère les tags sélectionnés, les formatte avec la première lettre en majuscule, et les trie par ordre alphabétique
+
+
+var selectedIngredients = _filtres.selectedTags.ingredients.map(function (tag) {
+  return capitalizeFirstLetter(tag);
+}).sort();
+
+var selectedAppareils = _filtres.selectedTags.appareils.map(function (tag) {
+  return capitalizeFirstLetter(tag);
+}).sort();
+
+var selectedUstensiles = _filtres.selectedTags.ustensiles.map(function (tag) {
+  return capitalizeFirstLetter(tag);
+}).sort(); // Fonction pour afficher les recettes
+
 
 function displayRecipes(recipes) {
   var mediaContainer = document.getElementById('media-container'); // Sélectionne l'élément qui contiendra les recettes
@@ -54,14 +77,14 @@ function displayRecipes(recipes) {
 
     var recipeTitle = document.createElement('h2'); // Crée un élément pour le titre
 
-    recipeTitle.textContent = recipe.name; // Affiche le nom de la recette
+    recipeTitle.textContent = capitalizeFirstLetter(recipe.name); // Affiche le nom de la recette
 
     recipeTitle.classList.add('text-l', 'font-bold', 'text-gray-900', 'py-6', 'px-6'); // Style du titre
     // Label recette
 
     var recipeLabel = document.createElement('h3'); // Crée un élément pour le label de recette
 
-    recipeLabel.textContent = "RECETTE"; // Texte "RECETTE" affiché
+    recipeLabel.textContent = capitalizeFirstLetter("RECETTE"); // Texte "RECETTE" affiché
 
     recipeLabel.classList.add('text-sm', 'uppercase', 'font-semibold', 'pb-2', 'px-6', 'text-gray-600'); // Style du label
     // Description de la recette
@@ -75,7 +98,7 @@ function displayRecipes(recipes) {
 
     var ingredientLabel = document.createElement('h3'); // Crée un élément pour le label des ingrédients
 
-    ingredientLabel.textContent = "INGREDIENTS"; // Définit le texte du label
+    ingredientLabel.textContent = capitalizeFirstLetter("INGREDIENTS"); // Définit le texte du label
 
     ingredientLabel.classList.add('text-sm', 'mt-4', 'uppercase', 'font-semibold', 'pb-2', 'px-6', 'text-gray-600'); // Applique les styles
     // Grille pour les ingrédients
@@ -92,7 +115,7 @@ function displayRecipes(recipes) {
 
       var ingredientName = document.createElement('span'); // Crée un élément pour le nom de l'ingrédient
 
-      ingredientName.textContent = "".concat(ingredient.ingredient); // Définit le texte du nom
+      ingredientName.textContent = "".concat(capitalizeFirstLetter(ingredient.ingredient)); // Définit le texte du nom
 
       ingredientName.classList.add('mb-0'); // Applique les styles
 
@@ -137,17 +160,19 @@ function displayRecipes(recipes) {
 function showErrorMessage(searchText) {
   var mediaContainer = document.getElementById('media-container'); // Récupère le conteneur principal des médias
 
-  var errorMessageContainer = document.getElementById('error-message'); // Récupère le conteneur principal des médias
+  var errorMessageContainer = document.getElementById('error-message'); // Récupère le conteneur du message d'erreur
 
   if (mediaContainer) {
     mediaContainer.innerHTML = ''; // Efface les médias affichés en cas d'erreur
   }
-}
 
-if (errorMessageContainer) {
-  errorMessageContainer.style.display = 'block'; // Affiche le message d'erreur
+  if (errorMessageContainer) {
+    errorMessageContainer.style.display = 'block'; // Affiche le message d'erreur
 
-  errorMessageContainer.textContent = 'Aucune recette ne contient "' + searchText + '". Vous pouvez chercher "tarte aux pommes", "poisson", etc.'; // Définit le texte d'erreur
+    errorMessageContainer.textContent = 'Aucune recette ne contient "' + searchText + '". Vous pouvez chercher "tarte aux pommes", "poisson", etc.'; // Définit le texte d'erreur
+  } else {
+    console.error('Élément #error-message non trouvé'); // Affiche un message d'erreur si l'élément n'est pas trouvé
+  }
 } // Fonction pour masquer le message d'erreur
 
 

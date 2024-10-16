@@ -1,73 +1,25 @@
+//Contient la logique de recherche principale et
+//la mise à jour de l'affichage.
+
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
-import { displayTags, capitalizeFirstLetter, selectedTags, updateFilterOptions } from './filtres.js';// Importation de la fonction qui affiche les tags
-import { updateRecipeCount } from './index.js';
+import { selectedTags, filterOptions, updateAdvancedFilters } from './filtres.js';// Importation de la fonction qui affiche les tags
+import { updateRecipeCount} from './index.js';
 
 
-// Fonction pour mettre à jour les options des filtres avancés
-export function updateAdvancedFilters(recipes) {
-  const filters = {
-    ingredients: new Set(),
-    appareils: new Set(),
-    ustensiles: new Set()
-  };
-
-  // Parcourt chaque recette pour extraire les ingrédients, appareils et ustensiles
-  recipes.forEach(recipe => {
-    recipe.ingredients.forEach(ingredient => filters.ingredients.add(ingredient.ingredient));
-    if (recipe.appliance) filters.appareils.add(recipe.appliance);
-    recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
-  });
-
-  // Conversion des Set en tableau et capitalisation des premières lettres sans tri
-  const sortedIngredients = [...new Set(
-    Array.from(filters.ingredients).map(item => capitalizeFirstLetter(item))
-  )];
-  
-  const sortedAppareils = [...new Set(
-    Array.from(filters.appareils).map(item => capitalizeFirstLetter(item))
-  )];
-  
-  const sortedUstensiles = [...new Set(
-    Array.from(filters.ustensiles).map(item => capitalizeFirstLetter(item))
-  )];
-
-  // Fonction pour mettre à jour les listes d'options des filtres
-  const updateOptions = (ul, items) => {
-    if (ul) { // Vérifie que l'élément ul existe
-      ul.innerHTML = ''; // Réinitialiser le contenu de la liste
-      items.forEach(item => {
-        const li = document.createElement('li');
-        li.textContent = item; // Nom de l'option
-        li.dataset.value = item.toLowerCase(); // Stocke la valeur en minuscules
-        li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
-        ul.appendChild(li); // Ajoute l'élément à la liste
-      });
-    } else {
-      console.error(`L'élément ${ul.id} n'a pas été trouvé.`);
-    }
-  };
-
-  // Mise à jour des listes des filtres avec les options triées
-  updateOptions(document.getElementById('ingredients'), sortedIngredients);
-  updateOptions(document.getElementById('appareils'), sortedAppareils);
-  updateOptions(document.getElementById('ustensiles'), sortedUstensiles);
-}
-
-// Fonction de filtrage des options dans les filtres avancés
-function filterOptions(inputId, ulId) {
-  const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
-  const ul = document.getElementById(ulId);// Sélectionne la liste correspondante
-
-  // Parcourt chaque élément de la liste et ajuste leur affichage selon la correspondance avec le texte de recherche  
-  Array.from(ul.children).forEach(li => {
-    li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
-  });
-  
+// Fonction pour masquer les recettes en vidant le conteneur
+function hideRecipes() {
+  const recipeContainer = document.getElementById('results-container');
+  if (recipeContainer) {
+    recipeContainer.innerHTML = ''; // Efface les recettes affichées
+  }
 }
 
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
+  // Masque les recettes précédemment affichées
+  hideRecipes(); // Appel de la fonction pour vider le conteneur des recettes
+
   const MainsearchInput = document.getElementById('main-search-input');
   const MainsearchText = MainsearchInput.value.trim().toLowerCase();// Récupère la valeur du champ de recherche principal
 
@@ -196,94 +148,3 @@ window.addEventListener('load', () => {
   document.getElementById('ustensiles-search').addEventListener('input', () => filterOptions('ustensiles-search', 'ustensiles'));
   });
   
-//Configuration des filtres Ingrédients, appareils et ustensiles
-document.addEventListener('DOMContentLoaded', () => {
-  function setupFilter(labelFor, containerId, ulId, inputId, clearBtnId) {
-    const label = document.querySelector(`label[for="${labelFor}"]`);// Sélectionne le label lié à l'input
-    const inputContainer = document.getElementById(containerId);// Sélectionne le conteneur de l'input
-    const ul = document.getElementById(ulId); // Sélectionne la liste des éléments (Ingrédients/Appareils/Ustensiles)
-    const input = document.getElementById(inputId);// Sélectionne l'input pour le filtre
-    const clearBtn = document.getElementById(clearBtnId);// Sélectionne le bouton pour effacer le texte de recherche
-
-    let isInputVisible = false; // Gérer l'état d'affichage de l'input
-    let placeholderText = input.placeholder; // Stocker le texte initial du placeholder
-
-    // Gestion de l'affichage/masquage du champ de recherche du filtre lors du clic sur le label
-    label.addEventListener('click', (e) => {
-      e.preventDefault(); // Empêche le comportement par défaut du label
-      isInputVisible = !isInputVisible;// Alterne l'état de visibilité de l'input
-
-      if (isInputVisible) {
-        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
-        label.classList.remove('label-hidden'); // Conserve l'espacement du label
-        input.focus(); // Donne le focus sur l'input lorsque visible
-      } else {
-        inputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
-        label.classList.add('label-hidden'); // Masque le label avec un padding réduit
-      }
-    });
-
-    // Vide le placeholder lors du focus sur l'input
-    input.addEventListener('focus', () => {
-      input.placeholder = '';  // Retire le texte du placeholder
-    });
-
-    // Remet le placeholder si l'input est vide après avoir perdu le focus
-    input.addEventListener('blur', () => {
-      if (input.value === '') {
-        input.placeholder = placeholderText; // Réinitialise le placeholder si aucun texte n'est saisi
-      }
-    });
-
-    // Affiche ou masque le bouton de suppression en fonction de la saisie dans l'input
-    input.addEventListener('input', () => {
-      if (input.value !== '') {
-        clearBtn.classList.remove('hidden'); // Affiche la croix pour effacer le texte
-      } else {
-        clearBtn.classList.add('hidden'); // Masque la croix si aucun texte n'est saisi
-      }
-    });
-
-    // Gère le clic sur le bouton pour effacer la saisie et réinitialise l'état du champ de recherche
-    clearBtn.addEventListener('click', () => {
-      input.value = ''; // Vide le champ de recherche
-      clearBtn.classList.add('hidden'); // Masque la croix de suppression
-      input.focus(); // Remet le focus sur l'input après la suppression
-    });
-
-    // Gère la sélection dans la liste (UL) et déplace l'élément sélectionné en haut tout en supprimant les doublons
-    ul.addEventListener('click', (e) => {
-      const clickedItem = e.target; // Récupère l'élément <li> cliqué
-      if (clickedItem.tagName.toLowerCase() === 'li') {
-        const items = ul.querySelectorAll('li'); // Récupère tous les éléments <li>
-        
-        // Supprime les doublons du même élément dans la liste
-        items.forEach(item => {
-          if (item !== clickedItem && item.textContent.trim() === clickedItem.textContent.trim()) {
-            item.remove(); // Supprime l'élément doublon
-          }
-        });
-
-        // Déplace l'élément cliqué en haut de la liste
-        ul.insertBefore(clickedItem, ul.firstChild);
-      }
-
-       // Conserve l'affichage du champ de recherche après sélection
-      if (clickedItem) {
-        input.value = '';  // Efface le texte du champ de recherche
-        clearBtn.classList.add('hidden'); // Masque la croix
-        isInputVisible = true;
-        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Conserve le champ de recherche visible
-        label.classList.remove('label-hidden'); // Garde le padding
-      }
-    });
-  }
-
- // Initialisation des filtres pour les ingrédients, appareils et ustensiles
-  setupFilter('ingredients-search', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
-  setupFilter('appareils-search', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
-  setupFilter('ustensiles-search', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
-});
-
-
-
