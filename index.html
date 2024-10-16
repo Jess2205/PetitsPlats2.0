@@ -22,11 +22,6 @@
   display: block;
   }
   
-  #main-clear-search {
-  top: 40%;
-
-  }
-
   .filter-list {
   list-style: none;
   margin: 0;
@@ -37,35 +32,22 @@
   } 
   
     /* Masquer la barre de défilement */
-.filter-list::-webkit-scrollbar {
+  .filter-list::-webkit-scrollbar {
     display: none; /* Cache la barre de défilement pour Chrome/Safari */
-}
+  }
 
-.filter-list {
+  .filter-list {
     -ms-overflow-style: none;  /* Cache la barre de défilement pour Internet Explorer et Edge */
     scrollbar-width: none; /* Cache la barre de défilement pour Firefox */
-}
-
-  
-
-  .selected {
-  background-color: #FFD15B;
   }
 
-  .close-icon {
-    margin-left: 8px; /* Un petit espacement */
-    cursor: pointer; /* Pour indiquer que c'est cliquable */
-    font-weight: bold; /* Pour rendre l'icône plus visible */
-  }
   /* Style pour ajouter l'image de fond */
   .header-bg {
-            background-image: url('./assets/header-background.png');
-            background-size: contain; /* Couvrir tout le conteneur */
-            background-position: center; /* Centrer l'image dans le conteneur */
-            background-repeat: no-repeat; /* Empêcher la répétition de l'image */
-            width: 1440px;
-            height: 667px;
-        }
+    background-image: url('./assets/header-background.png');
+    background-size: contain; /* Couvrir tout le conteneur */
+    width: 1440px;
+    height: 667px;
+  }
   
   .titre-ppal {
     font-family: Anton;
@@ -73,25 +55,14 @@
     width: 1050px;
     Line-height: 66.24px;
     top: 248px;
-    left: 188px;
-    
+    left: 188px; 
   }
 
   .bar-rech {
     width: 956px;
-    height:72px ;
-   
+    height:72px ; 
   }
 
-  .tag-container{
-    position: absolute;
-    left: 300px;
-  }
-
-  .media-container {
-    width: 1000px;
-    
-  }
   </style>
 
 </head>
@@ -104,7 +75,7 @@
         <img src="./assets/Logo.png" alt="Les Petits Plats Logo" class="w-[207px] h-[25.26px]">
       </h1>
     </div>
-    <h2 class=" titre-ppal absolute px-44 text-center text-yellow-400">
+    <h2 class=" titre-ppal  absolute px-44 text-center text-yellow-400">
       CHERCHEZ PARMI PLUS DE 1500 RECETTES DU QUOTIDIEN, SIMPLES ET DÉLICIEUSES
     </h2>
   
@@ -116,7 +87,7 @@
         placeholder="Rechercher une recette, un ingrédient, ..." 
         class="text-black w-full rounded p-8 focus:outline-none focus:placeholder-transparent"
       >
-      <button id="main-clear-search" class="absolute right-14 top-4 text-gray-400 hidden" aria-label="Effacer la recherche">
+      <button id="main-clear-search" class="absolute right-14 top-7 text-gray-400 hidden" aria-label="Effacer la recherche">
         <img src="./assets/croiix-grise-ppale.png" alt="Icône d'une croix" class="w-4 h-4 relative bottom-2 mt-2 mr-4">
       </button>
       <button class="absolute w-12 h-12 top-3 right-4 " aria-label="Rechercher">

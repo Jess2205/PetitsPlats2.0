@@ -163,10 +163,10 @@ function updateListItems(ul, items) {
       li.classList.toggle('selected'); // Assurez-vous d'avoir la classe 'selected' qui applique le fond jaune
       
       // Créer l'élément de fermeture uniquement si l'élément est sélectionné
-      if (li.classList.contains('selected')) {
+      if (li.classList.contains('selected','bg-yellow-400')) {
         const closeIcon = document.createElement('span');
         closeIcon.textContent = '✖'; // Icône de fermeture
-        closeIcon.classList.add('close-icon');
+        closeIcon.classList.add('close-icon','cursor-pointer','ml-8','font-bold');
 
         // Écouteur d'événements pour la fermeture
         closeIcon.addEventListener('click', (e) => {
