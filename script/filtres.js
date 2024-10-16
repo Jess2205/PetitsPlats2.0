@@ -1,298 +1,476 @@
-import { recipes } from './recipes.js'; // Assurez-vous que le chemin est correct
-import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount } from './index.js'; // Assurez-vous que le chemin est correct
+//Gère la logique des filtres avancés et
+//leur interaction avec la recherche principale.
 
-// Objet pour stocker les tags sélectionnés
-const selectedTags = {
-  ingredients: [],
-  appareils: [],
-  ustensiles: []
+import { recipes } from './recipes.js'; // Importe les données des recettes
+import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount, capitalizeFirstLetter } from './index.js'; // Importe des fonctions pour afficher les recettes, gérer les erreurs et mettre à jour le compteur
+import { MainfilterRecipes} from './main.js'; // Import de la fonction principale de filtrage depuis main.js
+
+
+// Objet pour stocker les tags sélectionnés par catégorie
+// Objet pour stocker les tags sélectionnés par catégorie
+export const selectedTags = {
+  ingredients: [], // Tags d'ingrédients sélectionnés
+  appareils: [], // Tags d'appareils sélectionnés
+  ustensiles: [] // Tags d'ustensiles sélectionnés
 };
 
-// Fonction pour afficher les tags dans le conteneur
+// Fonction pour afficher les tags dans l'interface utilisateur
 export function displayTags() {
-  const tagContainer = document.getElementById('tag-container');
+  const tagContainer = document.getElementById('tag-container'); // Sélectionne le conteneur des tags dans le DOM
   if (!tagContainer) {
-    console.error('Élément #tag-container non trouvé');
+    console.error('Élément #tag-container non trouvé'); // Si le conteneur n'existe pas, affiche une erreur
     return;
   }
 
-  tagContainer.innerHTML = ''; // Efface les tags existants
+  tagContainer.innerHTML = ''; // Réinitialise l'affichage des tags à chaque mise à jour
 
-  // Afficher chaque catégorie et ses tags
+  // Pour chaque catégorie (ingrédients, appareils, ustensiles), on affiche les tags sélectionnés
   for (const [category, tagsArray] of Object.entries(selectedTags)) {
     tagsArray.forEach(tagText => {
-      const tag = document.createElement('span');
-      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-52';
+      const tag = document.createElement('span'); // Création d'un élément "span" pour chaque tag
+      tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-44'; // Style du tag
+      tag.textContent = tagText; // Texte du tag
 
-      tag.textContent = tagText;
-
-      const removeIcon = document.createElement('span');
-      removeIcon.textContent = 'x';
-      removeIcon.classList.add('ml-2', 'cursor-pointer', 'hover:text-black-700', 'text-2xl'); // Ajout d'une couleur au survol
-
-      tag.appendChild(removeIcon);
-
-      // Event listener pour supprimer le tag
-      removeIcon.addEventListener('click', () => {
-        removeTag(tagText, category);
-        // Refiltre les recettes et met à jour l'affichage des tags après suppression
-        filterRecipesWithAdvancedFilters();
-      });
-
-      tagContainer.appendChild(tag);
+      // Création de l'icône de suppression
+      const removeIcon = createRemoveIcon(tagText, category);
+      tag.appendChild(removeIcon); // Ajout de l'icône de suppression au tag
+      tagContainer.appendChild(tag); // Ajout du tag au conteneur de tags
     });
   }
 }
 
-// Fonction pour ajouter un tag dans la catégorie correspondante
-function addTag(tagText, category) {
-  if (selectedTags[category] && !selectedTags[category].includes(tagText)) {
-    selectedTags[category].push(tagText);
-    displayTags(); // Affiche les tags sélectionnés
-    filterRecipesWithAdvancedFilters(); // Met à jour les recettes avec les filtres avancés
-    updateFilterOptions(recipes); // Met à jour les options des filtres après ajout du tag
-  }
-}
+// Fonction pour créer l'icône de suppression
+function createRemoveIcon(tagText, category) {
+  const removeIcon = document.createElement('span');
+  removeIcon.style.position = 'relative'; // Pour positionner correctement l'icône
 
-// Fonction pour retirer un tag
-function removeTag(tagText, category) {
-  if (selectedTags[category]) {
-    const index = selectedTags[category].indexOf(tagText);
-    if (index > -1) {
-      selectedTags[category].splice(index, 1);
-      displayTags(); // Re-affiche les tags
-      filterRecipesWithAdvancedFilters(); // Refiltre les recettes après suppression du tag
-      updateFilterOptions(recipes); // Met à jour les options des filtres après suppression du tag
-    }
-  }
-}
+  const img = document.createElement('img');
+  img.src = './assets/icone close tag.png'; // Chemin de l'image de suppression
+  img.alt = 'Supprimer'; // Texte alternatif pour l'accessibilité
+  img.style.width = '17px'; // Taille de l'image
+  img.style.height = '17px'; // Taille de l'image
+  img.style.display = 'none'; // Masquer l'image par défaut
 
+  const xText = document.createElement('span');
+  xText.textContent = 'X'; // Texte de l'icône de suppression
+  xText.style.fontSize = '17px'; // Taille de la police
+  xText.classList.add('ml-2', 'cursor-pointer', 'text-black-700', 'text-2xl', 'z-30'); // Classes Tailwind pour le style
 
-// Mettre à jour les options des filtres avancés en fonction des recettes affichées
-function updateFilterOptions(filteredRecipes) {
-  const ingredientsList = document.getElementById('ingredients-search');
-  const appareilsList = document.getElementById('appareils-search');
-  const ustensilesList = document.getElementById('ustensiles-search');
-
-  if (!ingredientsList || !appareilsList || !ustensilesList) {
-    console.error('Un ou plusieurs éléments de filtre non trouvés');
-    return;
-  }
-
-  const uniqueIngredients = new Set();
-  const uniqueAppareils = new Set();
-  const uniqueUstensiles = new Set();
-
-  filteredRecipes.forEach(recipe => {
-    recipe.ingredients.forEach(ingredient => uniqueIngredients.add(ingredient.ingredient));
-    if (recipe.appliance) uniqueAppareils.add(recipe.appliance);
-    recipe.ustensils.forEach(ustensile => uniqueUstensiles.add(ustensile));
+  // Gestion des événements de survol
+  removeIcon.appendChild(xText);
+  removeIcon.appendChild(img);
+  removeIcon.addEventListener('mouseenter', () => {
+    xText.style.display = 'none'; // Masquer le "X"
+    img.style.display = 'inline'; // Afficher l'image
   });
 
-  function updateListItems(ul, items) {
-    ul.innerHTML = '';
-    items.forEach(item => {
-      const li = document.createElement('li');
-      li.textContent = item;
-      li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
-  
-      // Ajouter un tag lorsqu'un élément de la liste est cliqué
-      li.addEventListener('click', () => {
-        const category = ul.id.includes('ingredients') ? 'ingredients' :
-                        ul.id.includes('appareils') ? 'appareils' : 'ustensiles';
-        addTag(item, category); // Utilise l'ID pour retrouver la catégorie
-      });
-  
-      ul.appendChild(li);
-    });
-  }
-  
-
-  updateListItems(ingredientsList, [...uniqueIngredients]);
-  updateListItems(appareilsList, [...uniqueAppareils]);
-  updateListItems(ustensilesList, [...uniqueUstensiles]);
-
-  
-}
-
-// Filtrage des recettes avec les filtres avancés (Ingrédients, Appareils, Ustensiles)
-function filterRecipesWithAdvancedFilters() {
-  const selectedIngredients = selectedTags.ingredients.map(tag => tag.toLowerCase());
-  const selectedAppareils = selectedTags.appareils.map(tag => tag.toLowerCase());
-  const selectedUstensiles = selectedTags.ustensiles.map(tag => tag.toLowerCase());
-
-  const filteredRecipes = recipes.filter(recipe => {
-    const matchesIngredients = selectedIngredients.length === 0 ||
-      recipe.ingredients.some(ingredient => 
-        selectedIngredients.includes(ingredient.ingredient.toLowerCase())
-      );
-
-    const matchesAppareils = selectedAppareils.length === 0 ||
-      selectedAppareils.includes(recipe.appliance?.toLowerCase() || '');
-
-    const matchesUstensiles = selectedUstensiles.length === 0 ||
-      recipe.ustensils?.some(ustensile => 
-        selectedUstensiles.includes(ustensile.toLowerCase())
-      ) || false;
-
-    return matchesIngredients && matchesAppareils && matchesUstensiles;
+  removeIcon.addEventListener('mouseleave', () => {
+    xText.style.display = 'inline'; // Afficher le "X"
+    img.style.display = 'none'; // Masquer l'image
   });
 
-  updateRecipeCount(filteredRecipes.length); // Met à jour le compteur de recettes
-
-  if (filteredRecipes.length === 0) {
-    hideRecipes(); // Cacher les recettes si aucune recette ne correspond
-    showErrorMessage(); 
-  } else {
-    hideErrorMessage();
-    displayRecipes(filteredRecipes); // Utilise displayRecipes pour afficher les recettes filtrées
-    updateFilterOptions(filteredRecipes); // Met à jour les options des filtres avancés avec les recettes filtrées
-  }
-  
-}
-
-// Ajouter des écouteurs d'événements pour les filtres
-function listenToFilterChanges() {
-  const filters = document.querySelectorAll('#ingredients, #appareils, #ustensiles');
-  filters.forEach(filter => {
-    if (filter) {
-      filter.addEventListener('click', event => {
-        const category = event.target.closest('ul').id; // Utilise l'ID du UL comme catégorie
-        const selectedOption = event.target.textContent;
-        if (selectedOption) {
-          addTag(selectedOption, category);
-        }
-      });
-    }
+  // Gestionnaire de clic pour supprimer le tag
+  removeIcon.addEventListener('click', () => {
+    removeTag(tagText, category); // Appelle la fonction pour supprimer le tag
   });
+
+  return removeIcon; // Retourne l'icône de suppression
 }
 
+// Fonction de filtrage des options dans les filtres avancés
+export function filterOptions(inputId, ulId) {
+  const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
+  const ul = document.getElementById(ulId);// Sélectionne la liste correspondante
 
-
-// Initialisation des filtres lors du chargement de la page
-window.addEventListener('load', () => {
-  updateFilterOptions(recipes); // Met à jour les options des filtres avancés avec toutes les recettes initiales
-  listenToFilterChanges();
+  // Parcourt chaque élément de la liste et ajuste leur affichage selon la correspondance avec le texte de recherche  
+  Array.from(ul.children).forEach(li => {
+    li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
+  });
   
-});
+}
 
-document.addEventListener("DOMContentLoaded", function() {
-
-  
-  function toggleDropdown(dropdownId, label) {
+document.addEventListener('DOMContentLoaded', () => {
+  // Fonction pour gérer l'affichage des dropdowns et l'écoute des événements d'entrée
+  function setupDropdownFilter(labelFor, containerId, inputId, dropdownId) {
+    const label = document.querySelector(`label[for="${labelFor}"]`);
     const dropdown = document.getElementById(dropdownId);
+    const input = document.getElementById(inputId);
     const arrow = label.querySelector('.arrow');
-    
+
     if (!dropdown) {
       console.error(`Dropdown avec l'ID ${dropdownId} non trouvé.`);
       return;
     }
 
-    if (dropdown.classList.contains('hidden')) {
-      dropdown.classList.remove('hidden');
-      arrow.innerHTML = '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 inline-block">';
-    } else {
-      dropdown.classList.add('hidden');
-      arrow.innerHTML = '<img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 inline-block">';
-    }
+    // Gestion de l'affichage/masquage du dropdown
+    label.addEventListener('click', (e) => {
+      e.preventDefault();
+      dropdown.classList.toggle('hidden');
+      arrow.innerHTML = dropdown.classList.contains('hidden')
+        ? '<img src="./assets/flèche-descendante.png" alt="Flèche vers le bas" class="w-4 h-4 ml-10 inline-block">'
+        : '<img src="./assets/flèche-montante.png" alt="Flèche vers le haut" class="w-4 h-4 ml-10 inline-block">';
+    });
+
+    // Écouteurs pour la recherche en temps réel
+    input.addEventListener('input', () => {
+      MainfilterRecipes();
+    });
   }
 
-  const filters = [
-    { id: 'ingredients', label: 'Ingrédients' },
-    { id: 'appareils', label: 'Appareils' },
-    { id: 'ustensiles', label: 'Ustensiles' },
-  ];
+  // Initialisation des filtres
+  setupDropdownFilter('ingredients-search', 'ingredients-input-container', 'ingredients-search', 'ingredients');
+  setupDropdownFilter('appareils-search', 'appareils-input-container', 'appareils-search', 'appareils');
+  setupDropdownFilter('ustensiles-search', 'ustensiles-input-container', 'ustensiles-search', 'ustensiles');
+});
 
-  filters.forEach(filter => {
-    const label = document.querySelector(`label[for="${filter.id}-search"]`); // Ajustement ici pour utiliser -search
-    if (label) {
-      label.addEventListener('click', function() {
-        toggleDropdown(filter.id, label);
+
+// Fonction pour ajouter un tag dans la catégorie correspondante
+function addTag(tagText, category) {
+  const capitalizedTag = tagText.charAt(0).toUpperCase() + tagText.slice(1).toLowerCase();
+
+  // Vérifie si le tag n'est pas déjà sélectionné dans la catégorie
+  if (selectedTags[category] && !selectedTags[category].some(tag => tag.toLowerCase() === capitalizedTag.toLowerCase())) {
+    selectedTags[category].push(capitalizedTag); // Ajoute le tag à la liste de la catégorie
+    updateTagsAndFilters(); // Met à jour l'affichage des tags et les filtres
+  }
+}
+
+// Fonction pour retirer un tag d'une catégorie spécifique
+function removeTag(tagText, category) {
+  if (selectedTags[category]) {
+    const index = selectedTags[category].indexOf(tagText); // Trouver l'index du tag dans la catégorie
+    if (index > -1) {
+      selectedTags[category].splice(index, 1); // Supprime le tag
+      updateTagsAndFilters(); // Met à jour l'affichage des tags et les filtres
+    }
+  }
+}
+
+// Fonction pour mettre à jour les tags et les filtres
+function updateTagsAndFilters() {
+  displayTags(); // Met à jour l'affichage des tags
+  updateFilterOptions(recipes); // Met à jour les options des filtres
+  MainfilterRecipes(); // Fonction principale de filtrage
+}
+
+
+// Fonction pour mettre à jour les options des filtres avancés
+export function updateAdvancedFilters(recipes) {
+  const filters = {
+    ingredients: new Set(),
+    appareils: new Set(),
+    ustensiles: new Set()
+  };
+
+  // Parcourt chaque recette pour extraire les ingrédients, appareils et ustensiles
+  recipes.forEach(recipe => {
+    recipe.ingredients.forEach(ingredient => filters.ingredients.add(ingredient.ingredient));
+    if (recipe.appliance) filters.appareils.add(recipe.appliance);
+    recipe.ustensils.forEach(ustensile => filters.ustensiles.add(ustensile));
+  });
+
+  // Conversion des Set en tableau et capitalisation des premières lettres sans tri
+  const sortedIngredients = [...new Set(
+    Array.from(filters.ingredients).map(item => capitalizeFirstLetter(item))
+  )];
+  
+  const sortedAppareils = [...new Set(
+    Array.from(filters.appareils).map(item => capitalizeFirstLetter(item))
+  )];
+  
+  const sortedUstensiles = [...new Set(
+    Array.from(filters.ustensiles).map(item => capitalizeFirstLetter(item))
+  )];
+
+  // Fonction pour mettre à jour les listes d'options des filtres
+  const updateOptions = (ul, items) => {
+    if (ul) { // Vérifie que l'élément ul existe
+      ul.innerHTML = ''; // Réinitialiser le contenu de la liste
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item; // Nom de l'option
+        li.dataset.value = item.toLowerCase(); // Stocke la valeur en minuscules
+        li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
+        ul.appendChild(li); // Ajoute l'élément à la liste
       });
     } else {
-      console.warn(`Label pour ${filter.id} non trouvé.`);
+      console.error(`L'élément ${ul.id} n'a pas été trouvé.`);
     }
-  });
+  };
+
+  // Mise à jour des listes des filtres avec les options triées
+  updateOptions(document.getElementById('ingredients'), sortedIngredients);
+  updateOptions(document.getElementById('appareils'), sortedAppareils);
+  updateOptions(document.getElementById('ustensiles'), sortedUstensiles);
+}
+
+
+// Mettre à jour les options des filtres avancés (Ingrédients, Appareils, Ustensiles) en fonction des recettes affichées
+export function updateFilterOptions(filteredRecipes) {
+  const ingredientsList = document.getElementById('ingredients-search');
+  const appareilsList = document.getElementById('appareils-search');
+  const ustensilesList = document.getElementById('ustensiles-search');
+
+  if (!ingredientsList || !appareilsList || !ustensilesList) {
+    console.error('Un ou plusieurs éléments de filtre non trouvés');// Affiche une erreur si des éléments sont manquants
+    return;
+  }
+
+  const uniqueIngredients = new Set();// Ensemble pour les ingrédients uniques
+  const uniqueAppareils = new Set();// Ensemble pour les ingrédients uniques
+  const uniqueUstensiles = new Set();// Ensemble pour les ingrédients uniques
+
+// Parcourt les recettes filtrées pour extraire les ingrédients, appareils et ustensiles uniques
+filteredRecipes.forEach(recipe => {
+  if (recipe.ingredients) {
+    recipe.ingredients.forEach(ingredient => {
+      uniqueIngredients.add(ingredient.ingredient.toLowerCase().trim());// Ajoute les ingrédients en minuscules et sans espaces inutiles
+    });
+  }
+  
+  if (recipe.appliance) {
+    uniqueAppareils.add(recipe.appliance.toLowerCase().trim());// Ajoute les appareils
+  }
+  
+  if (recipe.ustensils) {
+    recipe.ustensils.forEach(ustensile => {
+      uniqueUstensiles.add(ustensile.toLowerCase().trim());// Ajoute les ustensiles
+    });
+  }
 });
 
 
+// Fonction pour mettre à jour les éléments de la liste des filtres (ingrédients, appareils, ustensiles)
+function updateListItems(ul, items) {
+  ul.innerHTML = ''; // Réinitialise la liste des éléments
+  items.forEach(item => {
+    const li = document.createElement('li');// Crée un élément de liste pour chaque item
+    li.textContent = item; // Texte de l'élément de la liste
+    li.classList.add('cursor-pointer', 'hover:bg-yellow-400', 'py-2', 'px-4', 'list-item'); // Styles pour chaque élément
 
-function filterRecipes() {
-  const ingredientSearchText = document.getElementById('ingredients-search').value.toLowerCase();
-  const applianceSearchText = document.getElementById('appareils-search').value.toLowerCase();
-  const utensilSearchText = document.getElementById('ustensiles-search').value.toLowerCase();
+    // Ajoute un tag lorsqu'on clique sur un élément de la liste
+    li.addEventListener('click', () => {
+      const category = ul.id.includes('ingredients') ? 'ingredients' :
+                      ul.id.includes('appareils') ? 'appareils' : 'ustensiles';// Détermine la catégorie du tag
 
-  // Filtre les recettes
-  const filteredRecipes = recipes.filter(recipe => {
-    const matchesIngredients = ingredientSearchText === '' || recipe.ingredients.some(ingredient =>
-      ingredient.ingredient.toLowerCase().includes(ingredientSearchText)
-    );
+      // Ajoute le tag dans la catégorie correspondante
+      addTag(item, category); // Ajoute le tag correspondant
 
-    const matchesAppareils = applianceSearchText === '' || recipe.appliance.toLowerCase().includes(applianceSearchText);
+      // Ajoute la classe de fond jaune
+      li.classList.toggle('selected'); // Bascule la classe sélectionnée
+      
+      // Gère l'affichage de l'icône de fermeture (supprimer le tag)
+      if (li.classList.contains('selected','bg-yellow-400')) {
+        const closeIcon = document.createElement('span');// Crée l'icône de fermeture
+        closeIcon.textContent = '✖'; // Icône de fermeture
+        closeIcon.classList.add('close-icon','cursor-pointer','ml-8','font-bold');// Style de l'icône
 
-    const matchesUstensiles = utensilSearchText === '' || recipe.ustensils.some(utensil =>
-      utensil.toLowerCase().includes(utensilSearchText)
-    );
+        // Écouteur d'événements pour la fermeture
+        closeIcon.addEventListener('click', (e) => {
+          e.stopPropagation(); // Empêche le clic sur l'élément de liste d'être déclenché
+          li.classList.remove('selected'); // Enlève la sélection
+          closeIcon.remove(); // Supprime l'icône de fermeture
+        
+        });
 
-    return matchesIngredients && matchesAppareils && matchesUstensiles;
+        // Ajouter l'icône de fermeture à l'élément de liste
+        li.appendChild(closeIcon);// Ajoute l'icône à l'élément de liste
+      } else {
+        // Retire l'icône de fermeture si l'élément n'est plus sélectionné
+        const closeIcon = li.querySelector('.close-icon');
+        if (closeIcon) {
+          closeIcon.remove();
+        }
+      }
+
+      // Appel des fonctions de filtrage et d'affichage des tags
+      MainfilterRecipes(); 
+      displayTags(); 
+    });
+
+    ul.appendChild(li); // Ajoute l'élément à la liste
   });
+}
+  updateListItems(ingredientsList, [...uniqueIngredients]);// Mise à jour des ingrédients
+  updateListItems(appareilsList, [...uniqueAppareils]);// Mise à jour des appareils
+  updateListItems(ustensilesList, [...uniqueUstensiles]);// Mise à jour des ustensiles
+  
+}
 
-  // Affiche les recettes filtrées
-  console.log(filteredRecipes); // Log pour voir les recettes filtrées
+//Cette fonction va gérer la vérification des correspondances pour 
+//les ingrédients, appareils, ustensiles et le texte de recherche.
+function isRecipeMatchingFilters(recipe, selectedIngredients, selectedAppareils, selectedUstensiles, searchText) {
+  const matchesIngredients = selectedIngredients.length === 0 || 
+      selectedIngredients.every(tag => 
+          recipe.ingredients.some(ingredient => 
+              ingredient.ingredient.toLowerCase().includes(tag.toLowerCase())
+          )
+      );
+
+  const matchesAppareils = selectedAppareils.length === 0 || 
+      selectedAppareils.includes(recipe.appliance?.toLowerCase() || '');
+
+  const matchesUstensiles = selectedUstensiles.length === 0 || 
+      recipe.ustensils?.some(ustensile => 
+          selectedUstensiles.includes(ustensile.toLowerCase())
+      ) || false;
+
+  const matchesSearchText = searchText === '' || 
+      recipe.name.toLowerCase().includes(searchText) || 
+      recipe.ingredients.some(ingredient => 
+          ingredient.ingredient.toLowerCase().includes(searchText)
+      ) || 
+      recipe.description.toLowerCase().includes(searchText);
+
+  return matchesIngredients && matchesAppareils && matchesUstensiles && matchesSearchText;
+}
+
+
+// Fonction de filtrage des recettes avec les filtres avancés (tags et champ de recherche principal)
+export function filterRecipesWithAdvancedFilters() {
+  // Récupère les éléments d'entrée pour chaque catégorie de filtres
+  const ingredientInput = document.getElementById('ingredients-search');
+  const appareilInput = document.getElementById('appareils-search');
+  const ustensileInput = document.getElementById('ustensiles-search');
+
+  // Récupère et normalise les valeurs saisies dans les champs de recherche
+  const ingredientValue = ingredientInput ? ingredientInput.value.trim().toLowerCase() : '';
+  const appareilValue = appareilInput ? appareilInput.value.trim().toLowerCase() : '';
+  const ustensileValue = ustensileInput ? ustensileInput.value.trim().toLowerCase() : '';
+
+  // Récupérer le texte de recherche principal
+  const searchInputElement = document.getElementById('main-search-input');
+  const searchText = searchInputElement ? searchInputElement.value.toLowerCase() : '';
+
+  // Affichage des logs pour déboguer
+  console.log('Champ de recherche principal:', searchInputElement);
+  console.log('Texte de recherche principal:', searchText);
+
+  // Formatage des tags sélectionnés (première lettre en majuscule)
+  const selectedIngredients = selectedTags.ingredients.map(tag => capitalizeFirstLetter(tag));
+  const selectedAppareils = selectedTags.appareils.map(tag => capitalizeFirstLetter(tag));
+  const selectedUstensiles = selectedTags.ustensiles.map(tag => capitalizeFirstLetter(tag));
+
+  // Vérification si tous les filtres et la barre de recherche sont vides
+  const isAllEmpty = selectedIngredients.length === 0 && selectedAppareils.length === 0 && selectedUstensiles.length === 0 && !searchText;
+
+  // Si aucun filtre ni recherche, afficher toutes les recettes
+  if (isAllEmpty) {
+      displayRecipes(recipes);
+      updateRecipeCount(1500);
+      return;
+  }
+
+  // Filtre les recettes en fonction des tags et du texte de recherche
+  const filteredRecipes = recipes.filter(recipe => 
+      isRecipeMatchingFilters(recipe, selectedIngredients, selectedAppareils, selectedUstensiles, searchText)
+  );
+
+  // Affiche les recettes filtrées et met à jour le compteur de recettes
   displayRecipes(filteredRecipes);
-
-  // Met à jour le compteur
   updateRecipeCount(filteredRecipes.length);
 
-  // Gérer l'affichage des messages d'erreur
+  // Si aucune recette ne correspond, afficher un message d'erreur
   if (filteredRecipes.length === 0) {
-    hideRecipes();
-    showErrorMessage();
+      hideRecipes();
+      showErrorMessage();
   } else {
-    hideErrorMessage();
+      hideErrorMessage();
+      displayRecipes(filteredRecipes);
+      updateFilterOptions(filteredRecipes);
   }
-
-  // Met à jour les options des filtres avancés
-  updateFilterOptions(filteredRecipes);
 }
 
-// Écouteurs pour la recherche en temps réel sur les trois filtres
-document.getElementById('ingredients-search').addEventListener('input', filterRecipes);
-document.getElementById('appareils-search').addEventListener('input', filterRecipes);
-document.getElementById('ustensiles-search').addEventListener('input', filterRecipes);
 
-// Fonction pour gérer le clic sur un élément de la liste
-// Fonction pour gérer le clic sur un élément de la liste
-function handleListItemClick(event) {
-  const listItem = event.target;
+document.addEventListener('DOMContentLoaded', () => {
+  function setupFilters(labelFor, containerId, ulId, inputId, clearBtnId) {
+    const label = document.querySelector(`label[for="${labelFor}"]`); // Sélectionne le label
+    const inputContainer = document.getElementById(containerId); // Conteneur de l'input
+    const ul = document.getElementById(ulId); // Liste des éléments (UL)
+    const input = document.getElementById(inputId); // Input pour le filtre
+    const clearBtn = document.getElementById(clearBtnId); // Bouton pour effacer le texte
 
-  // Vérifie si l'élément cliqué est un item de liste
-  if (listItem.classList.contains('list-item')) {
-      // Vérifie si l'élément est déjà sélectionné
-      if (!listItem.classList.contains('bg-yellow-custom')) {
-          // Ajouter la classe de fond jaune
-          listItem.classList.add('bg-yellow-custom');
+    let isInputVisible = false; // État d'affichage de l'input
+    let placeholderText = input.placeholder; // Texte du placeholder
 
-          // Créer l'élément de fermeture
-          const closeIcon = document.createElement('span');
-          closeIcon.textContent = '✖'; // Ou une autre icône de fermeture
-          closeIcon.classList.add('close-icon');
+    // Gestion de l'affichage/masquage du champ de recherche
+    label.addEventListener('click', (e) => {
+      e.preventDefault();
+      isInputVisible = !isInputVisible;
 
-          // Écouteur d'événements pour la fermeture
-          closeIcon.addEventListener('click', (e) => {
-              e.stopPropagation(); // Empêche le clic sur l'élément de liste
-              listItem.classList.remove('bg-yellow-custom'); // Enlève la sélection
-              closeIcon.remove(); // Retire l'icône de fermeture
-          });
-
-          // Ajouter l'icône de fermeture à l'élément de liste
-          listItem.appendChild(closeIcon);
+      if (isInputVisible) {
+        inputContainer.classList.remove('opacity-0', 'pointer-events-none');
+        label.classList.remove('label-hidden');
+        input.focus();
+      } else {
+        inputContainer.classList.add('opacity-0', 'pointer-events-none');
+        label.classList.add('label-hidden');
       }
-  }
-}
+    });
 
-// Ajouter des écouteurs d'événements sur tous les éléments de la liste
-const listItems = document.querySelectorAll('.list-item');
-listItems.forEach(item => {
-  item.addEventListener('click', handleListItemClick);
+    input.addEventListener('focus', () => {
+      input.placeholder = ''; // Efface le placeholder
+    });
+
+    input.addEventListener('blur', () => {
+      if (input.value === '') {
+        input.placeholder = placeholderText; // Réinitialise le placeholder
+      }
+    });
+
+    input.addEventListener('input', () => {
+      if (input.value !== '') {
+        clearBtn.classList.remove('hidden'); // Affiche le bouton d'effacement
+      } else {
+        clearBtn.classList.add('hidden'); // Masque le bouton d'effacement
+      }
+    });
+
+    clearBtn.addEventListener('click', () => {
+      input.value = ''; // Vide le champ de recherche
+      clearBtn.classList.add('hidden');
+      input.focus();
+    });
+
+    // Gestion des sélections dans la liste (UL)
+    ul.addEventListener('click', (e) => {
+      const clickedItem = e.target.closest('li'); // Récupère l'élément li cliqué
+      if (clickedItem) {
+        const items = ul.querySelectorAll('li'); // Tous les éléments <li>
+        
+        // Supprime les doublons
+        items.forEach(item => {
+          if (item !== clickedItem && item.textContent.trim() === clickedItem.textContent.trim()) {
+            item.remove(); // Supprime l'élément doublon
+          }
+        });
+
+        // Déplace l'élément cliqué en haut
+        ul.insertBefore(clickedItem, ul.firstChild);
+        
+        // Ajoute le tag correspondant
+        const category = ul.id; // Utilise l'ID du UL pour déterminer la catégorie
+        addTag(clickedItem.dataset.value, category); // Ajoute le tag
+        input.value = ''; // Efface le texte du champ de recherche
+        clearBtn.classList.add('hidden'); // Masque le bouton d'effacement
+        isInputVisible = true; // Conserve l'état d'affichage
+        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Conserve le champ de recherche visible
+        label.classList.remove('label-hidden'); // Garde le padding
+      }
+    });
+  }
+
+  // Initialisation des filtres pour ingrédients, appareils et ustensiles
+  const filterConfigs = [
+    { labelFor: 'ingredients-search', containerId: 'ingredients-input-container', ulId: 'ingredients', inputId: 'ingredients-search', clearBtnId: 'ingredients-clear-search' },
+    { labelFor: 'appareils-search', containerId: 'appareils-input-container', ulId: 'appareils', inputId: 'appareils-search', clearBtnId: 'appareils-clear-search' },
+    { labelFor: 'ustensiles-search', containerId: 'ustensiles-input-container', ulId: 'ustensiles', inputId: 'ustensiles-search', clearBtnId: 'ustensiles-clear-search' }
+  ];
+
+  filterConfigs.forEach(config => setupFilters(config.labelFor, config.containerId, config.ulId, config.inputId, config.clearBtnId));
+
+  // Appeler la mise à jour des filtres et ajouter les écouteurs d'événements
+  updateAdvancedFilters(recipes); // Met à jour les options des filtres
+  updateFilterOptions(recipes); // Met à jour les options des filtres avec toutes les recettes initiales
 });
+
