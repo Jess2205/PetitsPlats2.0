@@ -57,18 +57,21 @@ export function updateAdvancedFilters(recipes) {
 // Fonction de filtrage des options dans les filtres avancés
 function filterOptions(inputId, ulId) {
   const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
-  const ul = document.getElementById(ulId);
-// Parcourt chaque élément de la liste et ajuste leur affichage selon la correspondance avec le texte de recherche  
+  const ul = document.getElementById(ulId);// Sélectionne la liste correspondante
+
+  // Parcourt chaque élément de la liste et ajuste leur affichage selon la correspondance avec le texte de recherche  
   Array.from(ul.children).forEach(li => {
     li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
   
 }
 
+// Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
   const MainsearchInput = document.getElementById('main-search-input');
-  const MainsearchText = MainsearchInput.value.trim().toLowerCase();
+  const MainsearchText = MainsearchInput.value.trim().toLowerCase();// Récupère la valeur du champ de recherche principal
 
+  // Récupération des valeurs des champs de recherche avancés (ingrédients, appareils, ustensiles)
   const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase();
   const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase();
   const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase();
@@ -103,7 +106,7 @@ export function MainfilterRecipes() {
       filteredRecipes = recipes; // Affiche toutes les recettes si aucun tag
     }
   } else {
-    // Filtrer les recettes normalement
+    // Filtrer les recettes en fonction de la recherche principale et des filtres avancés
     filteredRecipes = recipes.filter(recette => {
       const correspondTexte = MainsearchText === '' || 
         recette.name.toLowerCase().includes(MainsearchText) ||  
@@ -134,33 +137,30 @@ export function MainfilterRecipes() {
     });
   }
 
-  // Mettez à jour l'affichage des recettes filtrées
+  // Mise à jour l'affichage des recettes filtrées
   displayRecipes(filteredRecipes);
 
-  // Mettez à jour le compteur : si tout est vide (texte et tags), affichez 1500, sinon le nombre réel de recettes filtrées
+  // Mise à jour du compteur : si tout est vide (texte et tags), affiche 1500, sinon le nombre réel de recettes filtrées
   let totalRecipesCount;
   if (filteredRecipes.length === 50) {
-    totalRecipesCount = 1500; // Si le total est à 50, afficher 1500
+    totalRecipesCount = 1500; // Si le total est à 50, affiche 1500
   } else {
     totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
   }
 
-  updateRecipeCount(totalRecipesCount);
-  updateAdvancedFilters(filteredRecipes);
+  updateRecipeCount(totalRecipesCount);// Met à jour le compteur de recettes affichées
+  updateAdvancedFilters(filteredRecipes);// Met à jour les options des filtres selon les recettes filtrées
 
-  // Gérer l'affichage du message d'erreur
+  // Affiche un message d'erreur si aucune recette n'est trouvée
   if (filteredRecipes.length === 0) {
     showErrorMessage(MainsearchText);
   } else {
     hideErrorMessage();
-  }
-
-  
-  
+  } 
 }
 
 
-// Écouteur d'événements pour la barre de recherche principale
+
 document.getElementById('main-search-input').addEventListener('input', function () {
   const clearBtn = document.getElementById('main-clear-search');
   // Vérifiez si le champ de recherche a du texte
@@ -172,7 +172,7 @@ document.getElementById('main-search-input').addEventListener('input', function 
   }
 });
 
-// Efface le texte et remet le focus sur l'input après clic sur la croix
+// Gestion du bouton "clear" pour effacer le texte de la barre de recherche
 document.getElementById('main-clear-search').addEventListener('click', function () {
   const MainsearchInput = document.getElementById('main-search-input');
   MainsearchInput.value = ''; // Efface le texte de l'input
@@ -182,15 +182,15 @@ document.getElementById('main-clear-search').addEventListener('click', function 
   MainfilterRecipes(); // Met à jour les résultats
 });
 
-// Initialisation au chargement de la page
+// Initialisation des éléments et des filtres au chargement de la page
 window.addEventListener('load', () => {
   displayRecipes(recipes); // Affiche toutes les recettes au départ
   updateAdvancedFilters(recipes); // Met à jour les filtres avec toutes les recettes
  
-  // Ajoute l'écouteur d'événement pour le champ de recherche
+  // Ajoute l'écouteur d'événement pour la barre de recherche principale
   document.getElementById('main-search-input').addEventListener('input', MainfilterRecipes);
 
-  // Ajout des écouteurs pour les champs de recherche et les filtres avancés
+  // Ajoute des écouteurs pour filtrer les options dans les filtres avancés
   document.getElementById('ingredients-search').addEventListener('input', () => filterOptions('ingredients-search', 'ingredients'));
   document.getElementById('appareils-search').addEventListener('input', () => filterOptions('appareils-search', 'appareils'));
   document.getElementById('ustensiles-search').addEventListener('input', () => filterOptions('ustensiles-search', 'ustensiles'));
@@ -199,68 +199,68 @@ window.addEventListener('load', () => {
 //Configuration des filtres Ingrédients, appareils et ustensiles
 document.addEventListener('DOMContentLoaded', () => {
   function setupFilter(labelFor, containerId, ulId, inputId, clearBtnId) {
-    const label = document.querySelector(`label[for="${labelFor}"]`);
-    const inputContainer = document.getElementById(containerId);
-    const ul = document.getElementById(ulId);
-    const input = document.getElementById(inputId);
-    const clearBtn = document.getElementById(clearBtnId);
+    const label = document.querySelector(`label[for="${labelFor}"]`);// Sélectionne le label lié à l'input
+    const inputContainer = document.getElementById(containerId);// Sélectionne le conteneur de l'input
+    const ul = document.getElementById(ulId); // Sélectionne la liste des éléments (Ingrédients/Appareils/Ustensiles)
+    const input = document.getElementById(inputId);// Sélectionne l'input pour le filtre
+    const clearBtn = document.getElementById(clearBtnId);// Sélectionne le bouton pour effacer le texte de recherche
 
     let isInputVisible = false; // Gérer l'état d'affichage de l'input
     let placeholderText = input.placeholder; // Stocker le texte initial du placeholder
 
-    // Affiche ou masque le champ de recherche du filtre
+    // Gestion de l'affichage/masquage du champ de recherche du filtre lors du clic sur le label
     label.addEventListener('click', (e) => {
       e.preventDefault(); // Empêche le comportement par défaut du label
-      isInputVisible = !isInputVisible;
+      isInputVisible = !isInputVisible;// Alterne l'état de visibilité de l'input
 
       if (isInputVisible) {
         inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Affiche l'input
-        label.classList.remove('label-hidden'); // Garde le padding
-        input.focus(); // Met le focus sur l'input
+        label.classList.remove('label-hidden'); // Conserve l'espacement du label
+        input.focus(); // Donne le focus sur l'input lorsque visible
       } else {
         inputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
-        label.classList.add('label-hidden'); // Réduit le padding
+        label.classList.add('label-hidden'); // Masque le label avec un padding réduit
       }
     });
 
-    // Efface le placeholder au focus
+    // Vide le placeholder lors du focus sur l'input
     input.addEventListener('focus', () => {
-      input.placeholder = ''; // Vide le placeholder
+      input.placeholder = '';  // Retire le texte du placeholder
     });
 
     // Remet le placeholder si l'input est vide après avoir perdu le focus
     input.addEventListener('blur', () => {
       if (input.value === '') {
-        input.placeholder = placeholderText; // Remet le placeholder initial
+        input.placeholder = placeholderText; // Réinitialise le placeholder si aucun texte n'est saisi
       }
     });
 
-    // Affiche la croix lorsque du texte est saisi
+    // Affiche ou masque le bouton de suppression en fonction de la saisie dans l'input
     input.addEventListener('input', () => {
       if (input.value !== '') {
-        clearBtn.classList.remove('hidden'); // Affiche la croix
+        clearBtn.classList.remove('hidden'); // Affiche la croix pour effacer le texte
       } else {
-        clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
+        clearBtn.classList.add('hidden'); // Masque la croix si aucun texte n'est saisi
       }
     });
 
-    // Efface le texte de recherche lorsque l'utilisateur clique sur la croix
+    // Gère le clic sur le bouton pour effacer la saisie et réinitialise l'état du champ de recherche
     clearBtn.addEventListener('click', () => {
-      input.value = ''; // Efface le texte de l'input
-      clearBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
-      input.focus(); // Remet le focus sur l'input après avoir effacé
+      input.value = ''; // Vide le champ de recherche
+      clearBtn.classList.add('hidden'); // Masque la croix de suppression
+      input.focus(); // Remet le focus sur l'input après la suppression
     });
 
-    // Déplacement de l'élément sélectionné en haut de la liste et suppression des doublons
+    // Gère la sélection dans la liste (UL) et déplace l'élément sélectionné en haut tout en supprimant les doublons
     ul.addEventListener('click', (e) => {
-      const clickedItem = e.target; // Récupère l'élément cliqué
+      const clickedItem = e.target; // Récupère l'élément <li> cliqué
       if (clickedItem.tagName.toLowerCase() === 'li') {
         const items = ul.querySelectorAll('li'); // Récupère tous les éléments <li>
         
-        // Supprime tous les doublons de l'élément sélectionné
+        // Supprime les doublons du même élément dans la liste
         items.forEach(item => {
           if (item !== clickedItem && item.textContent.trim() === clickedItem.textContent.trim()) {
-            item.remove(); // Supprime les doublons
+            item.remove(); // Supprime l'élément doublon
           }
         });
 
@@ -268,18 +268,18 @@ document.addEventListener('DOMContentLoaded', () => {
         ul.insertBefore(clickedItem, ul.firstChild);
       }
 
-      // Garde le conteneur affiché après la sélection d'un ingrédient/appareil/ustensile
+       // Conserve l'affichage du champ de recherche après sélection
       if (clickedItem) {
-        input.value = ''; // Efface le texte saisi dans l'input
+        input.value = '';  // Efface le texte du champ de recherche
         clearBtn.classList.add('hidden'); // Masque la croix
         isInputVisible = true;
-        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Garde l'input visible
+        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Conserve le champ de recherche visible
         label.classList.remove('label-hidden'); // Garde le padding
       }
     });
   }
 
-  // Configuration des filtres
+ // Initialisation des filtres pour les ingrédients, appareils et ustensiles
   setupFilter('ingredients-search', 'ingredients-input-container', 'ingredients', 'ingredients-search', 'ingredients-clear-search');
   setupFilter('appareils-search', 'appareils-input-container', 'appareils', 'appareils-search', 'appareils-clear-search');
   setupFilter('ustensiles-search', 'ustensiles-input-container', 'ustensiles', 'ustensiles-search', 'ustensiles-clear-search');
