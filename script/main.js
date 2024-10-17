@@ -18,45 +18,51 @@ function hideRecipes() {
 // Branche 2 : Boucles While et For
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
-  console.time('MainfilterRecipes'); // Démarre le chronométrage
-  hideRecipes(); // Vide le conteneur des recettes
+  console.time('MainfilterRecipes'); // Démarre le chronométrage pour mesurer la durée d'exécution de la fonction
 
+  hideRecipes(); // Vide le conteneur des recettes affichées sur la page
+
+  // Récupération des valeurs des champs de recherche principaux (texte, ingrédients, appareils, ustensiles)
   const MainsearchInput = document.getElementById('main-search-input');
-  const MainsearchText = MainsearchInput.value.trim().toLowerCase();
+  const MainsearchText = MainsearchInput.value.trim().toLowerCase(); // Texte principal
 
-  const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase();
-  const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase();
-  const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase();
+  const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase(); // Ingrédient
+  const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase(); // Appareil
+  const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase(); // Ustensile
 
+  // Vérifie si tous les champs de recherche et les tags sont vides
   const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '' &&
     selectedTags.ingredients.length === 0 &&
     selectedTags.appareils.length === 0 &&
     selectedTags.ustensiles.length === 0;
 
-  let filteredRecipes = [];
+  let filteredRecipes = []; // Tableau pour stocker les recettes filtrées
 
+  // Si moins de 3 caractères sont entrés dans la recherche principale
   if (MainsearchText.length < 3) {
     if (selectedTags.ingredients.length > 0 || selectedTags.appareils.length > 0 || selectedTags.ustensiles.length > 0) {
-      // Filtrer selon les tags
+      // Si des tags sont sélectionnés, on filtre en fonction de ces tags
       let i = 0;
-      while (i < recipes.length) {
+      while (i < recipes.length) { // Parcourt toutes les recettes
         let recette = recipes[i];
-        let matchesTags = true;
+        let matchesTags = true; // Indicateur de correspondance des tags
 
+        // Filtrage par tag d'ingrédient
         for (let j = 0; j < selectedTags.ingredients.length; j++) {
           let foundIngredient = false;
           for (let k = 0; k < recette.ingredients.length; k++) {
             if (recette.ingredients[k].ingredient.toLowerCase() === selectedTags.ingredients[j].toLowerCase()) {
               foundIngredient = true;
-              break;
+              break; // Si l'ingrédient est trouvé, on quitte la boucle interne
             }
           }
-          if (!foundIngredient) {
+          if (!foundIngredient) { // Si aucun ingrédient ne correspond, on exclut la recette
             matchesTags = false;
             break;
           }
         }
 
+        // Filtrage par tag d'appareil
         for (let j = 0; j < selectedTags.appareils.length; j++) {
           if (recette.appliance?.toLowerCase() !== selectedTags.appareils[j].toLowerCase()) {
             matchesTags = false;
@@ -64,6 +70,7 @@ export function MainfilterRecipes() {
           }
         }
 
+        // Filtrage par tag d'ustensile
         for (let j = 0; j < selectedTags.ustensiles.length; j++) {
           let foundUstensile = false;
           for (let k = 0; k < recette.ustensils.length; k++) {
@@ -78,32 +85,40 @@ export function MainfilterRecipes() {
           }
         }
 
+        // Si la recette correspond à tous les tags, elle est ajoutée aux recettes filtrées
         if (matchesTags) {
           filteredRecipes.push(recette);
         }
         i++;
       }
     } else {
-      filteredRecipes = recipes.slice(); // Copie de toutes les recettes si aucun tag
+      // Si aucun tag ni recherche n'est activé, toutes les recettes sont affichées
+      filteredRecipes = recipes.slice(); // Copie du tableau original des recettes
     }
   } else {
+    // Si au moins 3 caractères sont entrés dans la barre de recherche principale
     let i = 0;
     while (i < recipes.length) {
       let recette = recipes[i];
       
+      // Vérifie si la recette correspond au texte recherché
       let correspondTexte = MainsearchText === '' || 
         recette.name.toLowerCase().includes(MainsearchText) ||  
         recette.description.toLowerCase().includes(MainsearchText);
 
+      // Vérifie si la recette contient l'ingrédient recherché
       let correspondIngredientInput = ingredientInput === '' || 
         recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
 
+      // Vérifie si la recette utilise l'appareil recherché
       let correspondAppareilInput = appareilInput === '' || 
         recette.appliance?.toLowerCase().includes(appareilInput);
 
+      // Vérifie si la recette contient l'ustensile recherché
       let correspondUstensileInput = ustensileInput === '' || 
         recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
 
+      // Vérifie si la recette correspond aux tags sélectionnés (similaire au filtre précédent)
       let matchesTags = true;
       for (let j = 0; j < selectedTags.ingredients.length; j++) {
         let foundIngredient = false;
@@ -119,6 +134,7 @@ export function MainfilterRecipes() {
         }
       }
 
+      // Filtrage par tag d'appareil
       for (let j = 0; j < selectedTags.appareils.length; j++) {
         if (recette.appliance?.toLowerCase() !== selectedTags.appareils[j].toLowerCase()) {
           matchesTags = false;
@@ -126,6 +142,7 @@ export function MainfilterRecipes() {
         }
       }
 
+      // Filtrage par tag d'ustensile
       for (let j = 0; j < selectedTags.ustensiles.length; j++) {
         let foundUstensile = false;
         for (let k = 0; k < recette.ustensils.length; k++) {
@@ -140,6 +157,7 @@ export function MainfilterRecipes() {
         }
       }
 
+      // Si la recette correspond à tous les critères, elle est ajoutée à la liste des recettes filtrées
       if (correspondTexte && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags) {
         filteredRecipes.push(recette);
       }
@@ -147,24 +165,28 @@ export function MainfilterRecipes() {
     }
   }
 
+  // Affiche les recettes filtrées sur la page
   displayRecipes(filteredRecipes);
 
+  // Mise à jour du compteur de recettes et des filtres avancés
   let totalRecipesCount;
   if (filteredRecipes.length === 50) {
-    totalRecipesCount = 1500;
+    totalRecipesCount = 1500; // Hypothèse: si 50 recettes affichées, on considère un total fictif de 1500
   } else {
-    totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
+    totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length; // Total réel ou fictif en cas de champ vide
   }
 
-  updateRecipeCount(totalRecipesCount);
-  updateAdvancedFilters(filteredRecipes);
+  updateRecipeCount(totalRecipesCount); // Mise à jour du nombre de recettes affichées
+  updateAdvancedFilters(filteredRecipes); // Mise à jour des options des filtres avancés en fonction des résultats
 
+  // Gestion des erreurs si aucune recette n'est trouvée
   if (filteredRecipes.length === 0) {
     showErrorMessage(MainsearchText);
   } else {
     hideErrorMessage();
   }
-  console.timeEnd('MainfilterRecipes'); // Termine le chronométrage et affiche le temps écoulé
+
+  console.timeEnd('MainfilterRecipes'); // Termine le chronométrage et affiche la durée d'exécution
 }
 
 // Écouteur pour l'événement 'input'
