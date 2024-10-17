@@ -15,6 +15,7 @@ function hideRecipes() {
   }
 }
 
+// Fonction de filtrage principale avec méthodes fonctionnelles
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
   // Masque les recettes précédemment affichées
