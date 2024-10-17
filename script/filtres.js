@@ -95,8 +95,6 @@ export function filterOptions(inputId, ulId) {
 }
 
 
-
-
 document.addEventListener('DOMContentLoaded', () => {
   // Fonction pour gérer l'affichage des dropdowns et l'écoute des événements d'entrée
   function setupDropdownFilter(labelFor, containerId, inputId, dropdownId) {
@@ -278,7 +276,7 @@ function updateListItems(ul, items) {
           e.stopPropagation(); // Empêche le clic sur l'élément de liste d'être déclenché
           li.classList.remove('selected'); // Enlève la sélection
           closeIcon.remove(); // Supprime l'icône de fermeture
-        
+                 
         });
 
         // Ajouter l'icône de fermeture à l'élément de liste
@@ -398,22 +396,29 @@ document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById(inputId); // Input pour le filtre
     const clearBtn = document.getElementById(clearBtnId); // Bouton pour effacer le texte
 
-    let isInputVisible = false; // État d'affichage de l'input
-    let placeholderText = input.placeholder; // Texte du placeholder
+    let isInputVisible = false; // État d'affichage de l'input et de la liste
 
-    // Gestion de l'affichage/masquage du champ de recherche
-    label.addEventListener('click', (e) => {
-      e.preventDefault();
+    // Fonction pour afficher ou masquer l'input et la liste déroulante
+    function toggleDropdown() {
       isInputVisible = !isInputVisible;
-
+      
       if (isInputVisible) {
         inputContainer.classList.remove('opacity-0', 'pointer-events-none');
         label.classList.remove('label-hidden');
+        ul.classList.remove('hidden');
         input.focus();
       } else {
+        // Masque l'input et la liste déroulante
         inputContainer.classList.add('opacity-0', 'pointer-events-none');
         label.classList.add('label-hidden');
+        ul.classList.add('hidden');
       }
+    }
+
+    // Gestion de l'affichage/masquage au clic sur le label
+    label.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggleDropdown();
     });
 
     input.addEventListener('focus', () => {
@@ -422,7 +427,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     input.addEventListener('blur', () => {
       if (input.value === '') {
-        input.placeholder = placeholderText; // Réinitialise le placeholder
+        input.placeholder = 'Rechercher'; // Placeholder par défaut si vide
       }
     });
 
@@ -444,26 +449,15 @@ document.addEventListener('DOMContentLoaded', () => {
     ul.addEventListener('click', (e) => {
       const clickedItem = e.target.closest('li'); // Récupère l'élément li cliqué
       if (clickedItem) {
-        const items = ul.querySelectorAll('li'); // Tous les éléments <li>
-        
-        // Supprime les doublons
-        items.forEach(item => {
-          if (item !== clickedItem && item.textContent.trim() === clickedItem.textContent.trim()) {
-            item.remove(); // Supprime l'élément doublon
-          }
-        });
-
-        // Déplace l'élément cliqué en haut
-        ul.insertBefore(clickedItem, ul.firstChild);
-        
+        console.log(`Tag ajouté depuis la liste : ${clickedItem.textContent}`);
         // Ajoute le tag correspondant
         const category = ul.id; // Utilise l'ID du UL pour déterminer la catégorie
         addTag(clickedItem.dataset.value, category); // Ajoute le tag
-        input.value = ''; // Efface le texte du champ de recherche
-        clearBtn.classList.add('hidden'); // Masque le bouton d'effacement
-        isInputVisible = true; // Conserve l'état d'affichage
-        inputContainer.classList.remove('opacity-0', 'pointer-events-none'); // Conserve le champ de recherche visible
-        label.classList.remove('label-hidden'); // Garde le padding
+
+        // Masque l'input et la liste déroulante après la sélection
+        isInputVisible = false;
+        inputContainer.classList.add('opacity-0', 'pointer-events-none'); // Masque l'input
+        ul.classList.add('hidden'); // Masque la liste déroulante
       }
     });
   }
@@ -481,4 +475,3 @@ document.addEventListener('DOMContentLoaded', () => {
   updateAdvancedFilters(recipes); // Met à jour les options des filtres
   updateFilterOptions(recipes); // Met à jour les options des filtres avec toutes les recettes initiales
 });
-
