@@ -113,11 +113,17 @@ export function MainfilterRecipes() {
 }
 
 
-
+// Écouteur pour l'événement 'input'
 document.getElementById('main-search-input').addEventListener('input', function () {
+  handleInputChange(this); // Passe l'élément d'entrée en tant que paramètre
+});
+
+// Fonction pour gérer les changements dans le champ de recherche
+function handleInputChange(inputElement) {
   const clearBtn = document.getElementById('main-clear-search');
+  
   // Vérifiez si le champ de recherche a du texte
-  if (this.value.length > 0) {
+  if (inputElement.value.length > 0) {
     clearBtn.classList.remove('hidden'); // Affiche la croix si du texte est saisi
     hideErrorMessage();
   } else {
@@ -126,18 +132,22 @@ document.getElementById('main-search-input').addEventListener('input', function 
 
   // Appelez filterOptions pour filtrer les options selon le texte de l'input
   filterOptions('main-search-input', 'ingredients'); // Remplacez 'ingredients' par 'appareils' ou 'ustensiles' selon le cas
-});
-
+}
 
 // Gestion du bouton "clear" pour effacer le texte de la barre de recherche
 document.getElementById('main-clear-search').addEventListener('click', function () {
-  const MainsearchInput = document.getElementById('main-search-input');
-  MainsearchInput.value = ''; // Efface le texte de l'input
-  this.classList.add('hidden'); // Masque la croix après avoir effacé le texte
-  hideErrorMessage();
-  MainsearchInput.focus(); // Remet le focus sur l'input après avoir effacé
-  MainfilterRecipes(); // Met à jour les résultats
+  handleClearSearch(this); // Passe le bouton de nettoyage en tant que paramètre
 });
+
+// Fonction pour gérer le nettoyage du champ de recherche
+function handleClearSearch(clearBtn) {
+  const mainSearchInput = document.getElementById('main-search-input');
+  mainSearchInput.value = ''; // Efface le texte de l'input
+  clearBtn.classList.add('hidden'); // Masque la croix après avoir effacé le texte
+  hideErrorMessage();
+  mainSearchInput.focus(); // Remet le focus sur l'input après avoir effacé
+  MainfilterRecipes(); // Met à jour les résultats
+}
 
 // Initialisation des éléments et des filtres au chargement de la page
 window.addEventListener('load', () => {
