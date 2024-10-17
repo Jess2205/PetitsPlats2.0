@@ -210,7 +210,6 @@ export function updateAdvancedFilters(recipes) {
   updateOptions(document.getElementById('ustensiles'), sortedUstensiles);
 }
 
-
 // Mettre à jour les options des filtres avancés (Ingrédients, Appareils, Ustensiles) en fonction des recettes affichées
 export function updateFilterOptions(filteredRecipes) {
   const ingredientsList = document.getElementById('ingredients-search');

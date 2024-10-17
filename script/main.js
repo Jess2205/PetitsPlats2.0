@@ -167,8 +167,6 @@ export function MainfilterRecipes() {
   console.timeEnd('MainfilterRecipes'); // Termine le chronométrage et affiche le temps écoulé
 }
 
-
-
 // Écouteur pour l'événement 'input'
 document.getElementById('main-search-input').addEventListener('input', function () {
   handleInputChange(this); // Passe l'élément d'entrée en tant que paramètre
