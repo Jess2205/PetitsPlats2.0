@@ -6,7 +6,7 @@ import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js';
 import { selectedTags, filterOptions, updateAdvancedFilters } from './filtres.js';// Importation de la fonction qui affiche les tags
 import { updateRecipeCount} from './index.js';
 
-// Branche 2 : Boucles While et For
+
 // Fonction pour masquer les recettes en vidant le conteneur
 function hideRecipes() {
   const recipeContainer = document.getElementById('results-container');
@@ -15,6 +15,7 @@ function hideRecipes() {
   }
 }
 
+// Branche 2 : Boucles While et For
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
   hideRecipes(); // Vide le conteneur des recettes
