@@ -185,6 +185,9 @@ document.getElementById('main-clear-search').addEventListener('click', function 
   hideErrorMessage();
   MainsearchInput.focus(); // Remet le focus sur l'input après avoir effacé
   MainfilterRecipes(); // Met à jour les résultats
+
+  // Appelez filterOptions pour filtrer les options selon le texte de l'input
+  filterOptions('main-search-input', 'ulId'); // Remplacez 'ulId' par l'ID réel de votre liste d'options
 });
 
 // Initialisation des éléments et des filtres au chargement de la page
