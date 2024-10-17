@@ -124,8 +124,9 @@ document.getElementById('main-search-input').addEventListener('input', function 
   }
 
   // Appelez filterOptions pour filtrer les options selon le texte de l'input
-  filterOptions('main-search-input', 'ulId'); // Remplacez 'ulId' par l'ID réel de votre liste d'options
+  filterOptions('main-search-input', 'ingredients'); // Remplacez 'ingredients' par 'appareils' ou 'ustensiles' selon le cas
 });
+
 
 // Gestion du bouton "clear" pour effacer le texte de la barre de recherche
 document.getElementById('main-clear-search').addEventListener('click', function () {

@@ -79,15 +79,21 @@ function createRemoveIcon(tagText, category) {
 
 // Fonction de filtrage des options dans les filtres avancés
 export function filterOptions(inputId, ulId) {
-  const searchText = document.getElementById(inputId).value.toLowerCase();// Récupère le texte de recherche et le met en minuscules
-  const ul = document.getElementById(ulId);// Sélectionne la liste correspondante
+  const searchText = document.getElementById(inputId).value.toLowerCase(); // Récupère le texte de recherche
+  const ul = document.getElementById(ulId); // Sélectionne la liste correspondante
+
+  // Vérifie si ul existe avant de continuer
+  if (!ul) {
+    console.error(`L'élément avec l'ID ${ulId} n'a pas été trouvé.`);
+    return; // Sortir de la fonction si ul n'existe pas
+  }
 
   // Parcourt chaque élément de la liste et ajuste leur affichage selon la correspondance avec le texte de recherche  
   Array.from(ul.children).forEach(li => {
     li.style.display = li.dataset.value.toLowerCase().includes(searchText) || searchText === "" ? "block" : "none";
   });
-  
 }
+
 
 
 
