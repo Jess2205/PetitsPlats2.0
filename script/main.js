@@ -18,108 +18,110 @@ function hideRecipes() {
 // Branche 2 : Boucles While et For
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
-  console.time('MainfilterRecipes'); // Démarre le chronométrage pour mesurer la durée d'exécution de la fonction
+  console.time('MainfilterRecipes'); // Démarre le chronométrage pour mesurer la performance de la fonction.
 
-  hideRecipes(); // Vide le conteneur des recettes affichées sur la page
+  hideRecipes(); // Vide le conteneur des recettes actuellement affichées, préparant l'affichage des nouvelles recettes filtrées.
 
-  // Récupération des valeurs des champs de recherche principaux (texte, ingrédients, appareils, ustensiles)
+  // Récupération des valeurs des champs de recherche principaux : texte principal, ingrédients, appareils, ustensiles.
   const MainsearchInput = document.getElementById('main-search-input');
-  const MainsearchText = MainsearchInput.value.trim().toLowerCase(); // Texte principal
+  const MainsearchText = MainsearchInput.value.trim().toLowerCase(); // Le texte saisi dans la recherche principale, converti en minuscule et sans espace superflu.
 
-  const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase(); // Ingrédient
-  const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase(); // Appareil
-  const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase(); // Ustensile
+  const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase(); // Le texte pour filtrer par ingrédient.
+  const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase(); // Le texte pour filtrer par appareil.
+  const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase(); // Le texte pour filtrer par ustensile.
 
-  // Vérifie si tous les champs de recherche et les tags sont vides
+  // Vérifie si tous les champs de recherche sont vides, y compris les tags sélectionnés pour ingrédients, appareils et ustensiles.
   const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '' &&
     selectedTags.ingredients.length === 0 &&
     selectedTags.appareils.length === 0 &&
     selectedTags.ustensiles.length === 0;
 
-  let filteredRecipes = []; // Tableau pour stocker les recettes filtrées
+  let filteredRecipes = []; // Initialisation du tableau des recettes filtrées.
 
-  // Si moins de 3 caractères sont entrés dans la recherche principale
+  // Si le texte dans la recherche principale contient moins de 3 caractères :
   if (MainsearchText.length < 3) {
     if (selectedTags.ingredients.length > 0 || selectedTags.appareils.length > 0 || selectedTags.ustensiles.length > 0) {
-      // Si des tags sont sélectionnés, on filtre en fonction de ces tags
+      // Si des tags sont sélectionnés, on filtre les recettes uniquement en fonction des tags.
       let i = 0;
-      while (i < recipes.length) { // Parcourt toutes les recettes
-        let recette = recipes[i];
-        let matchesTags = true; // Indicateur de correspondance des tags
+      while (i < recipes.length) {
+        let recette = recipes[i]; // Accès à chaque recette dans la liste globale.
+        let matchesTags = true; // Indicateur de correspondance initialisé à `true`, changera à `false` si un tag ne correspond pas.
 
-        // Filtrage par tag d'ingrédient
+        // Filtre par tag d'ingrédient.
         for (let j = 0; j < selectedTags.ingredients.length; j++) {
           let foundIngredient = false;
           for (let k = 0; k < recette.ingredients.length; k++) {
             if (recette.ingredients[k].ingredient.toLowerCase() === selectedTags.ingredients[j].toLowerCase()) {
-              foundIngredient = true;
-              break; // Si l'ingrédient est trouvé, on quitte la boucle interne
+              foundIngredient = true; // Correspondance trouvée pour l'ingrédient, on peut sortir de cette boucle.
+              break;
             }
           }
-          if (!foundIngredient) { // Si aucun ingrédient ne correspond, on exclut la recette
-            matchesTags = false;
+          if (!foundIngredient) { 
+            matchesTags = false; // Si aucun ingrédient ne correspond, on arrête et on exclut cette recette.
             break;
           }
         }
 
-        // Filtrage par tag d'appareil
+        // Filtre par tag d'appareil.
         for (let j = 0; j < selectedTags.appareils.length; j++) {
           if (recette.appliance?.toLowerCase() !== selectedTags.appareils[j].toLowerCase()) {
-            matchesTags = false;
+            matchesTags = false; // L'appareil ne correspond pas, on exclut la recette.
             break;
           }
         }
 
-        // Filtrage par tag d'ustensile
+        // Filtre par tag d'ustensile.
         for (let j = 0; j < selectedTags.ustensiles.length; j++) {
           let foundUstensile = false;
           for (let k = 0; k < recette.ustensils.length; k++) {
             if (recette.ustensils[k].toLowerCase() === selectedTags.ustensiles[j].toLowerCase()) {
-              foundUstensile = true;
+              foundUstensile = true; // Correspondance trouvée pour l'ustensile.
               break;
             }
           }
-          if (!foundUstensile) {
-            matchesTags = false;
+          if (!foundUstensile) { 
+            matchesTags = false; // L'ustensile ne correspond pas, on exclut la recette.
             break;
           }
         }
 
-        // Si la recette correspond à tous les tags, elle est ajoutée aux recettes filtrées
+        // Si la recette correspond à tous les tags, elle est ajoutée aux résultats filtrés.
         if (matchesTags) {
           filteredRecipes.push(recette);
         }
         i++;
       }
     } else {
-      // Si aucun tag ni recherche n'est activé, toutes les recettes sont affichées
-      filteredRecipes = recipes.slice(); // Copie du tableau original des recettes
+      // Si aucun tag n'est sélectionné et aucun texte de recherche n'est saisi, toutes les recettes sont affichées.
+      filteredRecipes = recipes.slice(); // On copie le tableau original des recettes.
     }
   } else {
-    // Si au moins 3 caractères sont entrés dans la barre de recherche principale
+    // Si le texte principal contient 3 caractères ou plus, on filtre en fonction du texte et des tags sélectionnés.
     let i = 0;
     while (i < recipes.length) {
       let recette = recipes[i];
       
-      // Vérifie si la recette correspond au texte recherché
+      // Vérifie si la recette correspond au texte recherché dans le nom ou la description.
       let correspondTexte = MainsearchText === '' || 
         recette.name.toLowerCase().includes(MainsearchText) ||  
         recette.description.toLowerCase().includes(MainsearchText);
 
-      // Vérifie si la recette contient l'ingrédient recherché
+      // Vérifie si la recette contient l'ingrédient recherché.
       let correspondIngredientInput = ingredientInput === '' || 
         recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
 
-      // Vérifie si la recette utilise l'appareil recherché
+      // Vérifie si la recette utilise l'appareil recherché.
       let correspondAppareilInput = appareilInput === '' || 
         recette.appliance?.toLowerCase().includes(appareilInput);
 
-      // Vérifie si la recette contient l'ustensile recherché
+      // Vérifie si la recette contient l'ustensile recherché.
       let correspondUstensileInput = ustensileInput === '' || 
         recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
 
-      // Vérifie si la recette correspond aux tags sélectionnés (similaire au filtre précédent)
+      // Vérifie si la recette correspond aux tags sélectionnés (ingrédients, appareils, ustensiles).
       let matchesTags = true;
+
+      // Même logique de filtrage par tags comme précédemment.
       for (let j = 0; j < selectedTags.ingredients.length; j++) {
         let foundIngredient = false;
         for (let k = 0; k < recette.ingredients.length; k++) {
@@ -134,7 +136,7 @@ export function MainfilterRecipes() {
         }
       }
 
-      // Filtrage par tag d'appareil
+      // Filtre par tag d'appareil.
       for (let j = 0; j < selectedTags.appareils.length; j++) {
         if (recette.appliance?.toLowerCase() !== selectedTags.appareils[j].toLowerCase()) {
           matchesTags = false;
@@ -142,7 +144,7 @@ export function MainfilterRecipes() {
         }
       }
 
-      // Filtrage par tag d'ustensile
+      // Filtre par tag d'ustensile.
       for (let j = 0; j < selectedTags.ustensiles.length; j++) {
         let foundUstensile = false;
         for (let k = 0; k < recette.ustensils.length; k++) {
@@ -157,7 +159,7 @@ export function MainfilterRecipes() {
         }
       }
 
-      // Si la recette correspond à tous les critères, elle est ajoutée à la liste des recettes filtrées
+      // Si la recette correspond à tous les critères de texte, d'ingrédient, d'appareil, d'ustensile, et de tags, on l'ajoute aux résultats.
       if (correspondTexte && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags) {
         filteredRecipes.push(recette);
       }
@@ -165,28 +167,29 @@ export function MainfilterRecipes() {
     }
   }
 
-  // Affiche les recettes filtrées sur la page
+  // Affiche les recettes filtrées.
   displayRecipes(filteredRecipes);
 
-  // Mise à jour du compteur de recettes et des filtres avancés
+  // Mise à jour du compteur de recettes et des filtres avancés.
   let totalRecipesCount;
   if (filteredRecipes.length === 50) {
-    totalRecipesCount = 1500; // Hypothèse: si 50 recettes affichées, on considère un total fictif de 1500
+    totalRecipesCount = 1500; // Indicateur fictif pour représenter un grand ensemble de résultats.
   } else {
-    totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length; // Total réel ou fictif en cas de champ vide
+    totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length; // Mise à jour du total réel ou fictif.
   }
 
-  updateRecipeCount(totalRecipesCount); // Mise à jour du nombre de recettes affichées
-  updateAdvancedFilters(filteredRecipes); // Mise à jour des options des filtres avancés en fonction des résultats
+  // Mise à jour de l'interface avec le nombre de recettes et les options de filtre.
+  updateRecipeCount(totalRecipesCount);
+  updateAdvancedFilters(filteredRecipes);
 
-  // Gestion des erreurs si aucune recette n'est trouvée
+  // Si aucune recette n'est trouvée, affiche un message d'erreur.
   if (filteredRecipes.length === 0) {
     showErrorMessage(MainsearchText);
   } else {
-    hideErrorMessage();
+    hideErrorMessage(); // Cache le message d'erreur si des recettes sont trouvées.
   }
 
-  console.timeEnd('MainfilterRecipes'); // Termine le chronométrage et affiche la durée d'exécution
+  console.timeEnd('MainfilterRecipes'); // Termine le chronométrage et affiche la durée d'exécution de la fonction dans la console.
 }
 
 // Écouteur pour l'événement 'input'
