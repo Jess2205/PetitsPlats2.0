@@ -122,6 +122,9 @@ document.getElementById('main-search-input').addEventListener('input', function 
   } else {
     clearBtn.classList.add('hidden'); // Masque la croix si l'input est vide
   }
+
+  // Appelez filterOptions pour filtrer les options selon le texte de l'input
+  filterOptions('main-search-input', 'ulId'); // Remplacez 'ulId' par l'ID réel de votre liste d'options
 });
 
 // Gestion du bouton "clear" pour effacer le texte de la barre de recherche

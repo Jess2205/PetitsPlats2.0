@@ -89,6 +89,8 @@ export function filterOptions(inputId, ulId) {
   
 }
 
+
+
 document.addEventListener('DOMContentLoaded', () => {
   // Fonction pour gérer l'affichage des dropdowns et l'écoute des événements d'entrée
   function setupDropdownFilter(labelFor, containerId, inputId, dropdownId) {
