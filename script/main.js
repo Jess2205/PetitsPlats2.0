@@ -18,6 +18,7 @@ function hideRecipes() {
 // Branche 2 : Boucles While et For
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
+  console.time('MainfilterRecipes'); // Démarre le chronométrage
   hideRecipes(); // Vide le conteneur des recettes
 
   const MainsearchInput = document.getElementById('main-search-input');
@@ -163,6 +164,7 @@ export function MainfilterRecipes() {
   } else {
     hideErrorMessage();
   }
+  console.timeEnd('MainfilterRecipes'); // Termine le chronométrage et affiche le temps écoulé
 }
 
 
