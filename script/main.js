@@ -18,31 +18,44 @@ function hideRecipes() {
 // Fonction de filtrage principale avec méthodes fonctionnelles
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
-  console.time('MainfilterRecipesFunctional'); // Démarre le chronométrage
-  // Masque les recettes précédemment affichées
-  hideRecipes(); // Appel de la fonction pour vider le conteneur des recettes
+  // Démarre un chronométrage pour mesurer la performance de la fonction.
+  // Ce sera utile pour analyser l'optimisation du temps d'exécution pendant le développement.
+  console.time('MainfilterRecipesFunctional');
 
+  // Appel de la fonction `hideRecipes` pour masquer ou supprimer les recettes précédemment affichées.
+  // Cette fonction vide probablement le conteneur des recettes pour éviter de superposer les nouvelles.
+  hideRecipes();
+
+  // Récupère la valeur saisie par l'utilisateur dans la barre de recherche principale
+  // On utilise `trim()` pour supprimer les espaces au début/fin et `toLowerCase()` pour ignorer la casse.
   const MainsearchInput = document.getElementById('main-search-input');
-  const MainsearchText = MainsearchInput.value.trim().toLowerCase();// Récupère la valeur du champ de recherche principal
+  const MainsearchText = MainsearchInput.value.trim().toLowerCase();
 
-  // Récupération des valeurs des champs de recherche avancés (ingrédients, appareils, ustensiles)
+  // Récupération des valeurs dans les champs de recherche avancée :
+  // - Recherche par ingrédient,
+  // - Recherche par appareil,
+  // - Recherche par ustensile.
+  // La logique est la même que pour le champ principal : on nettoie les espaces superflus et on ignore la casse.
   const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase();
   const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase();
   const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase();
 
-  // Vérifiez si le champ de recherche principal et tous les champs de recherche des filtres sont vides
+  // Vérification si tous les champs de recherche (principal et avancés) sont vides,
+  // ainsi que si aucun tag n'a été sélectionné dans les filtres.
+  // Cette condition permettra de savoir s'il faut afficher toutes les recettes sans filtrage.
   const isAllEmpty = MainsearchText === '' && ingredientInput === '' && appareilInput === '' && ustensileInput === '' &&
-    selectedTags.ingredients.length === 0 &&
-    selectedTags.appareils.length === 0 &&
-    selectedTags.ustensiles.length === 0;
+    selectedTags.ingredients.length === 0 && // Aucun tag d'ingrédient sélectionné
+    selectedTags.appareils.length === 0 &&   // Aucun tag d'appareil sélectionné
+    selectedTags.ustensiles.length === 0;    // Aucun tag d'ustensile sélectionné
 
-  let filteredRecipes;
+  let filteredRecipes; // Variable qui contiendra les recettes filtrées
 
-  // Si moins de 3 caractères, afficher toutes les recettes ou celles filtrées par tags
+  // Si l'utilisateur a saisi moins de 3 caractères dans la recherche principale :
   if (MainsearchText.length < 3) {
+    // Si des tags sont sélectionnés (ingrédients, appareils ou ustensiles), on filtre les recettes uniquement sur les tags.
     if (selectedTags.ingredients.length > 0 || selectedTags.appareils.length > 0 || selectedTags.ustensiles.length > 0) {
-      // Filtrer selon les tags si présents
       filteredRecipes = recipes.filter(recette => {
+        // Vérification si la recette correspond à TOUS les tags sélectionnés.
         const matchesTags =
           selectedTags.ingredients.every(tag => 
             recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tag.toLowerCase())
@@ -53,29 +66,36 @@ export function MainfilterRecipes() {
           selectedTags.ustensiles.every(tag => 
             recette.ustensils?.some(ustensile => ustensile.toLowerCase() === tag.toLowerCase())
           );
-
-        return matchesTags;
+        return matchesTags; // La recette est incluse si elle correspond à tous les tags sélectionnés.
       });
     } else {
-      filteredRecipes = recipes; // Affiche toutes les recettes si aucun tag
+      // Si aucun tag n'est sélectionné et que la recherche texte est vide ou trop courte (< 3 caractères),
+      // on affiche toutes les recettes sans aucun filtrage.
+      filteredRecipes = recipes;
     }
   } else {
-    // Filtrer les recettes en fonction de la recherche principale et des filtres avancés
+    // Si au moins 3 caractères sont saisis dans le champ de recherche principal,
+    // on commence à filtrer les recettes en fonction de la recherche et des champs de recherche avancée.
     filteredRecipes = recipes.filter(recette => {
-      const correspondTexte = MainsearchText === '' || 
-        recette.name.toLowerCase().includes(MainsearchText) ||  
-        recette.description.toLowerCase().includes(MainsearchText) ||  
-        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText));
+      // Recherche dans le nom, la description ou les ingrédients de la recette.
+      const correspondTexte = MainsearchText === '' || // Si la recherche est vide, cette condition est vraie (pas de filtre texte)
+        recette.name.toLowerCase().includes(MainsearchText) ||  // Nom de la recette
+        recette.description.toLowerCase().includes(MainsearchText) ||  // Description de la recette
+        recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(MainsearchText)); // Ingrédients
 
+      // Filtrage par champ "ingrédient" dans la recherche avancée.
       const correspondIngredientInput = ingredientInput === '' || 
         recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase().includes(ingredientInput));
 
+      // Filtrage par champ "appareil" dans la recherche avancée.
       const correspondAppareilInput = appareilInput === '' || 
         recette.appliance?.toLowerCase().includes(appareilInput);
 
+      // Filtrage par champ "ustensile" dans la recherche avancée.
       const correspondUstensileInput = ustensileInput === '' || 
         recette.ustensils?.some(ustensile => ustensile.toLowerCase().includes(ustensileInput));
 
+      // Vérification des tags sélectionnés pour les ingrédients, appareils et ustensiles.
       const matchesTags = 
         selectedTags.ingredients.every(tag => 
           recette.ingredients.some(ingredient => ingredient.ingredient.toLowerCase() === tag.toLowerCase())
@@ -87,32 +107,46 @@ export function MainfilterRecipes() {
           recette.ustensils?.some(ustensile => ustensile.toLowerCase() === tag.toLowerCase())
         );
 
+      // Une recette est incluse dans les résultats si elle correspond à la recherche principale (ou si tous les champs sont vides)
+      // ET qu'elle correspond aux filtres avancés (ingrédients, appareils, ustensiles) ET aux tags sélectionnés.
       return (correspondTexte || isAllEmpty) && correspondIngredientInput && correspondAppareilInput && correspondUstensileInput && matchesTags;
     });
   }
 
-  // Mise à jour l'affichage des recettes filtrées
+  // Mise à jour de l'affichage des recettes filtrées. La fonction `displayRecipes` se charge de rendre visuellement les recettes dans l'interface utilisateur.
   displayRecipes(filteredRecipes);
 
-  // Mise à jour du compteur : si tout est vide (texte et tags), affiche 1500, sinon le nombre réel de recettes filtrées
+  // Mise à jour du compteur de recettes affichées :
+  // Si tout est vide (pas de filtre ou recherche active), on simule l'affichage de 1500 recettes.
+  // Sinon, on affiche le nombre réel de recettes filtrées.
   let totalRecipesCount;
   if (filteredRecipes.length === 50) {
-    totalRecipesCount = 1500; // Si le total est à 50, affiche 1500
+    totalRecipesCount = 1500; // Si le total est à 50, on affiche 1500 (hypothèse pour un effet visuel ou simulation)
   } else {
-    totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length;
+    totalRecipesCount = isAllEmpty ? 1500 : filteredRecipes.length; // Soit 1500, soit le nombre réel
   }
 
-  updateRecipeCount(totalRecipesCount);// Met à jour le compteur de recettes affichées
-  updateAdvancedFilters(filteredRecipes);// Met à jour les options des filtres selon les recettes filtrées
+  // Met à jour le compteur de recettes visibles dans l'interface (par exemple, affichage "X recettes trouvées").
+  updateRecipeCount(totalRecipesCount);
 
-  // Affiche un message d'erreur si aucune recette n'est trouvée
+  // Met à jour les filtres avancés (ingrédients, appareils, ustensiles) en fonction des recettes restantes.
+  // Cette fonction va probablement adapter la liste d'ingrédients, d'appareils et d'ustensiles pour n'afficher que ceux pertinents pour les recettes filtrées.
+  updateAdvancedFilters(filteredRecipes);
+
+  // Si aucune recette n'a été trouvée après le filtrage, un message d'erreur est affiché pour informer l'utilisateur.
   if (filteredRecipes.length === 0) {
-    showErrorMessage(MainsearchText);
+    showErrorMessage(MainsearchText); // Message d'erreur avec le terme recherché
   } else {
+    // Si des recettes sont trouvées, on s'assure que le message d'erreur est caché.
     hideErrorMessage();
   }
-  console.timeEnd('MainfilterRecipesFunctional'); // Termine le chronométrage et affiche le temps écoulé 
+
+  // Fin du chronométrage pour afficher dans la console le temps total pris par cette fonction.
+  // Utile pour mesurer la performance et voir si l'optimisation est nécessaire.
+  console.timeEnd('MainfilterRecipesFunctional'); 
 }
+
+
 
 // Écouteur pour l'événement 'input'
 document.getElementById('main-search-input').addEventListener('input', function () {
