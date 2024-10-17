@@ -159,7 +159,6 @@ function updateTagsAndFilters() {
   MainfilterRecipes(); // Fonction principale de filtrage
 }
 
-
 // Fonction pour mettre à jour les options des filtres avancés
 export function updateAdvancedFilters(recipes) {
   const filters = {
@@ -209,7 +208,6 @@ export function updateAdvancedFilters(recipes) {
   updateOptions(document.getElementById('appareils'), sortedAppareils);
   updateOptions(document.getElementById('ustensiles'), sortedUstensiles);
 }
-
 
 // Mettre à jour les options des filtres avancés (Ingrédients, Appareils, Ustensiles) en fonction des recettes affichées
 export function updateFilterOptions(filteredRecipes) {
@@ -386,7 +384,6 @@ export function filterRecipesWithAdvancedFilters() {
       updateFilterOptions(filteredRecipes);
   }
 }
-
 
 document.addEventListener('DOMContentLoaded', () => {
   function setupFilters(labelFor, containerId, ulId, inputId, clearBtnId) {

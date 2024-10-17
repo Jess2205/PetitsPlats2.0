@@ -22,9 +22,6 @@ const selectedUstensiles = selectedTags.ustensiles
   .map(tag => capitalizeFirstLetter(tag))
   .sort();
 
-
-
-
 // Fonction pour afficher les recettes
 export function displayRecipes(recipes) {
   const mediaContainer = document.getElementById('media-container');// Sélectionne l'élément qui contiendra les recettes
