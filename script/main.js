@@ -18,6 +18,7 @@ function hideRecipes() {
 // Fonction de filtrage principale avec méthodes fonctionnelles
 // Fonction principale de filtrage des recettes
 export function MainfilterRecipes() { 
+  console.time('MainfilterRecipesFunctional'); // Démarre le chronométrage
   // Masque les recettes précédemment affichées
   hideRecipes(); // Appel de la fonction pour vider le conteneur des recettes
 
@@ -109,7 +110,8 @@ export function MainfilterRecipes() {
     showErrorMessage(MainsearchText);
   } else {
     hideErrorMessage();
-  } 
+  }
+  console.timeEnd('MainfilterRecipesFunctional'); // Termine le chronométrage et affiche le temps écoulé 
 }
 
 
