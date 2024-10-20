@@ -1,6 +1,23 @@
 //Contient la logique de recherche principale et
 //la mise à jour de l'affichage.
 
+// Ajout d'une fonction d'échappement pour prévenir les injections
+export function escapeHtml(unsafe) {
+  // La fonction prend un paramètre 'unsafe' qui est une chaîne de caractères potentiellement dangereuse.
+  return unsafe
+    // Remplace tous les caractères '&' par leur équivalent HTML '&amp;'.
+    .replace(/&/g, "&amp;")
+    // Remplace tous les caractères '<' par leur équivalent HTML '&lt;'.
+    .replace(/</g, "&lt;")
+    // Remplace tous les caractères '>' par leur équivalent HTML '&gt;'.
+    .replace(/>/g, "&gt;")
+    // Remplace tous les guillemets doubles '"' par leur équivalent HTML '&quot;'.
+    .replace(/"/g, "&quot;")
+    // Remplace tous les guillemets simples "'" par leur équivalent HTML '&#039;'.
+    .replace(/'/g, "&#039;");
+}
+
+
 import { recipes } from './recipes.js'; // Importation des données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage } from './index.js'; // Importation des fonctions pour afficher les recettes et gérer les messages d'erreur
 import { selectedTags, filterOptions, updateAdvancedFilters } from './filtres.js';// Importation de la fonction qui affiche les tags
@@ -29,16 +46,16 @@ export function MainfilterRecipes() {
   // Récupère la valeur saisie par l'utilisateur dans la barre de recherche principale
   // On utilise `trim()` pour supprimer les espaces au début/fin et `toLowerCase()` pour ignorer la casse.
   const MainsearchInput = document.getElementById('main-search-input');
-  const MainsearchText = MainsearchInput.value.trim().toLowerCase();
+  const MainsearchText = escapeHtml (MainsearchInput.value.trim().toLowerCase());
 
   // Récupération des valeurs dans les champs de recherche avancée :
   // - Recherche par ingrédient,
   // - Recherche par appareil,
   // - Recherche par ustensile.
   // La logique est la même que pour le champ principal : on nettoie les espaces superflus et on ignore la casse.
-  const ingredientInput = document.getElementById('ingredients-search').value.trim().toLowerCase();
-  const appareilInput = document.getElementById('appareils-search').value.trim().toLowerCase();
-  const ustensileInput = document.getElementById('ustensiles-search').value.trim().toLowerCase();
+  const ingredientInput = escapeHtml (document.getElementById('ingredients-search').value.trim().toLowerCase());
+  const appareilInput = escapeHtml (document.getElementById('appareils-search').value.trim().toLowerCase());
+  const ustensileInput = escapeHtml (document.getElementById('ustensiles-search').value.trim().toLowerCase());
 
   // Vérification si tous les champs de recherche (principal et avancés) sont vides,
   // ainsi que si aucun tag n'a été sélectionné dans les filtres.

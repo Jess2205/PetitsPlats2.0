@@ -3,7 +3,7 @@
 
 import { recipes } from './recipes.js'; // Importe les données des recettes
 import { displayRecipes, showErrorMessage, hideErrorMessage, updateRecipeCount, capitalizeFirstLetter } from './index.js'; // Importe des fonctions pour afficher les recettes, gérer les erreurs et mettre à jour le compteur
-import { MainfilterRecipes} from './main.js'; // Import de la fonction principale de filtrage depuis main.js
+import { MainfilterRecipes, escapeHtml} from './main.js'; // Import de la fonction principale de filtrage depuis main.js
 
 
 // Objet pour stocker les tags sélectionnés par catégorie
@@ -79,7 +79,7 @@ function createRemoveIcon(tagText, category) {
 
 // Fonction de filtrage des options dans les filtres avancés
 export function filterOptions(inputId, ulId) {
-  const searchText = document.getElementById(inputId).value.toLowerCase(); // Récupère le texte de recherche
+  const searchText = escapeHtml (document.getElementById(inputId).value.toLowerCase()); // Récupère le texte de recherche
   const ul = document.getElementById(ulId); // Sélectionne la liste correspondante
 
   // Vérifie si ul existe avant de continuer
@@ -119,7 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Écouteurs pour la recherche en temps réel
     input.addEventListener('input', () => {
-      MainfilterRecipes();
+      const safeInputValue = escapeHtml(input.value); // Échapper la valeur de l'entrée
+      console.log(safeInputValue); // Par exemple, afficher dans la console
+      MainfilterRecipes(safeInputValue);
     });
   }
 
@@ -193,7 +195,7 @@ export function updateAdvancedFilters(recipes) {
       ul.innerHTML = ''; // Réinitialiser le contenu de la liste
       items.forEach(item => {
         const li = document.createElement('li');
-        li.textContent = item; // Nom de l'option
+        li.textContent = escapeHtml(item); // Nom de l'option
         li.dataset.value = item.toLowerCase(); // Stocke la valeur en minuscules
         li.classList.add('cursor-pointer', 'hover:bg-yellow-300', 'py-2', 'px-4');
         ul.appendChild(li); // Ajoute l'élément à la liste
@@ -249,7 +251,7 @@ function updateListItems(ul, items) {
   ul.innerHTML = ''; // Réinitialise la liste des éléments
   items.forEach(item => {
     const li = document.createElement('li');// Crée un élément de liste pour chaque item
-    li.textContent = item; // Texte de l'élément de la liste
+    li.textContent = escapeHtml(item); // Texte de l'élément de la liste
     li.classList.add('cursor-pointer', 'hover:bg-yellow-400', 'py-2', 'px-4', 'list-item'); // Styles pour chaque élément
 
     // Ajoute un tag lorsqu'on clique sur un élément de la liste
@@ -344,7 +346,7 @@ export function filterRecipesWithAdvancedFilters() {
 
   // Récupérer le texte de recherche principal
   const searchInputElement = document.getElementById('main-search-input');
-  const searchText = searchInputElement ? searchInputElement.value.toLowerCase() : '';
+  const searchText = searchInputElement ?  escapeHtml (searchInputElement.value.toLowerCase()) : '';
 
   // Affichage des logs pour déboguer
   console.log('Champ de recherche principal:', searchInputElement);
@@ -428,8 +430,12 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
+    // Échappe l'entrée utilisateur dans l'input pour plus de sécurité
     input.addEventListener('input', () => {
-      if (input.value !== '') {
+      const escapedInputValue = escapeHtml(input.value); // Échappe la valeur entrée
+      input.value = escapedInputValue; // Remplace la valeur par celle échappée
+
+      if (escapedInputValue !== '') {
         clearBtn.classList.remove('hidden'); // Affiche le bouton d'effacement
       } else {
         clearBtn.classList.add('hidden'); // Masque le bouton d'effacement
@@ -446,7 +452,8 @@ document.addEventListener('DOMContentLoaded', () => {
     ul.addEventListener('click', (e) => {
       const clickedItem = e.target.closest('li'); // Récupère l'élément li cliqué
       if (clickedItem) {
-        console.log(`Tag ajouté depuis la liste : ${clickedItem.textContent}`);
+        const clickedValue = escapeHtml(clickedItem.textContent); // Échappe le texte de l'élément sélectionné
+        console.log(`Tag ajouté depuis la liste : ${clickedValue}`);
         // Ajoute le tag correspondant
         const category = ul.id; // Utilise l'ID du UL pour déterminer la catégorie
         addTag(clickedItem.dataset.value, category); // Ajoute le tag
