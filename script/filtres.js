@@ -29,7 +29,7 @@ export function displayTags() {
     tagsArray.forEach(tagText => {
       const tag = document.createElement('span'); // Création d'un élément "span" pour chaque tag
       tag.className = 'inline-flex justify-between bg-yellow-400 text-black rounded px-2 py-2 items-center w-44'; // Style du tag
-      tag.textContent = tagText; // Texte du tag
+      tag.textContent = escapeHtml(tagText); // Texte du tag
 
       // Création de l'icône de suppression
       const removeIcon = createRemoveIcon(tagText, category);
