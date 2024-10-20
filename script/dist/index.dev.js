@@ -13,6 +13,8 @@ var _recipes = require("./recipes.js");
 
 var _filtres = require("./filtres.js");
 
+var _main = require("./main.js");
+
 //Chargement initial, gestion des événements globaux 
 //et appel des fonctions de recherche et de filtre.
 // Importation des données de recettes depuis le fichier recipes.js
@@ -77,28 +79,28 @@ function displayRecipes(recipes) {
 
     var recipeTitle = document.createElement('h2'); // Crée un élément pour le titre
 
-    recipeTitle.textContent = capitalizeFirstLetter(recipe.name); // Affiche le nom de la recette
+    recipeTitle.textContent = (0, _main.escapeHtml)(capitalizeFirstLetter(recipe.name)); // Affiche le nom de la recette
 
     recipeTitle.classList.add('text-l', 'font-bold', 'text-gray-900', 'py-6', 'px-6'); // Style du titre
     // Label recette
 
     var recipeLabel = document.createElement('h3'); // Crée un élément pour le label de recette
 
-    recipeLabel.textContent = capitalizeFirstLetter("RECETTE"); // Texte "RECETTE" affiché
+    recipeLabel.textContent = (0, _main.escapeHtml)(capitalizeFirstLetter("RECETTE")); // Texte "RECETTE" affiché
 
     recipeLabel.classList.add('text-sm', 'uppercase', 'font-semibold', 'pb-2', 'px-6', 'text-gray-600'); // Style du label
     // Description de la recette
 
     var description = document.createElement('p'); // Crée un élément pour la description
 
-    description.textContent = recipe.description; // Affiche la description de la recette
+    description.textContent = (0, _main.escapeHtml)(recipe.description); // Affiche la description de la recette
 
     description.classList.add('text-2', 'mb-8', 'px-6', 'text-gray-700', 'leading-tight', 'line-clamp-4', 'h-24', 'overflow-hidden'); // Style de la description
     // Label ingrédients
 
     var ingredientLabel = document.createElement('h3'); // Crée un élément pour le label des ingrédients
 
-    ingredientLabel.textContent = capitalizeFirstLetter("INGREDIENTS"); // Définit le texte du label
+    ingredientLabel.textContent = (0, _main.escapeHtml)(capitalizeFirstLetter("INGREDIENTS")); // Définit le texte du label
 
     ingredientLabel.classList.add('text-sm', 'mt-4', 'uppercase', 'font-semibold', 'pb-2', 'px-6', 'text-gray-600'); // Applique les styles
     // Grille pour les ingrédients
@@ -115,7 +117,7 @@ function displayRecipes(recipes) {
 
       var ingredientName = document.createElement('span'); // Crée un élément pour le nom de l'ingrédient
 
-      ingredientName.textContent = "".concat(capitalizeFirstLetter(ingredient.ingredient)); // Définit le texte du nom
+      ingredientName.textContent = (0, _main.escapeHtml)("".concat(capitalizeFirstLetter(ingredient.ingredient))); // Échapper le nom
 
       ingredientName.classList.add('mb-0'); // Applique les styles
 
@@ -123,7 +125,7 @@ function displayRecipes(recipes) {
 
       if (ingredient.quantity) {
         // Vérifie si une quantité est spécifiée
-        ingredientQuantity.textContent = "".concat(ingredient.quantity, " ").concat(ingredient.unit || '').trim(); // Définit le texte de la quantité
+        ingredientQuantity.textContent = (0, _main.escapeHtml)("".concat(ingredient.quantity, " ").concat(ingredient.unit || '').trim()); // Échapper la quantité
 
         ingredientQuantity.classList.add('text-gray-900', 'mb-1'); // Applique les styles
       }
@@ -169,7 +171,7 @@ function showErrorMessage(searchText) {
   if (errorMessageContainer) {
     errorMessageContainer.style.display = 'block'; // Affiche le message d'erreur
 
-    errorMessageContainer.textContent = 'Aucune recette ne contient "' + searchText + '". Vous pouvez chercher "tarte aux pommes", "poisson", etc.'; // Définit le texte d'erreur
+    errorMessageContainer.textContent = 'Aucune recette ne contient "' + (0, _main.escapeHtml)(searchText) + '". Vous pouvez chercher "tarte aux pommes", "poisson", etc.'; // Définit le texte d'erreur
   } else {
     console.error('Élément #error-message non trouvé'); // Affiche un message d'erreur si l'élément n'est pas trouvé
   }
@@ -201,5 +203,5 @@ function updateRecipeCount(count) {
   } // Mettre à jour l'élément d'affichage avec le compteur formaté
 
 
-  recipeCountElement.textContent = "".concat(formattedCount, " ").concat(recipeText); // Définit le texte du compteur
+  recipeCountElement.textContent = "".concat((0, _main.escapeHtml)(formattedCount), " ").concat((0, _main.escapeHtml)(recipeText)); // Définit le texte du compteur
 }
